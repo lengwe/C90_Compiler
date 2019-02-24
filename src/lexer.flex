@@ -6,18 +6,20 @@ extern "C" int fileno(FILE *stream);
 
 #include "lexer.tab.hpp"
 #include <string>
+#include <iostream>
 %}
 
 
 KEYWORD {auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|int|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while}
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
-OPERATOR {\.\.\.|=|+|-|*|/|%|\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;]
+OPERATOR {\.\.\.|=|+|-|*|/|%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [e|E][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|[0-9]+\.
-INTEGER_CONSTANT
+INTEGER_CONSTANT  [1-9][0-9]*
 CHARACTER_CONSTANT
-WHITESPACE [ \t\r]+
-
+FLOAT_CONSTANT
+WHITESPACE  [ \t\r]+
+STRING_LITERAL
 
 
 {KEYWORD}         {
@@ -114,6 +116,12 @@ WHITESPACE [ \t\r]+
                     }
                   }
 
+{IDENTIFIER}      {
+                    //duplicate the string to yylval.str(which defined in parser.y)
+                    yylval.str = std::strdup(yytext);
+                    return IDENTIFIER;
+                  }
+
 {OPERATOR}        {
                     std::string op(yytext);
                     if(op == "..."){
@@ -136,6 +144,9 @@ WHITESPACE [ \t\r]+
                     }
                     else if(op == "%"){
                       return '%';
+                    }
+                    else if(op == "|"){
+                      return '|';
                     }
                     else if(op == "+="){
                       return ADD_ASSIGN;
@@ -177,7 +188,7 @@ WHITESPACE [ \t\r]+
                       return EQ_OP;
                     }
                     else if(op == "!="){
-                      return NE_ASSIGN;
+                      return NE_OP;
                     }
                     else if(op == ">"){
                       return '>';
@@ -210,7 +221,7 @@ WHITESPACE [ \t\r]+
                       return RIGHT_OP;
                     }
                     else if(op == "("){
-                      return '()';
+                      return '(';
                     }
                     else if(op == ")"){
                       return ')';
@@ -236,32 +247,31 @@ WHITESPACE [ \t\r]+
                     else if(op == ";"){
                       return ';';
                     }
-
-
-
+                    else if(op == "->"){
+                      return PTR_OP;
+                    }
+                    else if(op == "."){
+                      return '.';
+                    }
+                    else if(op == "&"){
+                      return '&';
+                    }
                   }
 
+{INTEGER_CONSTANT}  {
+                      yylval.int_num =  atoi(yytext);
+                      return INTEGER_NUM
+                    }
+
+{FLOAT_NUM}         {
+                      yylval.float_num = atof(yytext);
+                      return FLOAT_NUM;
+                    }
+
+{WHITESPACE}        { std::stderr<< "Invalid tokens"<<std::endl; }
 
 
 
-
-
-
-
-
-
-
-
-%%
-
-
-
-
-[0-9]+([.][0-9]*)? { yylval.number=strtod(yytext, 0); return T_NUMBER; }
-[a-z]+          { yylval.string=new std::string(yytext); return T_VARIABLE; }
-[ \t\r\n]+		{;}
-
-.               { fprintf(stderr, "Invalid token\n"); exit(1); }
 %%
 
 void yyerror (char const *s)
