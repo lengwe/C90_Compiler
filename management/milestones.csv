@@ -1,2 +1,5 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-DefineInitialMilestones,             ,               1,    ?,           , Come up with initial milestones for getting started
+Lexer,,1,Ramon,           ,Finish Lexer
+Parser,Lexer,,Leng,,Finish parser
+Test Suite,"Bash, lexer, parser",,Ramon,,
+Code Gen,* + working simulator,,,,
