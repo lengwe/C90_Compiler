@@ -14,12 +14,15 @@ KEYWORD {auto|break|case|char|const|continue|default|do|double|else|enum|extern|
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 OPERATOR {\.\.\.|=|+|-|*|/|%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [e|E][\+|\-]?[0-9]+
-FRACTION_CONSTANT [0-9]*\.[0-9]+|[0-9]+\.
+FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
 INTEGER_CONSTANT  [1-9][0-9]*
-CHARACTER_CONSTANT
+HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
+FLOAT_LITERAL     [f|F|l|L]
 FLOAT_CONSTANT
-WHITESPACE  [ \t\r]+
-STRING_LITERAL
+CHARACTER_CONSTANT
+WHITESPACE  [ \t\r\f\v]+
+/*??*/
+STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 
 {KEYWORD}         {
@@ -37,7 +40,7 @@ STRING_LITERAL
                       return CHAR;
                     }
                     else if(keyword == "const"){
-                      return CONST;
+                      return( CONST;
                     }
                     else if(keyword == "continue"){
                       return CONTINUE;
@@ -263,10 +266,20 @@ STRING_LITERAL
                       return INTEGER_NUM
                     }
 
-{FLOAT_NUM}         {
+{FLOAT_CONSTANT}    {
                       yylval.float_num = atof(yytext);
                       return FLOAT_NUM;
                     }
+
+{CHARACTER_CONSTANT}  {
+
+                      }
+
+{STRING_LITERAL}      {
+                        char* tmp_ptr = yytext+1;
+                        yylval.str = new std::string (yytext, tmp_ptr-1);
+                        return STRING_LITERAL;
+                      }
 
 {WHITESPACE}        { std::stderr<< "Invalid tokens"<<std::endl; }
 
