@@ -12,17 +12,39 @@ extern "C" int fileno(FILE *stream);
 
 KEYWORD {auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|int|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while}
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
-OPERATOR {\.\.\.|=|+|-|*|/|%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
-EXPONENT    [e|E][\+|\-]?[0-9]+
+OPERATOR {\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
+EXPONENT    [eE][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
-INTEGER_CONSTANT  [1-9][0-9]*
+DECIMAL_CONSTANT  [1-9][0-9]*
 HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
-FLOAT_LITERAL     [f|F|l|L]
-FLOAT_CONSTANT
-CHARACTER_CONSTANT
+FLOAT_SUFFIX      [f|F|l|L]
+INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
+CHAR_CONSTANT  ['](([\\]['])|([^']))+[']
 WHITESPACE  [ \t\r\f\v]+
 /*??*/
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
+
+//INTEGER_NUM
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
+  yylval.int_num = atoi(yytext);
+  return INT_NUM;
+}
+
+/*HEX_NUM*/
+[+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
+  yylval.int_num = atoi(yytext);
+  return HEX_NUM;
+}
+
+([+-])?{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
+  yylval.float_num = atof(yytext);
+  return FLOAT_NUM;
+}
+
+([+-])?([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
+  yylval.float_num = atof(yytext);
+  return FLOAT_NUM;
+}
 
 
 {KEYWORD}         {
@@ -121,16 +143,13 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 {IDENTIFIER}      {
                     //duplicate the string to yylval.str(which defined in parser.y)
-                    yylval.str = std::strdup(yytext);
+                    yylval.str = new std::string (yytext);
                     return IDENTIFIER;
                   }
 
 {OPERATOR}        {
                     std::string op(yytext);
-                    if(op == "..."){
-                      return ELLIPSIS;
-                    }
-                    else if(op == "="){
+                    if(op == "="){
                       return '=';
                     }
                     else if(op == "+"){
@@ -271,8 +290,10 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                       return FLOAT_NUM;
                     }
 
-{CHARACTER_CONSTANT}  {
-
+{CHAR_CONSTANT}  {
+                        char* tmp_ptr = yytext+1;
+                        yylval.str = new std::string (yytext, tmp_ptr-1);
+                        return CHAR_CONSTANTL;
                       }
 
 {STRING_LITERAL}      {
@@ -281,7 +302,9 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                         return STRING_LITERAL;
                       }
 
-{WHITESPACE}        { std::stderr<< "Invalid tokens"<<std::endl; }
+{WHITESPACE}        {;}
+
+.                   { std::stderr<< "Invalid tokens"<<std::endl; }
 
 
 

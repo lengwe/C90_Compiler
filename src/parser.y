@@ -11,7 +11,7 @@
   //do we need both double and float?
   double double_num;
   float float_num;
-  char* str;
+  std::string *str;
   //TODO: add ast class
 }
 
