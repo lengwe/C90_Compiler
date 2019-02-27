@@ -7,6 +7,8 @@ extern "C" int fileno(FILE *stream);
 #include "lexer.tab.hpp"
 #include <string>
 #include <iostream>
+
+int Line = 1;
 %}
 
 
@@ -21,7 +23,7 @@ FLOAT_SUFFIX      [f|F|l|L]
 INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
 CHAR_CONSTANT  ['](([\\]['])|([^']))+[']
 WHITESPACE  [ \t\r\f\v]+
-/*??*/
+PREPROCESSER  #[^\n]*\n
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 //INTEGER_NUM
@@ -46,98 +48,99 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
   return FLOAT_NUM;
 }
 
-
-{KEYWORD}         {
+//TODO: take out token and change it to yyval.str
+{KEYWORD}           {
                     std::string keyword(yytext);
                     if(keyword == "auto"){
-                      return AUTO;
+                      return token(AUTO);
                     }
                     else if(keyword == "break"){
-                      return BREAK;
+                      return token(BREAK);
                     }
                     else if(keyword == "case"){
-                      return CASE;
+                      return token(CASE);
                     }
                     else if(keyword == "char"){
-                      return CHAR;
+                      return token(CHAR);
                     }
                     else if(keyword == "const"){
-                      return( CONST;
+                      return token(CONST);
                     }
                     else if(keyword == "continue"){
-                      return CONTINUE;
+                      return token(CONTINUE);
                     }
                     else if(keyword == "default"){
-                      return DEFAULT;
+                      return token(DEFAULT);
                     }
                     else if(keyword == "do"){
-                      return DO;
+                      return token(DO);
                     }
                     else if(keyword == "double"){
-                      return DOUBLE;
+                      return token(DOUBLE);
                     }
                     else if(keyword == "else"){
-                      return ELSE;
+                      return token(ELSE);
                     }
                     else if(keyword == "enum"){
-                      return ENUM;
+                      return token(ENUM);
                     }
                     else if(keyword == "extern"){
-                      return EXTERN;
+                      return token(EXTERN);
                     }
                     else if(keyword == "for"){
-                      return FOR;
+                      return token(FOR);
                     }
                     else if(keyword == "if"){
-                      return IF;
+                      return token(IF);
                     }
                     else if(keyword == "int"){
-                      return INT;
+                      return token(INT);
                     }
                     else if(keyword == "long"){
-                      return LONG;
+                      return token(LONG);
                     }
                     else if(keyword == "register"){
-                      return REGISTER;
+                      return token(REGISTER);
                     }
                     else if(keyword == "return"){
-                      return RETURN;
+                      return token(RETURN);
                     }
                     else if(keyword == "short"){
-                      return SHORT;
+
+                      return token(SHORT);
                     }
                     else if(keyword == "signed"){
-                      return SIGNED;
+                      return token(SIGNED);
                     }
                     else if(keyword == "unsigned"){
-                      return UNSIGNED;
+                      return token(UNSIGNED);
                     }
                     else if(keyword == "sizeof"){
-                      return SIZEOF;
+                      return token(SIZEOF);
                     }
                     else if(keyword == "static"){
-                      return STATIC;
+                      return token(STATIC);
                     }
                     else if(keyword == "struct"){
-                      return STRUCT;
+                      return token(STRUCT);
                     }
                     else if(keyword == "switch"){
-                      return SWITCH;
+                      return token(SWITCH);
                     }
                     else if(keyword == "typedef"){
-                      return TYPEDEF;
+                      return token(TYPEDEF);
                     }
                     else if(keyword == "union"){
-                      return UNION;
+                      return token(UNION);
                     }
                     else if(keyword == "void"){
-                      return VOID;
+                      return token(VOID);
                     }
                     else if(keyword == "volatile"){
-                      return VOLATILE;
+                      return token(VOLATILE);
                     }
                     else if(keyword == "while"){
-                      return WHILE;
+                      return token(WHILE);
                     }
                   }
 
@@ -149,6 +152,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 {OPERATOR}        {
                     std::string op(yytext);
+                    yylval.str = new std::string (yytext);
                     if(op == "="){
                       return '=';
                     }
@@ -183,7 +187,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                       return DIV_ASSIGN;
                     }
                     else if(op == "%="){
-                      return MOD_ASSGIN;
+                      return MOD_ASSIGN;
                     }
                     else if(op == ">>="){
                       return RIGHT_ASSIGN;
@@ -292,21 +296,27 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 {CHAR_CONSTANT}  {
                         char* tmp_ptr = yytext+1;
-                        yylval.str = new std::string (yytext, tmp_ptr-1);
+                        yylval.str = new std::string (tmp_ptr, tmp_ptr-1);
                         return CHAR_CONSTANTL;
                       }
 
 {STRING_LITERAL}      {
                         char* tmp_ptr = yytext+1;
-                        yylval.str = new std::string (yytext, tmp_ptr-1);
+                        yylval.str = new std::string (tmp_ptr, tmp_ptr-1);
                         return STRING_LITERAL;
                       }
+{PREPROCESSER}        {
+                        char* tmp_ptr = yytext+1;
+                        yylval.str = new std::string (tmp_ptr);
+                        return STRING_LITERAL;
+                      }
+
 
 {WHITESPACE}        {;}
 
 .                   { std::stderr<< "Invalid tokens"<<std::endl; }
 
-
+[\n]                {Line++;}
 
 %%
 
@@ -314,4 +324,9 @@ void yyerror (char const *s)
 {
   fprintf (stderr, "Parse error : %s\n", s);
   exit(1);
+}
+
+int token(int IN){
+  yyval.str = new std::string(yytext);
+  return IN
 }
