@@ -4,37 +4,31 @@
 // Avoid error "error: `fileno' was not declared in this scope"
 extern "C" int fileno(FILE *stream);
 
-#include "lexer.tab.hpp"
+#include "parser.tab.hpp"
 #include <string>
 #include <iostream>
 %}
-
-
-KEYWORD {auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|int|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while}
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
-OPERATOR {\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
+OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [eE][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
 DECIMAL_CONSTANT  [1-9][0-9]*
 HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
 FLOAT_SUFFIX      [f|F|l|L]
+KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|int|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while]
 INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
 CHAR_CONSTANT  ['](([\\]['])|([^']))+[']
 WHITESPACE  [ \t\r\f\v]+
-/*??*/
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
+%%
 
-//INTEGER_NUM
-{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
-  yylval.int_num = atoi(yytext);
-  return INT_NUM;
-}
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.int_num = atoi(yytext);return INT_NUM;}
 
-/*HEX_NUM*/
 [+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
   yylval.int_num = atoi(yytext);
   return HEX_NUM;
 }
+
 
 ([+-])?{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
   yylval.float_num = atof(yytext);
@@ -62,7 +56,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                       return CHAR;
                     }
                     else if(keyword == "const"){
-                      return( CONST;
+                      return CONST;
                     }
                     else if(keyword == "continue"){
                       return CONTINUE;
@@ -141,6 +135,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                     }
                   }
 
+
 {IDENTIFIER}      {
                     //duplicate the string to yylval.str(which defined in parser.y)
                     yylval.str = new std::string (yytext);
@@ -162,7 +157,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                       return '*';
                     }
                     else if(op == "/"){
-                      return '/'
+                      return '/';
                     }
                     else if(op == "%"){
                       return '%';
@@ -280,31 +275,12 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
                     }
                   }
 
-{INTEGER_CONSTANT}  {
-                      yylval.int_num =  atoi(yytext);
-                      return INTEGER_NUM
-                    }
 
-{FLOAT_CONSTANT}    {
-                      yylval.float_num = atof(yytext);
-                      return FLOAT_NUM;
-                    }
-
-{CHAR_CONSTANT}  {
-                        char* tmp_ptr = yytext+1;
-                        yylval.str = new std::string (yytext, tmp_ptr-1);
-                        return CHAR_CONSTANTL;
-                      }
-
-{STRING_LITERAL}      {
-                        char* tmp_ptr = yytext+1;
-                        yylval.str = new std::string (yytext, tmp_ptr-1);
-                        return STRING_LITERAL;
-                      }
 
 {WHITESPACE}        {;}
 
-.                   { std::stderr<< "Invalid tokens"<<std::endl; }
+.                   { }
+
 
 
 
