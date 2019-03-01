@@ -7,7 +7,7 @@
   int yylex(void);
   void yyerror(const char*);
 }
-
+%error-verbose
 %union{
   int int_num;
   //do we need both double and float?

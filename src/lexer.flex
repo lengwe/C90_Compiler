@@ -8,6 +8,7 @@ extern "C" int fileno(FILE *stream);
 #include <string>
 #include <iostream>
 %}
+KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [eE][\+|\-]?[0-9]+
@@ -15,7 +16,6 @@ FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
 DECIMAL_CONSTANT  [1-9][0-9]*
 HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
 FLOAT_SUFFIX      [f|F|l|L]
-KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|int|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while]
 INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
 CHAR_CONSTANT  ['](([\\]['])|([^']))+[']
 WHITESPACE  [ \t\r\f\v]+
@@ -40,100 +40,37 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
   return FLOAT_NUM;
 }
 
+auto {return AUTO;}
+break {return BREAK;}
+case {return CASE;}
+char {return CHAR;}
+const {return CONST;}
+continue {return CONTINUE;}
+default {return DEFAULT;}
+do {return DO;}
+double {return DOUBLE;}
+else {return ELSE;}
+enum {return ENUM;}
+extern {return EXTERN;}
+for {return FOR;}
+if {return IF;}
+int {return INT;}
+long {return LONG;}
+register {return REGISTER;}
+return {return RETURN;}
+short {return SHORT;}
+signed {return SIGNED;}
+unsigned {return UNSIGNED;}
+sizeof {return SIZEOF;}
+static {return STATIC;}
+struct {return STRUCT;}
+switch {return SWITCH;}
+typedef {return TYPEDEF;}
+union {return UNION;}
+void {return VOID;}
+volatile {return VOLATILE;}
+while {return WHILE;}
 
-{KEYWORD}         {
-                    std::string keyword(yytext);
-                    if(keyword == "auto"){
-                      return AUTO;
-                    }
-                    else if(keyword == "break"){
-                      return BREAK;
-                    }
-                    else if(keyword == "case"){
-                      return CASE;
-                    }
-                    else if(keyword == "char"){
-                      return CHAR;
-                    }
-                    else if(keyword == "const"){
-                      return CONST;
-                    }
-                    else if(keyword == "continue"){
-                      return CONTINUE;
-                    }
-                    else if(keyword == "default"){
-                      return DEFAULT;
-                    }
-                    else if(keyword == "do"){
-                      return DO;
-                    }
-                    else if(keyword == "double"){
-                      return DOUBLE;
-                    }
-                    else if(keyword == "else"){
-                      return ELSE;
-                    }
-                    else if(keyword == "enum"){
-                      return ENUM;
-                    }
-                    else if(keyword == "extern"){
-                      return EXTERN;
-                    }
-                    else if(keyword == "for"){
-                      return FOR;
-                    }
-                    else if(keyword == "if"){
-                      return IF;
-                    }
-                    else if(keyword == "int"){
-                      return INT;
-                    }
-                    else if(keyword == "long"){
-                      return LONG;
-                    }
-                    else if(keyword == "register"){
-                      return REGISTER;
-                    }
-                    else if(keyword == "return"){
-                      return RETURN;
-                    }
-                    else if(keyword == "short"){
-                      return SHORT;
-                    }
-                    else if(keyword == "signed"){
-                      return SIGNED;
-                    }
-                    else if(keyword == "unsigned"){
-                      return UNSIGNED;
-                    }
-                    else if(keyword == "sizeof"){
-                      return SIZEOF;
-                    }
-                    else if(keyword == "static"){
-                      return STATIC;
-                    }
-                    else if(keyword == "struct"){
-                      return STRUCT;
-                    }
-                    else if(keyword == "switch"){
-                      return SWITCH;
-                    }
-                    else if(keyword == "typedef"){
-                      return TYPEDEF;
-                    }
-                    else if(keyword == "union"){
-                      return UNION;
-                    }
-                    else if(keyword == "void"){
-                      return VOID;
-                    }
-                    else if(keyword == "volatile"){
-                      return VOLATILE;
-                    }
-                    else if(keyword == "while"){
-                      return WHILE;
-                    }
-                  }
 
 
 {IDENTIFIER}      {
