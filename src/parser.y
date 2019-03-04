@@ -28,34 +28,49 @@
 %type <number> INT_NUM
 %type <float_num> FLOAT_NUM
 %type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED
-%type <node> type_specifier translation_unit
+%type <node> type_specifier translation_unit external_declaration unary_operator
 
 %start ROOT
 
 %%
 
-ROOT: type_specifier {g_root = $1;}
+//ROOT: type_specifier {g_root = $1;}
+ROOT: translation_unit {g_root = $1;}
 
-// translation_unit
-// 	: external_declaration                          {$$ = new translation_unit($1);}
-// 	| translation_unit external_declaration         {$$ = new translation_unit($1,$2);}
-// 	;
+translation_unit
+: external_declaration                          {$$ = new translation_unit($1);}
+| translation_unit external_declaration         {$$ = new translation_unit($1,$2);}
+;
+
+external_declaration
+: function_definition           {$$ = new external_declaration($1);}
+| declaration                   {$$ = new external_declaration($1);}
+;
 
 type_specifier
-	: VOID         {$$ = new type_specifier(1);}
-	| CHAR         {$$ = new type_specifier(2);}
-	| SHORT        {$$ = new type_specifier(3);}
-	| INT          {$$ = new type_specifier(4);}
-	| LONG         {$$ = new type_specifier(5);}
-	| FLOAT        {$$ = new type_specifier(6);}
-	| DOUBLE       {$$ = new type_specifier(7);}
-	| SIGNED       {$$ = new type_specifier(8);}
-	| UNSIGNED     {$$ = new type_specifier(9);}
-  //| struct_or_union_specifier
-  //| enum_specifier
-  //| TYPE_NAME
-  ;
+: VOID         {$$ = new type_specifier(1);}
+| CHAR         {$$ = new type_specifier(2);}
+| SHORT        {$$ = new type_specifier(3);}
+| INT          {$$ = new type_specifier(4);}
+| LONG         {$$ = new type_specifier(5);}
+| FLOAT        {$$ = new type_specifier(6);}
+| DOUBLE       {$$ = new type_specifier(7);}
+| SIGNED       {$$ = new type_specifier(8);}
+| UNSIGNED     {$$ = new type_specifier(9);}
+//| struct_or_union_specifier
+//| enum_specifier
+//| TYPE_NAME
+;
 
+
+unary_operator
+: '&'          {$$ = new unary_operator(1);}
+| '*'          {$$ = new unary_operator(2);}
+| '+'          {$$ = new unary_operator(3);}
+| '-'          {$$ = new unary_operator(4);}
+| '~'          {$$ = new unary_operator(5);}
+| '!'          {$$ = new unary_operator(6);}
+;
 
 
 %%

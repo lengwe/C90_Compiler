@@ -10,7 +10,5 @@ int main()
 
     std::cout<<ast->c();
 
-
-
     return 0;
 }
