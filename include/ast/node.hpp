@@ -13,8 +13,8 @@ class Node{
 		virtual ~Node() {}
 
 		virtual std::string c()const=0;
-
 		virtual void print(std::ostream &dst)const=0;
+		virtual void python(std::string &dst)const=0;
 
 };
 
@@ -47,26 +47,36 @@ class type_specifier: public Node{
 			dst << type;
 		}
 
-		std::string c() const override{
+		//this function only checks the tree
+ 		std::string c() const override{
 			switch (type) {
 				case 1:
 					return "void";
+				break;
 				case 2:
 					return "char";
+				break;
 				case 3:
 					return "short";
+				break;
 				case 4:
 					return "int";
+				break;
 				case 5:
 					return "long";
+				break;
 				case 6:
 					return "float";
+				break;
 				case 7:
 					return "double";
+				break;
 				case 8:
 					return "signed";
+				break;
 				case 9:
 					return "unsigned";
+				break;
 			}
 		}
 
@@ -74,33 +84,43 @@ class type_specifier: public Node{
 		//void python().....
 };
 
-class unary_operator: public Node{
+class primary_expression : public Node{
 	private:
+		Nodeptr p;
 		int type;
+		std::string* string;
 	public:
-		unary_operator(int type_in) : type(type_in) {}
-		virtual void print(std::ostream &dst) const override{
-			dst << type;
-		}
+		primary_expression(int type_in, std::string* string_in) : type(type_in),string(string_in){}
+		primary_expression(int type_in, Nodeptr _p) : type(type_in),p(_p){}
 
-		std::string c() const override{
+		virtual void python(std::string &dst){
 			switch (type) {
 				case 1:
-					return "&";
 				case 2:
-					return "*";
 				case 3:
-					return "+";
+					dst=*string;
+					//std::cout<<dst<<std::endl;
+				break;
+
 				case 4:
-					return "-";
-				case 5:
-					return "~";
-				case 6:
-					return "!";
+					std::string str;
+					p->python(str);
+					dst = "("+str+")";
+				break;
+
 			}
 		}
 
-		//void python()....
-	};
+		// std::string c() const override{
+		// 	switch (type) {
+		// 		case 1:
+		// 		case 2:
+		// 		case 3:
+		// 		 return *string;
+		// 		break;
+
+};
+
+
 
 #endif
