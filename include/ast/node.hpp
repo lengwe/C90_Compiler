@@ -31,9 +31,10 @@ class translation_unit: public Node{
 
 class external_declaration: public Node{
 	private:
+		int type;
 		Nodeptr p;
 	public:
-		external_declaration(Nodeptr _p) : p(_p){}
+		external_declaration(int type, Nodeptr _p) : type(type_in), p(_p){}
 };
 
 

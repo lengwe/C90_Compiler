@@ -8,7 +8,7 @@ extern "C" int fileno(FILE *stream);
 #include <string>
 #include <iostream>
 %}
-KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while]
+KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|float|for|if|long|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|void|volatile|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [eE][\+|\-]?[0-9]+
@@ -51,12 +51,10 @@ do {return DO;}
 double {return DOUBLE;}
 else {return ELSE;}
 enum {return ENUM;}
-extern {return EXTERN;}
 for {return FOR;}
 if {return IF;}
 int {return INT;}
 long {return LONG;}
-register {return REGISTER;}
 return {return RETURN;}
 short {return SHORT;}
 signed {return SIGNED;}
@@ -66,7 +64,6 @@ static {return STATIC;}
 struct {return STRUCT;}
 switch {return SWITCH;}
 typedef {return TYPEDEF;}
-union {return UNION;}
 void {return VOID;}
 volatile {return VOLATILE;}
 while {return WHILE;}

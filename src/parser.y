@@ -24,8 +24,9 @@
 
 %type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONST
 %type <str> ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
-%type <node> type_specifier translation_unit external_declaration unary_operator
-%type <node> expression primary_expression
+%type <str> unary_operator assignment_operator storage_class_specifier
+%type <node> type_specifier translation_unit external_declaration storage_class_specifier
+%type <node> expression primary_expression argument_expression_list unary_expression cast_expression
 
 %start ROOT
 
@@ -42,14 +43,28 @@ primary_expression
 ;
 
 postfix_expression
-: primary_expression                                    {$$ = new primary_expression($1);}
-| postfix_expression '[' expression ']'                 {$$ = new primary_expression(1,$1);}
-| postfix_expression '(' ')'                            {$$ = new primary_expression(2,$1);}
-| postfix_expression '(' argument_expression_list ')'   {$$ = new primary_expression(3,$1);}
-| postfix_expression '.' IDENTIFIER                     {$$ = new primary_expression(4,$1);}
-| postfix_expression PTR_OP IDENTIFIER                  {$$ = new primary_expression(5,$1,$2,$3);}
-| postfix_expression INC_OP                             {$$ = new primary_expression(6,$1,$2);}
-| postfix_expression DEC_OP                             {$$ = new primary_expression(7,$1,$2);}
+: primary_expression                                    {$$ = new postfix_expression(1,$1);}
+| postfix_expression '[' expression ']'                 {$$ = new postfix_expression(2,$1,$3);}
+| postfix_expression '(' ')'                            {$$ = new postfix_expression(3,$1);}
+| postfix_expression '(' argument_expression_list ')'   {$$ = new postfix_expression(4,$1,$3);}
+| postfix_expression '.' IDENTIFIER                     {$$ = new postfix_expression(5,$1,$3);}
+| postfix_expression PTR_OP IDENTIFIER                  {$$ = new postfix_expression(6,$1,$3);}
+| postfix_expression INC_OP                             {$$ = new postfix_expression(7,$1);}
+| postfix_expression DEC_OP                             {$$ = new postfix_expression(8,$1);}
+;
+
+argument_expression_list
+: assignment_expression                                 {$$ = new argument_expression_list(1,$1);}
+| argument_expression_list ',' assignment_expression    {$$ = new argument_expression_list(2,$1,$3)}
+;
+
+unary_expression
+: postfix_expression                      {$$ = new unary_expression(1,$1);}
+| INC_OP unary_expression                 {$$ = new unary_expression(2,$2);}
+| DEC_OP unary_expression                 {$$ = new unary_expression(3,$2);}
+| unary_operator cast_expression          {$$ = new unary_expression(4,$1,$2);}
+// | SIZEOF unary_expression
+// | SIZEOF '(' type_name ')'
 ;
 
 translation_unit
@@ -58,8 +73,8 @@ translation_unit
 ;
 
 external_declaration
-: function_definition           {$$ = new external_declaration($1);}
-| declaration                   {$$ = new external_declaration($1);}
+: function_definition           {$$ = new external_declaration(1,$1);}
+| declaration                   {$$ = new external_declaration(2,$1);}
 ;
 
 type_specifier
@@ -99,6 +114,14 @@ assignment_operator
 | AND_ASSIGN     {$$ = new std:string ("&=");}
 | XOR_ASSIGN     {$$ = new std:string ("^=");}
 | OR_ASSIGN      {$$ = new std:string ("|=");}
+;
+
+storage_class_specifier
+: TYPEDEF        {$$ = new std:string ("typedef");}
+//| EXTERN(not in use)
+| STATIC         {$$ = new std:string ("static");}
+| AUTO           {$$ = new std:string ("auto");}
+| REGISTER       {$$ = new std:string ("register");}
 ;
 
 
