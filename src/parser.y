@@ -9,10 +9,6 @@
 }
 //%error-verbose
 %union{
-  int int_num;
-  //do we need both double and float?
-  double double_num;
-  float float_num;
   std::string *str;
   Node* node;
   //TODO: add ast class
@@ -25,9 +21,8 @@
 %token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP
 %token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM
 
-%type <number> INT_NUM
-%type <float_num> FLOAT_NUM
-%type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL
+
+%type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONST
 %type <node> type_specifier translation_unit external_declaration unary_operator
 %type <node> expression primary_expression
 

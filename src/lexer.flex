@@ -22,22 +22,22 @@ WHITESPACE  [ \t\r\f\v]+
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 %%
 
-{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.int_num = atoi(yytext);return INT_NUM;}
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONST;}
 
 [+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
-  yylval.int_num = atoi(yytext);
-  return HEX_NUM;
+  yylval.str = new std::string (yytext);
+  return CONST;
 }
 
 
 ([+-])?{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
-  yylval.float_num = atof(yytext);
-  return FLOAT_NUM;
+  yylval.str = new std::string (yytext);
+  return CONST;
 }
 
 ([+-])?([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
-  yylval.float_num = atof(yytext);
-  return FLOAT_NUM;
+  yylval.str = new std::string (yytext);
+  return CONST;
 }
 
 auto {return AUTO;}
