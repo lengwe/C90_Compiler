@@ -81,45 +81,12 @@ class type_specifier: public Node{
 		}
 
 		//code-gen python
-		//void python().....
+		/*virtual void python(std::string &dst){
+
+		}*/
 };
 
-class primary_expression : public Node{
-	private:
-		Nodeptr p;
-		int type;
-		std::string* string;
-	public:
-		primary_expression(int type_in, std::string* string_in) : type(type_in),string(string_in){}
-		primary_expression(int type_in, Nodeptr _p) : type(type_in),p(_p){}
 
-		virtual void python(std::string &dst){
-			switch (type) {
-				case 1:
-				case 2:
-				case 3:
-					dst=*string;
-					//std::cout<<dst<<std::endl;
-				break;
-
-				case 4:
-					std::string str;
-					p->python(str);
-					dst = "("+str+")";
-				break;
-
-			}
-		}
-
-		// std::string c() const override{
-		// 	switch (type) {
-		// 		case 1:
-		// 		case 2:
-		// 		case 3:
-		// 		 return *string;
-		// 		break;
-
-};
 
 
 

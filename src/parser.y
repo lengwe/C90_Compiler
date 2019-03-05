@@ -7,7 +7,7 @@
   int yylex(void);
   void yyerror(const char*);
 }
-//%error-verbose
+/*%error-verbose*/
 %union{
   std::string *str;
   Node* node;
@@ -23,6 +23,7 @@
 
 
 %type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONST
+%type <str> ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %type <node> type_specifier translation_unit external_declaration unary_operator
 %type <node> expression primary_expression
 
@@ -30,15 +31,26 @@
 
 %%
 
-//ROOT: type_specifier {g_root = $1;}
+/*ROOT: type_specifier {g_root = $1;}*/
 ROOT: translation_unit {g_root = $1;}
 
 primary_expression
-	: IDENTIFIER                 {$$ = new primary_expression(1,$1);}
-	| CONSTANT                   {$$ = new primary_expression(2,$1);}
-	| STRING_LITERAL             {$$ = new primary_expression(3,$1);}
-	//| '(' expression ')'         {$$ = new primary_expression(4.$1);}
-	;
+: IDENTIFIER                 {$$ = new primary_expression(1,$1);}
+| CONSTANT                   {$$ = new primary_expression(2,$1);}
+| STRING_LITERAL             {$$ = new primary_expression(3,$1);}
+| '(' expression ')'         {$$ = new primary_expression(4,$1);}
+;
+
+postfix_expression
+: primary_expression                                    {$$ = new primary_expression($1);}
+| postfix_expression '[' expression ']'                 {$$ = new primary_expression(1,$1);}
+| postfix_expression '(' ')'                            {$$ = new primary_expression(2,$1);}
+| postfix_expression '(' argument_expression_list ')'   {$$ = new primary_expression(3,$1);}
+| postfix_expression '.' IDENTIFIER                     {$$ = new primary_expression(4,$1);}
+| postfix_expression PTR_OP IDENTIFIER                  {$$ = new primary_expression(5,$1,$2,$3);}
+| postfix_expression INC_OP                             {$$ = new primary_expression(6,$1,$2);}
+| postfix_expression DEC_OP                             {$$ = new primary_expression(7,$1,$2);}
+;
 
 translation_unit
 : external_declaration                          {$$ = new translation_unit($1);}
@@ -75,7 +87,19 @@ unary_operator
 | '!'          {$$ = $1;}
 ;
 
-
+assignment_operator
+: '='            {$$ = $1;}
+| MUL_ASSIGN     {$$ = new std:string ("*=");}
+| DIV_ASSIGN     {$$ = new std:string ("/=");}
+| MOD_ASSIGN     {$$ = new std:string ("%=");}
+| ADD_ASSIGN     {$$ = new std:string ("+=");}
+| SUB_ASSIGN     {$$ = new std:string ("-=");}
+| LEFT_ASSIGN    {$$ = new std:string ("<<=");}
+| RIGHT_ASSIGN   {$$ = new std:string (">>=");}
+| AND_ASSIGN     {$$ = new std:string ("&=");}
+| XOR_ASSIGN     {$$ = new std:string ("^=");}
+| OR_ASSIGN      {$$ = new std:string ("|=");}
+;
 
 
 %%
