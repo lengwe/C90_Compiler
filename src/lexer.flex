@@ -8,7 +8,7 @@ extern "C" int fileno(FILE *stream);
 #include <string>
 #include <iostream>
 %}
-KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|float|for|if|long|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|void|volatile|while]
+KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|volatile|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [eE][\+|\-]?[0-9]+
@@ -26,18 +26,18 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 [+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
   yylval.str = new std::string (yytext);
-  return CONST;
+  return CONSTANT;
 }
 
 
 ([+-])?{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
   yylval.str = new std::string (yytext);
-  return CONST;
+  return CONSTANT;
 }
 
 ([+-])?([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
   yylval.str = new std::string (yytext);
-  return CONST;
+  return CONSTANT;
 }
 
 auto {return AUTO;}
@@ -59,7 +59,6 @@ return {return RETURN;}
 short {return SHORT;}
 signed {return SIGNED;}
 unsigned {return UNSIGNED;}
-sizeof {return SIZEOF;}
 static {return STATIC;}
 struct {return STRUCT;}
 switch {return SWITCH;}

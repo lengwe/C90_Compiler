@@ -14,7 +14,7 @@ class Node{
 
 		virtual std::string c()const=0;
 		virtual void print(std::ostream &dst)const=0;
-		virtual void python(std::string &dst)const=0;
+		//virtual void python(std::string &dst)const=0;
 
 };
 
@@ -34,7 +34,7 @@ class external_declaration: public Node{
 		int type;
 		Nodeptr p;
 	public:
-		external_declaration(int type, Nodeptr _p) : type(type_in), p(_p){}
+		external_declaration(int type_in, Nodeptr _p) : type(type_in), p(_p){}
 };
 
 
@@ -47,7 +47,7 @@ class type_specifier: public Node{
 		virtual void print(std::ostream &dst) const override{
 			dst << type;
 		}
-
+yylval.str = new std::string (yytext);
 		//this function only checks the tree
  		std::string c() const override{
 			switch (type) {
@@ -82,9 +82,11 @@ class type_specifier: public Node{
 		}
 
 		//code-gen python
-		/*virtual void python(std::string &dst){
-
-		}*/
+		// virtual void python(std::string &dst){
+		// 	switch (type) {
+		// 		case :
+		// 	}
+		// }
 };
 
 

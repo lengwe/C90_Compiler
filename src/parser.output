@@ -1,0 +1,192 @@
+Terminals unused in grammar
+
+   AUTO
+   BREAK
+   CASE
+   CHAR
+   CONTINUE
+   DEFAULT
+   DO
+   DOUBLE
+   ELSE
+   ENUM
+   FLOAT
+   FOR
+   IF
+   INT
+   LONG
+   RETURN
+   SHORT
+   SIGNED
+   UNSIGNED
+   SIZEOF
+   STATIC
+   STRUCT
+   SWITCH
+   TYPEDEF
+   VOID
+   VOLATILE
+   WHILE
+   ADD_ASSIGN
+   SUB_ASSIGN
+   MUL_ASSIGN
+   DIV_ASSIGN
+   MOD_ASSIGN
+   RIGHT_ASSIGN
+   LEFT_ASSIGN
+   AND_ASSIGN
+   XOR_ASSIGN
+   OR_ASSIGN
+   INC_OP
+   DEC_OP
+   EQ_OP
+   GE_OP
+   LE_OP
+   OR_OP
+   AND_OP
+   LEFT_OP
+   RIGHT_OP
+   PTR_OP
+   NE_OP
+   FLOAT_NUM
+   HEX_NUM
+   INT_NUM
+   CHAR_CONSTANT
+   MOD_ASSGIN
+
+
+Grammar
+
+    0 $accept: ROOT $end
+
+    1 ROOT: primary_expression
+
+    2 primary_expression: IDENTIFIER
+    3                   | CONSTANT
+    4                   | STRING_LITERAL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+AUTO (258)
+BREAK (259)
+CASE (260)
+CHAR (261)
+CONTINUE (262)
+DEFAULT (263)
+DO (264)
+DOUBLE (265)
+ELSE (266)
+ENUM (267)
+FLOAT (268)
+FOR (269)
+IF (270)
+INT (271)
+LONG (272)
+RETURN (273)
+SHORT (274)
+SIGNED (275)
+UNSIGNED (276)
+SIZEOF (277)
+STATIC (278)
+STRUCT (279)
+SWITCH (280)
+TYPEDEF (281)
+VOID (282)
+VOLATILE (283)
+WHILE (284)
+ADD_ASSIGN (285)
+SUB_ASSIGN (286)
+MUL_ASSIGN (287)
+DIV_ASSIGN (288)
+MOD_ASSIGN (289)
+RIGHT_ASSIGN (290)
+LEFT_ASSIGN (291)
+AND_ASSIGN (292)
+XOR_ASSIGN (293)
+OR_ASSIGN (294)
+INC_OP (295)
+DEC_OP (296)
+EQ_OP (297)
+GE_OP (298)
+LE_OP (299)
+OR_OP (300)
+AND_OP (301)
+LEFT_OP (302)
+RIGHT_OP (303)
+PTR_OP (304)
+NE_OP (305)
+IDENTIFIER (306) 2
+FLOAT_NUM (307)
+HEX_NUM (308)
+INT_NUM (309)
+CHAR_CONSTANT (310)
+CONSTANT (311) 3
+MOD_ASSGIN (312)
+STRING_LITERAL (313) 4
+
+
+Nonterminals, with rules where they appear
+
+$accept (59)
+    on left: 0
+ROOT (60)
+    on left: 1, on right: 0
+primary_expression (61)
+    on left: 2 3 4, on right: 1
+
+
+State 0
+
+    0 $accept: . ROOT $end
+
+    IDENTIFIER      shift, and go to state 1
+    CONSTANT        shift, and go to state 2
+    STRING_LITERAL  shift, and go to state 3
+
+    ROOT                go to state 4
+    primary_expression  go to state 5
+
+
+State 1
+
+    2 primary_expression: IDENTIFIER .
+
+    $default  reduce using rule 2 (primary_expression)
+
+
+State 2
+
+    3 primary_expression: CONSTANT .
+
+    $default  reduce using rule 3 (primary_expression)
+
+
+State 3
+
+    4 primary_expression: STRING_LITERAL .
+
+    $default  reduce using rule 4 (primary_expression)
+
+
+State 4
+
+    0 $accept: ROOT . $end
+
+    $end  shift, and go to state 6
+
+
+State 5
+
+    1 ROOT: primary_expression .
+
+    $default  reduce using rule 1 (ROOT)
+
+
+State 6
+
+    0 $accept: ROOT $end .
+
+    $default  accept

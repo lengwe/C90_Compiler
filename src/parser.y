@@ -15,18 +15,19 @@
 }
 
 /*KEYWORD*/
-%token AUTO BREAK CASE CHAR CONST CONTINUE DEFAULT DO DOUBLE ELSE ENUM EXTERN FLOAT FOR IF INT LONG REGISTER RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF UNION VOID VOLATILE WHILE
+%token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID VOLATILE WHILE
 /*OPERATOR*/
-%token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
+%token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP
-%token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM
+%token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM CHAR_CONSTANT CONSTANT MOD_ASSGIN STRING_LITERAL
 
 
-%type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONST
+%type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONSTANT
 %type <str> ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
-%type <str> unary_operator assignment_operator storage_class_specifier
-%type <node> type_specifier translation_unit external_declaration storage_class_specifier
-%type <node> expression primary_expression argument_expression_list unary_expression cast_expression
+/*%type <str> unary_operator assignment_operator storage_class_specifier
+%type <node> type_specifier translation_unit external_declaration
+%type <node> expression primary_expression argument_expression_list unary_expression cast_expression*/
+%type <node> primary_expression
 
 %start ROOT
 
@@ -39,7 +40,7 @@ primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
 | CONSTANT                   {$$ = new primary_expression(2,$1);}
 | STRING_LITERAL             {$$ = new primary_expression(3,$1);}
-| '(' expression ')'         {$$ = new primary_expression(4,$1);}
+//| '(' expression ')'         {$$ = new primary_expression(4,$1);}
 ;
 
 postfix_expression
@@ -63,8 +64,8 @@ unary_expression
 | INC_OP unary_expression                 {$$ = new unary_expression(2,$2);}
 | DEC_OP unary_expression                 {$$ = new unary_expression(3,$2);}
 | unary_operator cast_expression          {$$ = new unary_expression(4,$1,$2);}
-// | SIZEOF unary_expression
-// | SIZEOF '(' type_name ')'
+ | SIZEOF unary_expression
+ | SIZEOF '(' type_name ')'
 ;
 
 translation_unit
@@ -118,11 +119,11 @@ assignment_operator
 
 storage_class_specifier
 : TYPEDEF        {$$ = new std:string ("typedef");}
-//| EXTERN(not in use)
+/*| EXTERN(not in use)*/
 | STATIC         {$$ = new std:string ("static");}
 | AUTO           {$$ = new std:string ("auto");}
-| REGISTER       {$$ = new std:string ("register");}
-;
+
+
 
 
 %%
