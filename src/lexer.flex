@@ -8,7 +8,7 @@ extern "C" int fileno(FILE *stream);
 #include <string>
 #include <iostream>
 %}
-KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|volatile|while]
+KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|sizeof|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
 EXPONENT    [eE][\+|\-]?[0-9]+
@@ -64,8 +64,8 @@ struct {return STRUCT;}
 switch {return SWITCH;}
 typedef {return TYPEDEF;}
 void {return VOID;}
-volatile {return VOLATILE;}
 while {return WHILE;}
+sizeof {return SIZEOF;}
 
 
 
