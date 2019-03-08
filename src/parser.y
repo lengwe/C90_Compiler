@@ -15,7 +15,7 @@
 }
 
 /*KEYWORD*/
-%token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID WHILE
+%token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID WHILE CONST
 /*OPERATOR*/
 %token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP
@@ -39,7 +39,7 @@
 %%
 
 /*ROOT: type_specifier {g_root = $1;}*/
-ROOT: translation_unit {g_root = $1;}
+ROOT:  type_specifier  {g_root = $1;}
 
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
@@ -231,9 +231,10 @@ type_specifier
 ;
 
 struct_or_union_specifier
-: struct_or_union IDENTIFIER '{' struct_declaration_list '}'      {$$ = new struct_or_union_specifier(1,$1,$2,$4);}
-| struct_or_union '{' struct_declaration_list '}'                 {$$ = new struct_or_union_specifier(2,$1,$3);}
-| struct_or_union IDENTIFIER                                      {$$ = new struct_or_union_specifier(3,$1,$2);}
+:
+// : struct_or_union IDENTIFIER '{' struct_declaration_list '}'      {$$ = new struct_or_union_specifier(1,$1,$2,$4);}
+// | struct_or_union '{' struct_declaration_list '}'                 {$$ = new struct_or_union_specifier(2,$1,$3);}
+// | struct_or_union IDENTIFIER                                      {$$ = new struct_or_union_specifier(3,$1,$2);}
 ;
 
 function_definition

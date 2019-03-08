@@ -22,7 +22,7 @@ WHITESPACE  [ \t\r\f\v]+
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 %%
 
-{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONST;}
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
 
 [+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
   yylval.str = new std::string (yytext);

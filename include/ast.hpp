@@ -3,6 +3,7 @@
 
 #include "ast/node.hpp"
 #include "ast/ast_expression.hpp"
+#include "ast/ast_declaration.hpp"
 
 extern const Node* parseAST();
 

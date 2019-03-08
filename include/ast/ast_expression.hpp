@@ -18,33 +18,34 @@ class primary_expression : public Node{
 			dst << type;
 		}
 
-		virtual void python(std::string &dst){
-			switch (type) {
-				case 1:
-				case 2:
-				case 3:
-					dst=*string;
-					//std::cout<<dst<<std::endl;
-				break;
+		// virtual void python(std::string &dst){
+		// 	switch (type) {
+		// 		case 1:
+		// 		case 2:
+		// 		case 3:
+		// 			dst=*string;
+		// 			//std::cout<<dst<<std::endl;
+		// 		break;
+		//
+		// 		case 4:
+		// 			// std::string str;
+		// 			// p->python(str);
+		// 			// dst = "("+str+")";
+		// 		break;
+		// yylval.str = new std::string (yytext);
+		// 	}
+		// }
 
-				case 4:
-					std::string str;
-					p->python(str);
-					dst = "("+str+")";
-				break;
-		yylval.str = new std::string (yytext);
-			}
-		}
-
-		std::string c() const override{
-			switch (type) {
-				case 1:yylval.str = new std::string (yytext);
-				case 2:
-				case 3:
-				 return *string;
-				break;
-			}
-};
+		// std::string c() const override{
+		// 	switch (type) {
+		// 		case 1: yylval.str = new std::string (yytext);
+		// 		case 2:
+		// 		case 3:
+		// 		 return *string;
+			// 	break;
+			// }
+		// }
+		};
 
 class postfix_expression : public Node{
   private:
