@@ -83,35 +83,36 @@ extern int yydebug;
     TYPEDEF = 281,
     VOID = 282,
     WHILE = 283,
-    ADD_ASSIGN = 284,
-    SUB_ASSIGN = 285,
-    MUL_ASSIGN = 286,
-    DIV_ASSIGN = 287,
-    MOD_ASSIGN = 288,
-    RIGHT_ASSIGN = 289,
-    LEFT_ASSIGN = 290,
-    AND_ASSIGN = 291,
-    XOR_ASSIGN = 292,
-    OR_ASSIGN = 293,
-    INC_OP = 294,
-    DEC_OP = 295,
-    EQ_OP = 296,
-    GE_OP = 297,
-    LE_OP = 298,
-    OR_OP = 299,
-    AND_OP = 300,
-    LEFT_OP = 301,
-    RIGHT_OP = 302,
-    PTR_OP = 303,
-    NE_OP = 304,
-    IDENTIFIER = 305,
-    FLOAT_NUM = 306,
-    HEX_NUM = 307,
-    INT_NUM = 308,
-    CHAR_CONSTANT = 309,
-    CONSTANT = 310,
-    MOD_ASSGIN = 311,
-    STRING_LITERAL = 312
+    CONST = 284,
+    ADD_ASSIGN = 285,
+    SUB_ASSIGN = 286,
+    MUL_ASSIGN = 287,
+    DIV_ASSIGN = 288,
+    MOD_ASSIGN = 289,
+    RIGHT_ASSIGN = 290,
+    LEFT_ASSIGN = 291,
+    AND_ASSIGN = 292,
+    XOR_ASSIGN = 293,
+    OR_ASSIGN = 294,
+    INC_OP = 295,
+    DEC_OP = 296,
+    EQ_OP = 297,
+    GE_OP = 298,
+    LE_OP = 299,
+    OR_OP = 300,
+    AND_OP = 301,
+    LEFT_OP = 302,
+    RIGHT_OP = 303,
+    PTR_OP = 304,
+    NE_OP = 305,
+    IDENTIFIER = 306,
+    FLOAT_NUM = 307,
+    HEX_NUM = 308,
+    INT_NUM = 309,
+    CHAR_CONSTANT = 310,
+    CONSTANT = 311,
+    MOD_ASSGIN = 312,
+    STRING_LITERAL = 313
   };
 #endif
 
@@ -126,7 +127,7 @@ union YYSTYPE
   Node* node;
   //TODO: add ast class
 
-#line 130 "src/parser.tab.hpp" /* yacc.c:1909  */
+#line 131 "src/parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

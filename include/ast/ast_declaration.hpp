@@ -13,7 +13,7 @@ class declaration_specifiers : public Node{
 
   public:
     //case 1, 2
-    declaration_specifiers(int type, Nodeptr l, Nodeptr r) : type(type_in), l(_l), r(_r){}
+    declaration_specifiers(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
     // //case 5
     // declaration_specifiers(int type, std::string* string) : type(type_in), string(string_in){}
     // //case 6
@@ -24,18 +24,20 @@ class declaration_specifiers : public Node{
 
 class init_declarator_list : public Node{
   private:
-    Nodeptr l,r;
+    Nodeptr l;
+    Nodeptr r;
   public:
-    init_declarator_list(Nodeptr l. Nodeptr r) : l(_l), r(_r){}
+    init_declarator_list(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
 };
 
 class init_declarator : public Node{
   private:
-    Nodeptr l,r;
+    Nodeptr l;
+    Nodeptr r;
 
   public:
-    init_declarator(Nodeptr l. Nodeptr r) : l(_l), r(_r){}
+    init_declarator(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 };
 
 class type_specifier: public Node{
@@ -96,7 +98,9 @@ class struct_or_union_specifier : public Node {
   private:
     int type;
     std::string* string;
-    Nodeptr p,l,r;
+    Nodeptr p;
+    Nodeptr l;
+    Nodeptr r;
 
   public:
     //case 1

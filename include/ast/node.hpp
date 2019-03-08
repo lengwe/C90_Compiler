@@ -52,7 +52,7 @@ private:
 	Nodeptr compound_statement;
 public:
 	function_definition(Nodeptr _declaration_specifiers, Nodeptr _declarator, Nodeptr _declarator_list, Nodeptr _compound_statement):
-	declaration_specifiers(_declaration_specifiers), declarator(_declarator), declarator_list(_declarator_list), compound_statement(_compound_statement){};
+	declaration_specifiers(_declaration_specifiers), declarator(_declarator), declarator_list(_declarator_list), compound_statement(_compound_statement){}
 
 };
 
