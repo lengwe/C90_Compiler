@@ -15,22 +15,23 @@
 }
 
 /*KEYWORD*/
-%token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID WHILE SIZEOF
+%token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID WHILE
 /*OPERATOR*/
 %token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP
 %token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM CHAR_CONSTANT CONSTANT MOD_ASSGIN STRING_LITERAL
 
 
-%type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONSTANT
-%type <str> ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
+%type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONSTANT SIZEOF
+%type <str> ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN '*' '+' '-' '~' '!' '&' '='
 %type <str> unary_operator assignment_operator storage_class_specifier type_qualifier struct_or_union
 %type <node> type_specifier translation_unit external_declaration declaration_specifiers type_name
 //expressions
-%type <node> expression primary_expression argument_expression_list unary_expression cast_expression multiplicative_expression additive_expression shift_expression relational_expression
+%type <node> primary_expression argument_expression_list unary_expression cast_expression multiplicative_expression additive_expression shift_expression relational_expression
 %type <node> equality_expression and_expression exclusive_or_expression inclusive_or_expression logical_and_expression logical_or_expression conditional_expression assignment_expression expression constant_expression
 //declarators
-%type <node> init_declarator_list init_declarator declarator initializer struct_or_union_specifier
+%type <node> init_declarator_list init_declarator declarator initializer struct_or_union_specifier postfix_expression function_definition struct_declaration_list declaration
+%type <node> declaration_list compound_statement
 
 
 %start ROOT
@@ -235,6 +236,48 @@ struct_or_union_specifier
 | struct_or_union IDENTIFIER                                      {$$ = new struct_or_union_specifier(3,$1,$2);}
 ;
 
+function_definition
+	: declaration_specifiers declarator declaration_list compound_statement  {$$ = new function_definition($1,$2,$3,$4);}
+	| declaration_specifiers declarator compound_statement                   {$$ = new function_definition($1,$2,NULL,$3);}
+	| declarator declaration_list compound_statement                         {$$ = new function_definition(NULL,$1,$2,$3);}
+	| declarator compound_statement                                          {$$ = new function_definition(NULL,$1,NULL,$2);}
+	;
+
+compound_statement
+:
+;
+
+declaration_list
+:
+;
+
+declarator
+:
+;
+
+declaration
+:
+;
+
+initializer
+:
+;
+
+struct_declaration_list
+:
+;
+
+struct_or_union
+:
+;
+
+type_name
+:
+;
+
+type_qualifier
+:
+;
 // type_qualifier (not in use?)
 // : CONST        {$$ = new std::string ("const");}
 //| VOLATILE

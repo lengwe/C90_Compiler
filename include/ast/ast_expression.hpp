@@ -50,7 +50,8 @@ class postfix_expression : public Node{
   private:
     int type;
     Nodeptr p;
-    Nodeptr l,r;
+    Nodeptr l;
+		Nodeptr r;
     std::string* string;
   public:
 		//case 2,6,7
@@ -90,7 +91,8 @@ class unary_expression : public Node{
 
 class cast_expression :public Node{
 	private:
-		Nodeptr l,r;
+		Nodeptr l;
+		Nodeptr r;
 	public:
 		cast_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 };
@@ -98,7 +100,8 @@ class cast_expression :public Node{
 class multiplicative_expression : public Node{
 	private:
 		int type;
-		Node l,r;
+		Nodeptr l;
+		Nodeptr r;
 
 	public:
 		multiplicative_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
@@ -197,16 +200,18 @@ class conditional_expression : public Node{
 
 class assignment_expression : public Node{
 	private:
-		Nodeptr l,r;
+		Nodeptr l;
+		Nodeptr r;
 		std::string* assign_op;
 	public:
-		assignment_expression(Nodeptr _l, std::string* op_in, _p, Nodeptr _r) : l(_l), assign_op(op_in), r(_r){}
+		assignment_expression(Nodeptr _l, std::string* op_in,Nodeptr _r) : l(_l), assign_op(op_in), r(_r){}
 
 };
 
 class expression : public Node{
 	private:
-		Nodeptr l,r;
+		Nodeptr l;
+		Nodeptr r;
 
 	public:
 		expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
