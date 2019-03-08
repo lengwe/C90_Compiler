@@ -14,8 +14,12 @@ class Node{
 
 		virtual std::string c()const=0;
 		virtual void print(std::ostream &dst)const=0;
-		//virtual void python(std::string &dst)const=0;
+		virtual void python(std::string &dst)const=0;
 
+		//not implement
+		inline void nothing(){
+			std:;cerr<<"not implement"<<std::endl;
+		}
 };
 
 class translation_unit: public Node{

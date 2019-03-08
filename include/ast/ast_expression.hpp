@@ -15,30 +15,30 @@ class primary_expression : public Node{
 		primary_expression(int type_in, Nodeptr _p) : type(type_in),p(_p){}
 
 		virtual void print(std::ostream &dst) const override{
-			dst << type;
+			dst << "primary_expression";
 		}
 
-		virtual void python(std::string &dst){
+		virtual void python(std::string &dst) const override{
 			switch (type) {
 				case 1:
 				case 2:
 				case 3:
-					dst=*string;
-					//std::cout<<dst<<std::endl;
+					dst=*string ;
+					std::cerr<<"entering primary_expression"<<std::endl;
 				break;
 
 				case 4:
 					std::string str;
 					p->python(str);
 					dst = "("+str+")";
+					std::cerr<<"entering primary_expression"<<std::endl;
 				break;
-		yylval.str = new std::string (yytext);
 			}
 		}
 
 		std::string c() const override{
 			switch (type) {
-				case 1:yylval.str = new std::string (yytext);
+				case 1:
 				case 2:
 				case 3:
 				 return *string;
@@ -61,6 +61,10 @@ class postfix_expression : public Node{
 		//case 4,5
     postfix_expression(int type_in, Nodeptr _p, std::string *string_in) : type(type_in), p(_p), string(string_in){}
 
+		virtual void print(std::ostream &dst) const override{
+			dst << "postfix_expression";
+		}
+
 };
 
 class argument_expression_list : public Node{
@@ -71,6 +75,9 @@ class argument_expression_list : public Node{
 	public:
 		argument_expression_list(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
 
+		virtual void print(std::ostream &dst) const override{
+			dst << "postfix_expression";
+		}
 };
 
 class unary_expression : public Node{
@@ -87,6 +94,10 @@ class unary_expression : public Node{
 		//case 4,5
 		unary_expression(int type_in, std::string* string_in, Nodeptr _p) : type(type_in), string(string_in), p(_p) {}
 
+		virtual void print(std::ostream &dst) const override{
+			dst << "unary_expression";
+		}
+
 };
 
 class cast_expression :public Node{
@@ -95,6 +106,11 @@ class cast_expression :public Node{
 		Nodeptr r;
 	public:
 		cast_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+
+		virtual void print(std::ostream &dst) const override{
+			dst << "cast_expression";
+		}
+
 };
 
 class multiplicative_expression : public Node{
@@ -106,6 +122,10 @@ class multiplicative_expression : public Node{
 	public:
 		multiplicative_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
 
+	virtual void print(std::ostream &dst) const override{
+			dst << "unary_expression";
+		}
+
 };
 
 class additive_expression : public Node{
@@ -115,6 +135,11 @@ class additive_expression : public Node{
 
 	public:
 		additive_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void print(std::ostream &dst) const override{
+			dst << "additive_expression";
+		}
+
 };
 
 class shift_expression : public Node{
@@ -124,6 +149,11 @@ class shift_expression : public Node{
 
 	public:
 		shift_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void print(std::ostream &dst) const override{
+			dst << "shift_expression";
+		}
+
 };
 
 class relational_expression : public Node{
@@ -133,6 +163,11 @@ class relational_expression : public Node{
 
 	public:
 		relational_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void print(std::ostream &dst) const override{
+			dst << "relational_expression";
+		}
+
 };
 
 class equality_expression : public Node{
@@ -143,6 +178,9 @@ class equality_expression : public Node{
 	public:
 		equality_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
 
+		virtual void print(std::ostream &dst) const override{
+			dst << "equality_expression";
+		}
 };
 
 class and_expression : public Node{
@@ -151,6 +189,10 @@ class and_expression : public Node{
 
 	public:
 		and_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+
+		virtual void print(std::ostream &dst) const override{
+			dst << "and_expression";
+		}
 
 };
 
@@ -161,6 +203,9 @@ class exclusive_or_expression : public Node{
 	public:
 		exclusive_or_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
+		virtual void print(std::ostream &dst) const override{
+			dst << "exclusive_or_expression";
+		}
 };
 
 class inclusive_or_expression : public Node{

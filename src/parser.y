@@ -45,7 +45,7 @@ primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
 | CONSTANT                   {$$ = new primary_expression(2,$1);}
 | STRING_LITERAL             {$$ = new primary_expression(3,$1);}
-//| '(' expression ')'         {$$ = new primary_expression(4,$1);}
+| '(' expression ')'         {$$ = new primary_expression(4,$1);}
 ;
 
 postfix_expression
@@ -183,10 +183,15 @@ declaration_specifiers
 | storage_class_specifier declaration_specifiers      {$$ = new declaration_specifiers(1,$1,$2);}
 | type_specifier                                      {$$ = $1;}
 | type_specifier declaration_specifiers               {$$ = new declaration_specifiers(2,$1,$2);}
-// | type_qualifier                                      {$$ = new declaration_specifiers(5,$1);}
-// | type_qualifier declaration_specifiers               {$$ = new declaration_specifiers(6,$1,$2);}
+/*// | type_qualifier                                      {$$ = new declaration_specifiers(5,$1);}
+// | type_qualifier declaration_specifiers               {$$ = new declaration_specifiers(6,$1,$2);}*/
 ;
 
+initializer
+: assignment_expression                         {$$ = $1;}
+// | '{' initializer_list '}'                      {$$ = new initializer(1,$2);}
+// | '{' initializer_list ',' '}'                  {$$ = new initializer(2,$2);}
+// ;
 
 init_declarator_list
 : init_declarator                               {$$ = $1;}
@@ -237,51 +242,51 @@ struct_or_union_specifier
 ;
 
 function_definition
-	: declaration_specifiers declarator declaration_list compound_statement  {$$ = new function_definition($1,$2,$3,$4);}
-	| declaration_specifiers declarator compound_statement                   {$$ = new function_definition($1,$2,NULL,$3);}
-	| declarator declaration_list compound_statement                         {$$ = new function_definition(NULL,$1,$2,$3);}
-	| declarator compound_statement                                          {$$ = new function_definition(NULL,$1,NULL,$2);}
-	;
-
-compound_statement
-:
+: declaration_specifiers declarator declaration_list compound_statement  {$$ = new function_definition($1,$2,$3,$4);}
+| declaration_specifiers declarator compound_statement                   {$$ = new function_definition($1,$2,NULL,$3);}
+| declarator declaration_list compound_statement                         {$$ = new function_definition(NULL,$1,$2,$3);}
+| declarator compound_statement                                          {$$ = new function_definition(NULL,$1,NULL,$2);}
 ;
 
-declaration_list
-:
-;
-
-declarator
-:
-;
-
-declaration
-:
-;
-
-initializer
-:
-;
-
-struct_declaration_list
-:
-;
-
-struct_or_union
-:
-;
-
-type_name
-:
-;
-
-type_qualifier
-:
-;
-// type_qualifier (not in use?)
-// : CONST        {$$ = new std::string ("const");}
-//| VOLATILE
+// compound_statement
+// :
 // ;
+//
+// declaration_list
+// :
+// ;
+//
+// declarator
+// :
+// ;
+//
+// declaration
+// :
+// ;
+//
+// initializer
+// :
+// ;
+//
+// struct_declaration_list
+// :
+// ;
+//
+// struct_or_union
+// :
+// ;
+//
+// type_name
+// :
+// ;
+//
+// type_qualifier
+// :
+// ;
+// // type_qualifier (not in use?)
+// // : CONST        {$$ = new std::string ("const");}
+// //| VOLATILE
+// // ;
 
 
 
