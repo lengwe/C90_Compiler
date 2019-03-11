@@ -36,7 +36,7 @@
 %type <node>  struct_or_union type_name specifier_qualifier_list struct_declarator_list initializer_list
 %type <node>  direct_declarator parameter_list parameter_type_list parameter_declaration
 %type <node> jump_statement statement statement_list expression_statement selection_statement iteration_statement labeled_statement
-%type <node>  init_declarator
+%type <node>  init_declarator enum_specifier enumerator_list enumerator
 %start ROOT
 
 %%
@@ -228,7 +228,7 @@ type_specifier
 | SIGNED       {$$ = new type_specifier(8);}
 | UNSIGNED     {$$ = new type_specifier(9);}
 | struct_or_union_specifier     {$$ = $1;}
-//| enum_specifier                {$$ = $1;}
+| enum_specifier                {$$ = $1;}
 //| TYPE_NAME
 ;
 
@@ -336,20 +336,20 @@ struct_declarator
 | declarator ':' constant_expression                                 {$$ = new struct_declarator(1,$1,$3);}
 ;
 
-// enum_specifier
-// : ENUM '{' enumerator_list '}'                                       {$$ = new enum_specifier(1,$1,NULL,$3);}
-// | ENUM IDENTIFIER '{' enumerator_list '}'                            {$$ = new enum_specifier(2,$1,$2,$4);}
-// | ENUM IDENTIFIER                                                    {$$ = new enum_specifier(3,$1,$2,NULL);}
-// ;
-// enumerator_list
-// : enumerator                                                         {$$ = $1;}
-// | enumerator_list ',' enumerator                                     {$$ = new enumerator_list(1,$3,$1);}
-// ;
-//
-// enumerator
-// : IDENTIFIER                                                         {$$ = $1;}
-// | IDENTIFIER '=' constant_expression                                 {$$ = new enumerator(1,$1,$3);}
-// ;
+enum_specifier
+: ENUM '{' enumerator_list '}'                                       {$$ = new enum_specifier(1,$1,NULL,$3);}
+| ENUM IDENTIFIER '{' enumerator_list '}'                            {$$ = new enum_specifier(2,$1,$2,$4);}
+| ENUM IDENTIFIER                                                    {$$ = new enum_specifier(3,$1,$2,NULL);}
+;
+enumerator_list
+: enumerator                                                         {$$ = $1;}
+| enumerator_list ',' enumerator                                     {$$ = new enumerator_list(1,$3,$1);}
+;
+
+enumerator
+: IDENTIFIER                                                         {$$ = new enumerator(1,$1,NULL);}
+| IDENTIFIER '=' constant_expression                                 {$$ = new enumerator(2,$1,$3);}
+;
 
 // type_qualifier
 // : CONST                                                              {$$ = new type_qualifier(1,$1);}

@@ -197,53 +197,53 @@ class struct_declarator_list : public Node{
 
 
 
-// class enum_specifier : public Node{
-//   private:
-//     int type;
-//     std::string* num;
-// 		std::string* identifier;
-// 		Nodeptr enumerator_list;
-//
-//   public:
-//     enum_specifier(int type_in,  std::string* _l,std::string* _r, Nodeptr _s) : type(type_in), num(_l),
-// 		 	identifier(_r), enumerator_list(_s){}
-//
-//       virtual void python(std::string &dst) const override{
-//
-//       }
-// };
+class enum_specifier : public Node{
+  private:
+    int type;
+    std::string* num;
+		std::string* identifier;
+		Nodeptr enumerator_list;
 
-// class enumerator_list : public Node{
-//   private:
-//     int type;
-//     Nodeptr enumerator;
-// 		Nodeptr enumerator_listptr;
-//
-//
-//   public:
-//     enumerator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), enumerator(_l),
-// 		 	enumerator_listptr(_r){}
-//
-//       virtual void python(std::string &dst) const override{
-//
-//       }
-// };
-//
-// class enumerator : public Node{
-//   private:
-//     int type;
-//     std::string* IDENTIFIER;
-// 		Nodeptr constant_expression;
-//
-//
-//   public:
-//     enumerator(int type_in,  std::string* _l, Nodeptr _r) : type(type_in), IDENTIFIER(_l),
-// 		constant_expression(_r){}
-//
-//     virtual void python(std::string &dst) const override{
-//
-//     }
-// };
+  public:
+    enum_specifier(int type_in,  std::string* _l,std::string* _r, Nodeptr _s) : type(type_in), num(_l),
+		 	identifier(_r), enumerator_list(_s){}
+
+      virtual void python(std::string &dst) const override{
+
+      }
+};
+
+class enumerator_list : public Node{
+  private:
+    int type;
+    Nodeptr enumerator;
+		Nodeptr enumerator_listptr;
+
+
+  public:
+    enumerator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), enumerator(_l),
+		 	enumerator_listptr(_r){}
+
+      virtual void python(std::string &dst) const override{
+
+      }
+};
+
+class enumerator : public Node{
+  private:
+    int type;
+    std::string* IDENTIFIER;
+		Nodeptr constant_expression;
+
+
+  public:
+    enumerator(int type_in,  std::string* _l, Nodeptr _r) : type(type_in), IDENTIFIER(_l),
+		constant_expression(_r){}
+
+    virtual void python(std::string &dst) const override{
+
+    }
+};
 
 // class type_qualifier : public Node{
 //   private:
