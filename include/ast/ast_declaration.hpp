@@ -1,5 +1,5 @@
-#ifndef ast_declaration_hpp
-#define ast_declaration_hpp
+#ifndef AST_DECLARATION_HPP
+#define AST_DECLARATION_HPP
 
 #include <string>
 #include <iostream>
@@ -8,16 +8,13 @@
 class declaration_specifiers : public Node{
   private:
     int type;
-    Nodeptr l,r;
-    //std::string* string;
+    Nodeptr l;
+    Nodeptr r;
+    Nodeptr s;
 
   public:
-    //case 1, 2
-    declaration_specifiers(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
-    // //case 5
-    // declaration_specifiers(int type, std::string* string) : type(type_in), string(string_in){}
-    // //case 6
-    // declaration_specifiers(int type, std::string* string, Nodeptr p) : type(type_in), string(string_in), Nodeptr p(_p){}
+
+    declaration_specifiers(int type_in, Nodeptr _l, Nodeptr _s, Nodeptr _r) : type(type_in), l(_l), r(_r), s(_s){}
 
 
 };
@@ -46,11 +43,11 @@ class type_specifier: public Node{
 	public:
 		type_specifier(int type_in) : type(type_in) {}
 		//~type_specifier(){delete type;}
-		virtual void print(std::ostream &dst) const override{
-			dst << type;
-		}
+		// virtual void print(std::ostream &dst) const /*override*/{
+		// 	dst << type;
+		// }
 		//this function only checks the tree
- 		std::string c() const override{
+ 		std::string c() const /*override*/{
 			switch (type) {
 				case 1:
 					return "void";
@@ -95,20 +92,30 @@ class type_specifier: public Node{
 class struct_or_union_specifier : public Node {
   private:
     int type;
-    std::string* string;
-    Nodeptr p;
-    Nodeptr l;
-    Nodeptr r;
-
+    Nodeptr struct_or_union;
+    std::string* id;
+    Nodeptr struct_declarator_list;
   public:
-    //case 1
-    struct_or_union_specifier(int type_in, std::string* string_in, Nodeptr _p) : type(type_in), string(string_in), p(_p){}
-    //case 2
-    struct_or_union_specifier(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
-    //case 3
-    struct_or_union_specifier(int type_in, Nodeptr _p, std::string* string_in) : type(type_in), p(_p), string(string_in){}
-
+    struct_or_union_specifier(int _type, Nodeptr _s, std::string* _id, Nodeptr _l): type(_type),
+      struct_or_union(_s), id(_id), struct_declarator_list(_l){}
 };
 
+class direct_abstract_declarator : public Node {
+
+	private:
+    int type;
+		Nodeptr abstract_declarator;
+		Nodeptr constant_expression;
+		Nodeptr parameter_type_list;
+		Nodeptr _direct_abstract_declarator;
+
+	public:
+
+		direct_abstract_declarator(int _type, Nodeptr _abstract_declarator , Nodeptr _constant_expression , Nodeptr _parameter_type_list , Nodeptr _direct_abstract_declarator) :
+					type(_type), abstract_declarator(_abstract_declarator), constant_expression(_constant_expression), parameter_type_list(_parameter_type_list), _direct_abstract_declarator(_direct_abstract_declarator) {}
+
+		~direct_abstract_declarator() {}
+
+};
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef node_hpp
-#define node_hpp
+#ifndef NODE_HPP
+#define NODE_HPP
 
 #include <iostream>
 #include <string>
@@ -10,10 +10,10 @@ typedef const Node* Nodeptr;
 
 class Node{
 	public:
-		virtual ~Node() {}
+		 ~Node() {}
 
-		virtual std::string c()const=0;
-		virtual void print(std::ostream &dst)const=0;
+		std::string c()const;
+		// void print(std::ostream &dst) const;
 		//virtual void python(std::string &dst)const=0;
 
 };
@@ -22,7 +22,9 @@ class translation_unit: public Node{
 
 	private:
 		int type;
-		Nodeptr l,r,p;
+		Nodeptr l;
+		Nodeptr r;
+		Nodeptr p;
 
 	public:
 		//function overloading for constructor
@@ -42,17 +44,25 @@ class external_declaration: public Node{
 
 class function_definition : public Node {
 private:
+	int type;
 	Nodeptr declaration_specifiers;
 	Nodeptr declarator;
 	Nodeptr declarator_list;
 	Nodeptr compound_statement;
 public:
-	function_definition(Nodeptr _declaration_specifiers, Nodeptr _declarator, Nodeptr _declarator_list, Nodeptr _compound_statement):
-	declaration_specifiers(_declaration_specifiers), declarator(_declarator), declarator_list(_declarator_list), compound_statement(_compound_statement){}
+	function_definition(int _type, Nodeptr _declaration_specifiers, Nodeptr _declarator, Nodeptr _declarator_list, Nodeptr _compound_statement):
+	type(_type), declaration_specifiers(_declaration_specifiers), declarator(_declarator), declarator_list(_declarator_list), compound_statement(_compound_statement){}
 
 };
 
-
+class pointer : public Node{
+private:
+	int type;
+	Nodeptr pointerptr;
+	Nodeptr type_qualifier_list;
+public:
+	pointer(int _type, Nodeptr _pointer , Nodeptr _type_qualifier_list ) : type(_type) ,pointerptr(_pointer) , type_qualifier_list(_type_qualifier_list) {}
+};
 
 
 

@@ -105,14 +105,18 @@ extern int yydebug;
     RIGHT_OP = 303,
     PTR_OP = 304,
     NE_OP = 305,
-    IDENTIFIER = 306,
-    FLOAT_NUM = 307,
-    HEX_NUM = 308,
-    INT_NUM = 309,
-    CHAR_CONSTANT = 310,
-    CONSTANT = 311,
-    MOD_ASSGIN = 312,
-    STRING_LITERAL = 313
+    ELLIPSIS = 306,
+    GOTO = 307,
+    UNION = 308,
+    VOLATILE = 309,
+    IDENTIFIER = 310,
+    FLOAT_NUM = 311,
+    HEX_NUM = 312,
+    INT_NUM = 313,
+    CHAR_CONSTANT = 314,
+    CONSTANT = 315,
+    MOD_ASSGIN = 316,
+    STRING_LITERAL = 317
   };
 #endif
 
@@ -127,7 +131,7 @@ union YYSTYPE
   Node* node;
   //TODO: add ast class
 
-#line 131 "src/parser.tab.hpp" /* yacc.c:1909  */
+#line 135 "src/parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

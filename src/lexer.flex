@@ -66,7 +66,10 @@ typedef {return TYPEDEF;}
 void {return VOID;}
 while {return WHILE;}
 sizeof {return SIZEOF;}
-
+... {return ELLIPSIS;}
+goto {return GOTO;}
+union {return UNION;}
+volatile {return VOLATILE;}
 
 
 {IDENTIFIER}      {

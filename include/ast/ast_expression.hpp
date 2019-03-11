@@ -1,5 +1,5 @@
-#ifndef ast_expression_hpp
-#define ast_expression_hpp
+#ifndef AST_EXPRESSION_HPP
+#define AST_EXPRESSION_HPP
 
 #include <string>
 #include <iostream>
@@ -11,14 +11,14 @@ class primary_expression : public Node{
 		int type;
 		std::string* string;
 	public:
-		primary_expression(int type_in, std::string* string_in) : type(type_in),string(string_in){}
-		primary_expression(int type_in, Nodeptr _p) : type(type_in),p(_p){}
+		primary_expression(int type_in, std::string* string_in): type(type_in),string(string_in){}
+		primary_expression(int type_in, Nodeptr _p) : type(type_in), p(_p) {}
 
-		virtual void print(std::ostream &dst) const override{
-			dst << type;
-		}
+		// virtual void print(std::ostream &dst) const /*override*/{
+		// 	dst << type;
+		// }
 
-		// virtual void python(std::string &dst){
+		// virtual void python(std::string &dst) const /*override*/{
 		// 	switch (type) {
 		// 		case 1:
 		// 		case 2:
@@ -32,13 +32,12 @@ class primary_expression : public Node{
 		// 			// p->python(str);
 		// 			// dst = "("+str+")";
 		// 		break;
-		// yylval.str = new std::string (yytext);
 		// 	}
 		// }
 
-		// std::string c() const override{
+		// std::string c() const /*override*/{
 		// 	switch (type) {
-		// 		case 1: yylval.str = new std::string (yytext);
+		// 		case 1:
 		// 		case 2:
 		// 		case 3:
 		// 		 return *string;
@@ -218,5 +217,7 @@ class expression : public Node{
 		expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
 };
+
+
 
 #endif
