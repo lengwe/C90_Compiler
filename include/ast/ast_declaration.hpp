@@ -86,6 +86,8 @@ class type_specifier: public Node{
 		//code-gen python
 		virtual void python(std::string &dst){
 			//skip, no implementation
+      nothing();
+      std::cerr<<"entering type_specifier"<<std::endl
 		}
 };
 
