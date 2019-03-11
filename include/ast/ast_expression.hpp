@@ -18,22 +18,23 @@ class primary_expression : public Node{
 		// 	dst << type;
 		// }
 
-		// virtual void python(std::string &dst) const /*override*/{
-		// 	switch (type) {
-		// 		case 1:
-		// 		case 2:
-		// 		case 3:
-		// 			dst=*string;
-		// 			//std::cout<<dst<<std::endl;
-		// 		break;
-		//
-		// 		case 4:
-		// 			// std::string str;
-		// 			// p->python(str);
-		// 			// dst = "("+str+")";
-		// 		break;
-		// 	}
-		// }
+		virtual void python(std::string &dst) const override{
+			std::cerr<<"entering primary_expression\n";;
+			switch (type) {
+				case 1:
+				case 2:
+				case 3:
+					dst=*string;
+					std::cout<<dst<<std::endl;
+				break;
+
+				case 4:
+					std::string str;
+					p->python(str);
+					dst = "("+str+")";
+				break;
+			}
+		}
 
 		// std::string c() const /*override*/{
 		// 	switch (type) {
@@ -61,6 +62,9 @@ class postfix_expression : public Node{
 		//case 4,5
     postfix_expression(int type_in, Nodeptr _p, std::string *string_in) : type(type_in), p(_p), string(string_in){}
 
+		virtual void python(std::string &dst) const override{
+
+		}
 };
 
 class argument_expression_list : public Node{
@@ -70,6 +74,10 @@ class argument_expression_list : public Node{
 		Nodeptr l,r;
 	public:
 		argument_expression_list(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 
 };
 
@@ -87,6 +95,9 @@ class unary_expression : public Node{
 		//case 4,5
 		unary_expression(int type_in, std::string* string_in, Nodeptr _p) : type(type_in), string(string_in), p(_p) {}
 
+		virtual void python(std::string &dst) const override{
+
+		}
 };
 
 class cast_expression :public Node{
@@ -95,6 +106,10 @@ class cast_expression :public Node{
 		Nodeptr r;
 	public:
 		cast_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 };
 
 class multiplicative_expression : public Node{
@@ -106,6 +121,17 @@ class multiplicative_expression : public Node{
 	public:
 		multiplicative_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
 
+		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			std::cerr<<"entering multiplicative_expression\n";;
+			switch (type) {
+				case 1:
+					l->python(str1);
+					r->python(str2);
+					dst = str1 + "*" + str2;
+				break;
+			}
+		}
 };
 
 class additive_expression : public Node{
@@ -115,6 +141,28 @@ class additive_expression : public Node{
 
 	public:
 		additive_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			std::cerr<<"entering additive_expression\n";;
+			switch(type){
+				case 1:
+				l->python(str1);
+				r->python(str2);
+				dst = str1 + "+" + str2;
+				break;
+
+				case 2:
+				l->python(str1);
+				r->python(str2);
+				dst = str1 + "-" + str2;
+				break;
+
+				default:
+				throw std::runtime_error ("Unknow construct");
+				break;
+			}
+		}
 };
 
 class shift_expression : public Node{
@@ -124,6 +172,10 @@ class shift_expression : public Node{
 
 	public:
 		shift_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 };
 
 class relational_expression : public Node{
@@ -133,6 +185,28 @@ class relational_expression : public Node{
 
 	public:
 		relational_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			std::cerr<<"entering relational_expression\n";
+			switch(type){
+				case 1:
+				l->python(str1);
+				r->python(str2);
+				dst = str1 + "<" + str2;
+				break;
+
+				case 2:
+				l->python(str1);
+				r->python(str2);
+				dst = str1 + ">" + str2;
+				break;
+
+				default:
+				throw std::runtime_error ("Unknow construct");
+				break;
+			}
+		}
 };
 
 class equality_expression : public Node{
@@ -143,6 +217,27 @@ class equality_expression : public Node{
 	public:
 		equality_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
 
+		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			std::cerr<<"entering equality_expression\n";
+			switch(type){
+				case 1:
+				l->python(str1);
+				r->python(str2);
+				dst = str1 + "==" + str2;
+				break;
+
+				case 2:
+				l->python(str1);
+				r->python(str2);
+				dst = str1 + "!=" + str2;
+				break;
+
+				default:
+				throw std::runtime_error ("Unknow construct");
+				break;
+			}
+		}
 };
 
 class and_expression : public Node{
@@ -151,6 +246,10 @@ class and_expression : public Node{
 
 	public:
 		and_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 
 };
 
@@ -161,6 +260,10 @@ class exclusive_or_expression : public Node{
 	public:
 		exclusive_or_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
+		virtual void python(std::string &dst) const override{
+
+		}
+
 };
 
 class inclusive_or_expression : public Node{
@@ -169,6 +272,10 @@ class inclusive_or_expression : public Node{
 
 	public:
 		inclusive_or_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 
 };
 
@@ -179,6 +286,15 @@ class logical_and_expression : public Node{
 	public:
 		logical_and_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
+		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			std::cerr<<"entering logical_and_expression\n";
+					l->python(str1);
+					r->python(str2);
+					dst = str1 + "and" + str2;
+		}
+
+
 };
 
 class logical_or_expression : public Node{
@@ -188,6 +304,14 @@ class logical_or_expression : public Node{
 	public:
 		logical_or_expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
+		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			std::cerr<<"entering logical_or_expression\n";
+					l->python(str1);
+					r->python(str2);
+					dst = str1 + "or" + str2;
+		}
+
 };
 
 class conditional_expression : public Node{
@@ -195,6 +319,10 @@ class conditional_expression : public Node{
 		Nodeptr l,p,r;
 	public:
 		conditional_expression(Nodeptr _l, Nodeptr _p, Nodeptr _r) : l(_l), p(_p), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 
 };
 
@@ -206,6 +334,9 @@ class assignment_expression : public Node{
 	public:
 		assignment_expression(Nodeptr _l, std::string* op_in,Nodeptr _r) : l(_l), assign_op(op_in), r(_r){}
 
+		virtual void python(std::string &dst) const override{
+
+		}
 };
 
 class expression : public Node{
@@ -215,6 +346,10 @@ class expression : public Node{
 
 	public:
 		expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+
+		virtual void python(std::string &dst) const override{
+
+		}
 
 };
 

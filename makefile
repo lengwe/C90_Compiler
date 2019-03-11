@@ -1,5 +1,6 @@
 CPPFLAGS += -std=c++11 -W -Wall -g -Wno-unused-parameter
 CPPFLAGS += -I include
+CPPFLAGS += -Wfatal-errors -ggdb
 
 all : bin/print_canonical
 
