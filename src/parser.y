@@ -213,7 +213,6 @@ translation_unit
 ;
 
 external_declaration
-//???{$$=$1 or class}
 : function_definition           {$$ = new external_declaration(1,$1);}
 | declaration                   {$$ = new external_declaration(2,$1);}
 ;

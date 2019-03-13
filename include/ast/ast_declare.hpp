@@ -2,9 +2,8 @@
 #define AST_DECLARE_HPP
 #include <string>
 #include <iostream>
+#include <vector>
 #include "node.hpp"
-
-
 
 // class abstract_declarator : public Node{
 //   private:
@@ -75,7 +74,7 @@ class declaration_list : public Node{
 		 	declaration_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr << "enter list" << '\n';
+        std::cerr << "enter declaration_list" << '\n';
           std::string str, str2;
           // declaration->python(str);
           // if(declaration_listptr != NULL){
@@ -127,7 +126,8 @@ class declaration : public Node{
         std::string str1, str2;
         declaration_specifiers->python(str1);
         init_declarator_list -> python(str2);
-        dst = str1+str2;
+        std::cerr << "str2 in declaration "<<str2 << '\n';
+        dst = str1+str2+"\n";
       }
 };
 
@@ -143,7 +143,7 @@ class initializer : public Node{
 		 	initializer_list(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering initializer_list\n";
+        std::cerr<<"entering initializer\n";
       }
 };
 
@@ -159,7 +159,7 @@ class struct_declaration_list : public Node{
 		 	struct_declarator_list(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering initializer_list\n";
+          std::cerr<<"entering struct_declaration_list\n";
       }
 };
 
@@ -175,7 +175,7 @@ class struct_declaration : public Node{
 		 	struct_declarator_list(_r){}
 
       virtual void python(std::string &dst) const override{
-            std::cerr<<"entering initializer_list\n";
+            std::cerr<<"entering struct_declaration\n";
       }
 };
 
@@ -204,7 +204,7 @@ class type_name : public Node{
 		 	abstract_declarator(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering initializer_list\n";
+          std::cerr<<"entering struct_or_union\n";
   		}
 };
 
@@ -236,7 +236,7 @@ class struct_declarator_list : public Node{
 		 	struct_declarator_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering initializer_list\n";
+          std::cerr<<"entering struct_declarator_list\n";
   		}
 };
 
@@ -254,7 +254,7 @@ class enum_specifier : public Node{
 		 	identifier(_r), enumerator_list(_s){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering initializer_list\n";
+          std::cerr<<"entering enum_specifier\n";
       }
 };
 
@@ -270,7 +270,7 @@ class enumerator_list : public Node{
 		 	enumerator_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering initializer_list\n";
+          std::cerr<<"entering enumerator_list\n";
       }
 };
 
@@ -286,7 +286,7 @@ class enumerator : public Node{
 		constant_expression(_r){}
 
     virtual void python(std::string &dst) const override{
-        std::cerr<<"entering initializer_list\n";
+        std::cerr<<"entering enumerator\n";
     }
 };
 
@@ -349,13 +349,14 @@ class direct_declarator : public Node{
         switch (type) {
           case 1:
             dst = *identifier;
-            std::cout<<"case 1 in direct_declarator: "<<dst<<std::endl;
+            //global.push_back(dst);
+            std::cerr<<"case 1 in direct_declarator: "<<dst<<std::endl;
           break;
 
           case 2:
             declarator->python(str1);
             dst = "(" + str1 +")";
-            std::cout<<"case 2 in direct_declarator: "<<dst<<std::endl;
+            std::cerr<<"case 2 in direct_declarator: "<<dst<<std::endl;
           break;
 
           case 3:
@@ -363,7 +364,7 @@ class direct_declarator : public Node{
           break;
 
           case 5:
-            std::cout<<"case 5 in direct_declarator\n";
+            std::cerr<<"case 5 in direct_declarator\n";
             direct_declaratorptr->python(str1);
             parameter_type_list->python(str2);
             dst = str1 + "(" + str2 + ")";
@@ -372,7 +373,7 @@ class direct_declarator : public Node{
           case 6:
             direct_declaratorptr->python(str1);
             dst = str1 + "()";
-            std::cout<<"case 6 in direct_declarator: "<<dst<<'\n';
+            std::cerr<<"case 6 in direct_declarator: "<<dst<<'\n';
           break;
         }
       }
@@ -515,7 +516,7 @@ class expression_statement : public Node{
     expression_statement(Nodeptr _l) : expression(_l){}
 
     virtual void python(std::string &dst) const override{
-      std::cerr<<"entering statement_list\n";
+      std::cerr<<"entering expression_statement\n";
     }
 };
 
@@ -531,7 +532,7 @@ class selection_statement : public Node{
 		 	statement_1(_r), statement_2(_s){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering statement_list\n";
+        std::cerr<<"entering selection_statement\n";
       }
 };
 
@@ -548,7 +549,7 @@ class iteration_statement : public Node{
 		 	statement(_r), expression_statement_1(_p),expression_statement_2(_q){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering statement_list\n";
+        std::cerr<<"entering iteration_statement\n";
       }
 };
 
@@ -565,7 +566,7 @@ class labeled_statement : public Node{
 		 	keyword(_keyword), constant_expression(_l), statement(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering statement_list\n";
+        std::cerr<<"entering labeled_statement\n";
   		}
 };
 
@@ -581,7 +582,7 @@ class initializer_list : public Node{
 		 	initializer_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering statement_list\n";
+        std::cerr<<"entering initializer_list\n";
   		}
 };
 
@@ -596,7 +597,7 @@ class struct_declarator : public Node{
 		 	constant_expression(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering statement_list\n";
+        std::cerr<<"entering struct_declarator\n";
   		}
 };
 

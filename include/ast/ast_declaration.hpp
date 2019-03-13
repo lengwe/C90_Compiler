@@ -49,11 +49,12 @@ class init_declarator : public Node{
     init_declarator(Nodeptr _l, Nodeptr _r) : declarator(_l), initializer(_r){}
 
     virtual void python(std::string &dst) const override{
+      std::cerr<<" entering init_declarator\n";
       std::string str1,str2;
       declarator->python(str1);
       if(initializer == NULL){
         dst = str1 + "=0";
-        std::cerr <<"init"<< dst << '\n';
+        std::cerr <<"init "<< dst << '\n';
         return;
       }
       initializer->python(str2);

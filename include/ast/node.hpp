@@ -3,12 +3,15 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Node;
 
 typedef const Node* Nodeptr;
 
 class Node{
+	// protected:
+	// 	std::vector<std::string> global;
 	public:
 		 ~Node() {}
 
@@ -80,17 +83,24 @@ class external_declaration: public Node{
 			std::cerr<<"entering external_declaration\n";
 			std::string str;
 			switch (type) {
-				case 1:
+				case 1:{
 					//print global variable
+					std::string g;
 					p->python(str);
+					// for(int i=0;i<global.size();i++){
+					// 	g = "global" + global[i] +"\n";
+					// }
 					dst = str;
 					std::cerr<<"case 1 in ex: "<<dst<<std::endl;
+				}
 				break;
 
-				case 2:
+				case 2:{
+				//print value of global variable
 					p->python(str);
 					dst = str;
 					std::cerr<<"case 2 in ex: "<<dst<<std::endl;
+				}
 				break;
 			}
 		}
