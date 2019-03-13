@@ -77,11 +77,20 @@ class declaration_list : public Node{
       virtual void python(std::string &dst) const override{
         std::cerr << "enter list" << '\n';
           std::string str, str2;
-          declaration->python(str);
-          if(declaration_listptr != NULL){
-            declaration_listptr->python(str2);
+          // declaration->python(str);
+          // if(declaration_listptr != NULL){
+          //   declaration_listptr->python(str2);
+          // }
+          if(declaration_listptr!=NULL){
+            declaration_listptr->python(str);
+            declaration->python(str2);
+            dst = str + str2;
           }
-          dst = str+","+str2;
+          else{
+            declaration->python(str);
+            dst = str;
+          }
+          //dst = str+","+str2;
       }
 };
 
@@ -361,10 +370,9 @@ class direct_declarator : public Node{
           break;
 
           case 6:
-            std::cout<<"case 5 in direct_declarator\n";
             direct_declaratorptr->python(str1);
             dst = str1 + "()";
-            std::cout<<"case 5 in direct_declarator: "<<dst<<'\n';
+            std::cout<<"case 6 in direct_declarator: "<<dst<<'\n';
           break;
         }
       }
