@@ -16,7 +16,7 @@ class Node{
 		//void print(std::ostream &dst) const=0;
 		virtual void python(std::string &dst)const=0;
 
-		void indent(std::string &dst){
+		void indent(std::string &dst) const{
 
 		  std::size_t pos = 0;
 		  while((pos=dst.find('\n', pos))!=std::string::npos){
@@ -43,21 +43,27 @@ class translation_unit: public Node{
 		translation_unit(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in),l(_l),r(_r) {}
 
 		void python(std::string &dst) const override {
+			std::cerr<<"entering translation_unit\n";
 			std::string str1,str2;
 			switch (type) {
 				case 1:
 					p->python(str1);
 					dst = str1;
+					std::cerr<<"case 1 in trans: "<<dst<<std::endl;
+					break;
 				case 2:
 					if(l!=NULL){
 						l->python(str1);
 						r->python(str2);
 						dst = str1 + str2;
+						std::cerr<<"case 2 in trans: "<<dst<<std::endl;
 					}
 					else{
 						r->python(str2);
 						dst = str2;
+						std::cerr<<"case 2 in trans: "<<dst<<std::endl;
 					}
+				break;
 			}
 		}
 };
@@ -71,7 +77,22 @@ class external_declaration: public Node{
 		external_declaration(int type_in, Nodeptr _p) : type(type_in), p(_p){}
 
 		virtual void python(std::string &dst) const override{
+			std::cerr<<"entering external_declaration\n";
+			std::string str;
+			switch (type) {
+				case 1:
+					//print global variable
+					p->python(str);
+					dst = str;
+					std::cerr<<"case 1 in ex: "<<dst<<std::endl;
+				break;
 
+				case 2:
+					p->python(str);
+					dst = str;
+					std::cerr<<"case 2 in ex: "<<dst<<std::endl;
+				break;
+			}
 		}
 };
 
@@ -81,13 +102,31 @@ private:
 	int type;
 	Nodeptr declaration_specifiers;
 	Nodeptr declarator;
-	Nodeptr declarator_list;
+	Nodeptr declaration_list;
 	Nodeptr compound_statement;
 public:
 	function_definition(int _type, Nodeptr _declaration_specifiers, Nodeptr _declarator, Nodeptr _declarator_list, Nodeptr _compound_statement):
-	type(_type), declaration_specifiers(_declaration_specifiers), declarator(_declarator), declarator_list(_declarator_list), compound_statement(_compound_statement){}
+	type(_type), declaration_specifiers(_declaration_specifiers), declarator(_declarator), declaration_list(_declarator_list), compound_statement(_compound_statement){}
 
 	virtual void python(std::string &dst) const override{
+		std::cerr<<"entering function definition\n";
+		std::string str1, str2, str3;
+		switch (type) {
+			case 1:
+	  		declarator->python(str1);
+				declaration_list->python(str2);
+				compound_statement->python(str3);
+				dst = "def " + str1 + str2 + str3;
+				std::cerr<<"case 1 in func: "<<dst<<std::endl;
+			break;
+
+			case 2:
+				declarator->python(str1);
+				compound_statement->python(str2);
+				dst = "def " + str1 + str2;
+				std::cerr<<"case 2 in func: "<<dst<<std::endl;
+			break;
+		}
 
 	}
 

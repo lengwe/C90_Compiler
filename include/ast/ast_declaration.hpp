@@ -8,16 +8,21 @@
 class declaration_specifiers : public Node{
   private:
     int type;
-    Nodeptr l;
-    Nodeptr r;
+    Nodeptr _declaration_specifiers;
+    Nodeptr declarator;
     Nodeptr s;
 
   public:
 
-    declaration_specifiers(int type_in, Nodeptr _l, Nodeptr _s, Nodeptr _r) : type(type_in), l(_l), r(_r), s(_s){}
+    declaration_specifiers(int type_in, Nodeptr _l, Nodeptr _s, Nodeptr _r) : type(type_in), _declaration_specifiers(_l), declarator(_r), s(_s){}
 
     virtual void python(std::string &dst) const override{
-
+      std::cerr<<" entering declaration_specifiers\n";
+      std::string str1, str2;
+      _declaration_specifiers->python(str1);
+      if(declarator != NULL){
+      declarator->python(str2);
+      }
     }
 
 };
@@ -30,21 +35,29 @@ class init_declarator_list : public Node{
     init_declarator_list(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
     virtual void python(std::string &dst) const override{
-
+      std::cerr<<" entering init_declarator_list\n";
     }
 
 };
 
 class init_declarator : public Node{
   private:
-    Nodeptr l;
-    Nodeptr r;
+    Nodeptr declarator;
+    Nodeptr initializer;
 
   public:
-    init_declarator(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+    init_declarator(Nodeptr _l, Nodeptr _r) : declarator(_l), initializer(_r){}
 
     virtual void python(std::string &dst) const override{
-
+      std::string str1,str2;
+      declarator->python(str1);
+      if(initializer == NULL){
+        dst = str1 + "=0";
+        std::cerr <<"init"<< dst << '\n';
+        return;
+      }
+      initializer->python(str2);
+      dst = str1 + "=" + str2;
     }
 };
 
@@ -59,7 +72,7 @@ class type_specifier: public Node{
 		// }
 		//this function only checks the tree
  		std::string c() const /*override*/{
-			switch (type) {
+      switch (type) {
 				case 1:
 					return "void";
 				break;
@@ -96,8 +109,7 @@ class type_specifier: public Node{
 
 		//code-gen python
 		virtual void python(std::string &dst) const override{
-			//no implementation
-      //nothing();
+      //do nothing
       std::cerr<<"entering type_specifier"<<std::endl;
 		}
 };

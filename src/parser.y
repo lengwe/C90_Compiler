@@ -11,20 +11,19 @@
 %union{
   std::string *str;
   Node* node;
-  //TODO: add ast class
 }
 
 /*KEYWORD*/
 %token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID WHILE CONST
 /*OPERATOR*/
 %token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
-%token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP ELLIPSIS GOTO UNION VOLATILE
+%token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP GOTO UNION VOLATILE
 %token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM CHAR_CONSTANT CONSTANT MOD_ASSGIN STRING_LITERAL
 
 
 %type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONSTANT SIZEOF STRUCT UNION ENUM CONST
 %type <str> TYPEDEF STATIC AUTO ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSGIN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN '*' '+' '-' '~' '!' '&' '='
-%type <str> unary_operator assignment_operator  VOLATILE ELLIPSIS GOTO CONTINUE BREAK RETURN DEFAULT CASE FOR
+%type <str> unary_operator assignment_operator  VOLATILE GOTO CONTINUE BREAK RETURN DEFAULT CASE FOR
 %type <node> type_specifier translation_unit external_declaration declaration_specifiers
 //expressions
 %type <node> primary_expression argument_expression_list unary_expression cast_expression multiplicative_expression additive_expression shift_expression relational_expression
@@ -97,8 +96,8 @@ multiplicative_expression
 ;
 
 additive_expression
-: multiplicative_expression                          {$$ = $1;}
-| additive_expression '+' multiplicative_expression  {$$ = new additive_expression(1,$1,$3);}
+: multiplicative_expression                          {$$ = $1; std::cerr << "add milt" << '\n';}
+| additive_expression '+' multiplicative_expression  {$$ = new additive_expression(1,$1,$3); std::cerr << "plus" << '\n';}
 | additive_expression '-' multiplicative_expression  {$$ = new additive_expression(2,$1,$3);}
 ;
 
@@ -196,7 +195,7 @@ init_declarator_list
 ;
 
 init_declarator
-: declarator                                    {$$ = $1;}
+: declarator                                    {$$ = new init_declarator($1,NULL);}
 | declarator '=' initializer                    {$$ = new init_declarator($1,$3);}
 ;
 
@@ -241,8 +240,8 @@ struct_or_union_specifier
 function_definition
 : declaration_specifiers declarator declaration_list compound_statement  {$$ = new function_definition(1,$1,$2,$3,$4);}
 | declaration_specifiers declarator compound_statement                   {$$ = new function_definition(2,$1,$2,NULL,$3);}
-| declarator declaration_list compound_statement                         {$$ = new function_definition(3,NULL,$1,$2,$3);}
-| declarator compound_statement                                          {$$ = new function_definition(4,NULL,$1,NULL,$2);}
+// | declarator declaration_list compound_statement                         {$$ = new function_definition(3,NULL,$1,$2,$3);}
+// | declarator compound_statement                                          {$$ = new function_definition(4,NULL,$1,NULL,$2);}
 ;
 
 
@@ -266,9 +265,9 @@ function_definition
 
 compound_statement
 : '{' '}'                                                      {$$ = new compound_statement(1,NULL,NULL); }
-| '{' statement_list '}'                                       {$$ = $2; }
-| '{' declaration_list '}'                                     {$$ = $2; }
-| '{' declaration_list statement_list '}'                      {$$ = new compound_statement(2,$3,$2); }
+| '{' statement_list '}'                                       {$$ = new compound_statement(2,$2,NULL); }
+| '{' declaration_list '}'                                     {$$ = new compound_statement(3,NULL,$2); }
+| '{' declaration_list statement_list '}'                      {$$ = new compound_statement(4,$3,$2); }
 ;
 
 declaration_list
@@ -318,6 +317,7 @@ type_name
 //| specifier_qualifier_list abstract_declarator                 {$$ = new type_name(1,$1, $2);}
 ;
 
+
 specifier_qualifier_list
 : type_specifier specifier_qualifier_list                            {$$ = new specifier_qualifier_list(1,$1,$2,NULL);}
 | type_specifier                                                     {$$ = $1;}
@@ -355,20 +355,22 @@ enumerator
 // : CONST                                                              {$$ = new type_qualifier(1,$1);}
 // | VOLATILE                                                           {$$ = new type_qualifier(2,$1);}
 // ;
+//
+// identifier_list
+// : IDENTIFIER                                                         {$$ = new identifier_list(1,$1,NULL);}
+// | identifier_list ',' IDENTIFIER                                     {$$ = new identifier_list(2,$3,$1);}
 
-identifier_list
-: IDENTIFIER                                                         {$$ = new identifier_list(1,$1,NULL);}
-| identifier_list ',' IDENTIFIER                                     {$$ = new identifier_list(2,$3,$1);}
-;
+
+
 
 direct_declarator
-: IDENTIFIER                                                         {$$ = new direct_declarator(1,$1,NULL,NULL,NULL,NULL,NULL);}
-| '(' declarator ')'                                                 {$$ = new direct_declarator(2,NULL,NULL,$2,NULL,NULL,NULL);}
-| direct_declarator '[' constant_expression ']'                      {$$ = new direct_declarator(3,NULL,$1,NULL,$3,NULL,NULL);}
-| direct_declarator '[' ']'                                          {$$ = new direct_declarator(4,NULL,$1,NULL,NULL,NULL,NULL);}
-| direct_declarator '(' parameter_type_list ')'                      {$$ = new direct_declarator(5,NULL,$1,NULL,NULL,$3,NULL);}
-| direct_declarator '(' identifier_list ')'                          {$$ = new direct_declarator(6,NULL,$1,NULL,NULL,NULL,$3);}
-| direct_declarator '(' ')'                                          {$$ = new direct_declarator(7,NULL,$1,NULL,NULL,NULL,NULL);}
+: IDENTIFIER                                                         {$$ = new direct_declarator(1,$1,NULL,NULL,NULL,NULL);}
+| '(' declarator ')'                                                 {$$ = new direct_declarator(2,NULL,NULL,$2,NULL,NULL);}
+| direct_declarator '[' constant_expression ']'                      {$$ = new direct_declarator(3,NULL,$1,NULL,$3,NULL);}
+| direct_declarator '[' ']'                                          {$$ = new direct_declarator(4,NULL,$1,NULL,NULL,NULL);}
+| direct_declarator '(' parameter_type_list ')'                      {$$ = new direct_declarator(5,NULL,$1,NULL,NULL,$3);}
+//| direct_declarator '(' identifier_list ')'                          {$$ = new direct_declarator(6,NULL,$1,NULL,NULL,NULL,$3);}
+| direct_declarator '(' ')'                                          {$$ = new direct_declarator(6,NULL,$1,NULL,NULL,NULL);}
 ;
 
 
@@ -378,7 +380,7 @@ parameter_list
 ;
 parameter_type_list
 : parameter_list                                                     {$$ = $1;}
-| parameter_list ',' ELLIPSIS                                        {$$ = new parameter_type_list(1,$1,$3);}
+//| parameter_list ',' ELLIPSIS                                        {$$ = new parameter_type_list(1,$1,$3);}
 ;
 parameter_declaration
 : declaration_specifiers declarator                                  {$$ = new parameter_declaration(1,$1,$2,NULL);}

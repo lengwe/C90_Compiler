@@ -25,7 +25,7 @@ class primary_expression : public Node{
 				case 2:
 				case 3:
 					dst=*string;
-					std::cout<<dst<<std::endl;
+					//std::cout<<dst<<std::endl;
 				break;
 
 				case 4:
@@ -137,7 +137,8 @@ class multiplicative_expression : public Node{
 class additive_expression : public Node{
 	private:
 		int type;
-		Nodeptr l,r;
+		Nodeptr l;
+		Nodeptr r;
 
 	public:
 		additive_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
@@ -348,7 +349,7 @@ class expression : public Node{
 		expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
 		virtual void python(std::string &dst) const override{
-
+			std::cerr<<"entering expression\n";
 		}
 
 };
