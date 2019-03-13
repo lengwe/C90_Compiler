@@ -20,6 +20,7 @@ class primary_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::cerr<<"entering primary_expression\n";;
+			std::string str;
 			switch (type) {
 				case 1:
 				case 2:
@@ -27,12 +28,15 @@ class primary_expression : public Node{
 					dst=*string;
 					//std::cout<<dst<<std::endl;
 				break;
-
 				case 4:
-					std::string str;
 					p->python(str);
 					dst = "("+str+")";
 				break;
+				case 6:
+					p->python(str);
+					dst = "-("+str+")";
+				break;
+
 			}
 		}
 
@@ -336,7 +340,11 @@ class assignment_expression : public Node{
 		assignment_expression(Nodeptr _l, std::string* op_in,Nodeptr _r) : l(_l), assign_op(op_in), r(_r){}
 
 		virtual void python(std::string &dst) const override{
+			std::string str1, str2;
+			l->python(str1);
+			r->python(str2);
 
+			dst = str1 + *assign_op + str2;
 		}
 };
 

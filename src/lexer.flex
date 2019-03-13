@@ -10,10 +10,10 @@ extern "C" int fileno(FILE *stream);
 %}
 KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|sizeof|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
-OPERATOR [\=|+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|]
+OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|]
 EXPONENT    [eE][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
-DECIMAL_CONSTANT  [1-9][0-9]*
+DECIMAL_CONSTANT  ([1-9][0-9]*)|[0]*
 HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
 FLOAT_SUFFIX      [f|F|l|L]
 INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
@@ -24,7 +24,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 {OPERATOR}        {
   std::string op(yytext);
-  std::cerr << yytext << '\n';
+  std::cerr << op << '\n';
   if(op == "="){
     return '=';
   }
@@ -157,18 +157,18 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 }
 {DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
 
-[+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
   yylval.str = new std::string (yytext);
   return CONSTANT;
 }
 
 
-([+-])?{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
+{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
   yylval.str = new std::string (yytext);
   return CONSTANT;
 }
 
-([+-])?([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
+([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
   yylval.str = new std::string (yytext);
   return CONSTANT;
 }

@@ -57,7 +57,7 @@ class init_declarator : public Node{
         return;
       }
       initializer->python(str2);
-      dst = str1 + "=" + str2;
+      dst = str1 + "=" + str2 + '\n';
     }
 };
 

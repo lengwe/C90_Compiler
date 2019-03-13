@@ -45,6 +45,8 @@ ROOT:  translation_unit  {g_root = $1;}
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
 | CONSTANT                   {$$ = new primary_expression(2,$1);}
+| '+' CONSTANT               {$$ = new primary_expression(5,$1);}
+| '-' CONSTANT                {$$ = new primary_expression(6,$1);}
 | STRING_LITERAL             {$$ = new primary_expression(3,$1);}
 | '(' expression ')'         {$$ = new primary_expression(4,$2);}
 ;
