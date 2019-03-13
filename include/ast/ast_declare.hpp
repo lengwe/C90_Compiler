@@ -75,9 +75,13 @@ class declaration_list : public Node{
 		 	declaration_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::string str;
+        std::cerr << "enter list" << '\n';
+          std::string str, str2;
           declaration->python(str);
-          dst = str;
+          if(declaration_listptr != NULL){
+            declaration_listptr->python(str2);
+          }
+          dst = str+","+str2;
       }
 };
 
@@ -94,6 +98,7 @@ class declarator : public Node{
 
       virtual void python(std::string &dst) const override{
         std::cerr<<"entering declarator\n";
+
       }
 };
 
@@ -378,24 +383,36 @@ class parameter_list : public Node{
 
       virtual void python(std::string &dst) const override{
         std::cerr<<"entering parameter_list\n";
+        std::string str1, str2 = "";
+        parameter_declaration->python(str1);
+        if(parameter_listptr == NULL){
+          dst = str1;
+          return;
+        }
+        parameter_listptr->python(str2);
+        dst = str2+ ", " + str1;
       }
 };
 
-// class parameter_type_list : public Node{
-//   private:
-//     int type;
-//     Nodeptr parameter_list;
-// 		std::string* ellipsis;
-//
-//
-//   public:
-//     parameter_type_list(int type_in,  Nodeptr _l,std::string* _r) : type(type_in), parameter_list(_l),
-// 		 	ellipsis(_r){}
-//
-//       virtual void python(std::string &dst) const override{
-//
-//       }
-// };
+class parameter_type_list : public Node{
+  private:
+    int type;
+    Nodeptr parameter_list;
+		std::string* ellipsis;
+
+
+  public:
+    parameter_type_list(int type_in,  Nodeptr _l,std::string* _r) : type(type_in), parameter_list(_l),
+		 	ellipsis(_r){}
+
+      virtual void python(std::string &dst) const override{
+        std::string str;
+        if(ellipsis == NULL){
+           parameter_list->python(str);
+          dst = str;
+        }
+      }
+};
 
 class parameter_declaration : public Node{
   private:
@@ -410,6 +427,10 @@ class parameter_declaration : public Node{
 
       virtual void python(std::string &dst) const override{
           std::cerr<<" entering parameter_declaration\n";
+          std::string str1, str2;
+          declarator->python(str1);
+          declaration_specifiers->python(str2);
+          dst = str1 + str2;
       }
 };
 

@@ -44,9 +44,9 @@ ROOT:  translation_unit  {g_root = $1;}
 
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
+| '+' CONSTANT               {$$ = new primary_expression(2,$2);}
+| '-' CONSTANT                {$$ = new primary_expression(6,$2);}
 | CONSTANT                   {$$ = new primary_expression(2,$1);}
-| '+' CONSTANT               {$$ = new primary_expression(5,$1);}
-| '-' CONSTANT                {$$ = new primary_expression(6,$1);}
 | STRING_LITERAL             {$$ = new primary_expression(3,$1);}
 | '(' expression ')'         {$$ = new primary_expression(4,$2);}
 ;
@@ -98,15 +98,15 @@ multiplicative_expression
 ;
 
 additive_expression
-: multiplicative_expression                          {$$ = $1; std::cerr << "add milt" << '\n';}
-| additive_expression '+' multiplicative_expression  {$$ = new additive_expression(1,$1,$3); std::cerr << "plus" << '\n';}
+: multiplicative_expression                          {$$ = $1;}
+| additive_expression '+' multiplicative_expression  {$$ = new additive_expression(1,$1,$3);}
 | additive_expression '-' multiplicative_expression  {$$ = new additive_expression(2,$1,$3);}
 ;
 
 shift_expression
 : additive_expression                                {$$ = $1;}
-| shift_expression LEFT_OP additive_expression       {$$ = new shift_expression(1,$1,$3);}
-| shift_expression RIGHT_OP additive_expression      {$$ = new shift_expression(1,$1,$3);}
+| shift_expression '<''<' additive_expression       {$$ = new shift_expression(1,$1,$4);}
+| shift_expression '>''>' additive_expression      {$$ = new shift_expression(2,$1,$4);}
 ;
 
 relational_expression
@@ -242,8 +242,8 @@ struct_or_union_specifier
 function_definition
 : declaration_specifiers declarator declaration_list compound_statement  {$$ = new function_definition(1,$1,$2,$3,$4);}
 | declaration_specifiers declarator compound_statement                   {$$ = new function_definition(2,$1,$2,NULL,$3);}
-// | declarator declaration_list compound_statement                         {$$ = new function_definition(3,NULL,$1,$2,$3);}
-// | declarator compound_statement                                          {$$ = new function_definition(4,NULL,$1,NULL,$2);}
+// | declarator declaration_list compound_statement                      {$$ = new function_definition(3,NULL,$1,$2,$3);}
+// | declarator compound_statement                                     {$$ = new function_definition(4,NULL,$1,NULL,$2);}
 ;
 
 

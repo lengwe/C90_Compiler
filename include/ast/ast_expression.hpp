@@ -32,9 +32,9 @@ class primary_expression : public Node{
 					p->python(str);
 					dst = "("+str+")";
 				break;
+				case 5:
 				case 6:
-					p->python(str);
-					dst = "-("+str+")";
+					dst = "-" + *string;
 				break;
 
 			}
@@ -173,13 +173,22 @@ class additive_expression : public Node{
 class shift_expression : public Node{
 	private:
 		int type;
-		Nodeptr l,r;
+		Nodeptr shift_expressionptr,additive_expression;
 
 	public:
-		shift_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+		shift_expression(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), shift_expressionptr(_l), additive_expression(_r){}
 
 		virtual void python(std::string &dst) const override{
-
+			std::string str1, str2, op;
+			shift_expressionptr->python(str1);
+			additive_expression->python(str2);
+			if(type == 1){
+				op = "<<";
+			}
+			else if(type == 2){
+				op = ">>";
+			}
+			dst = str1 + op + str2;
 		}
 };
 
