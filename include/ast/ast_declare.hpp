@@ -409,7 +409,6 @@ class parameter_type_list : public Node{
     Nodeptr parameter_list;
 		std::string* ellipsis;
 
-
   public:
     parameter_type_list(int type_in,  Nodeptr _l,std::string* _r) : type(type_in), parameter_list(_l),
 		 	ellipsis(_r){}
@@ -474,7 +473,23 @@ class jump_statement : public Node{
 		 	id(_id), expression(_l){}
 
       virtual void python(std::string &dst) const override{
-                        std::cerr<<"entering jump_statement\n";
+        std::string str;
+        std::cerr<<"entering jump_statement\n";
+        switch(type){
+          case 1:
+          case 2:
+          case 3:
+          break;
+
+          case 4:
+            dst = "return";
+          break;
+
+          case 5:
+            expression->python(str);
+            dst = "return " + str;
+          break;
+        }
       }
 };
 
@@ -503,7 +518,17 @@ class statement_list : public Node{
 		 	statement_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-      std::cerr<<"entering statement_list\n";
+        std::string str, str2;
+        std::cerr<<"entering statement_list\n";
+        if(statement_listptr==NULL){
+          statement->python(str);
+          dst = str;
+        }
+        else{
+          statement_listptr->python(str);
+          statement->python(str2);
+          dst = str+str2;
+        }
       }
 };
 
