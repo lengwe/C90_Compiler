@@ -52,11 +52,12 @@ class compound_statement : public Node{
           break;
 
           case 4:
-            statement_list->python(str1);
-            declaration_list->python(str2);
+            declaration_list->python(str1);
+            statement_list->python(str2);
             indent(str1);
             indent(str2);
             dst = ":\n" + str1 + str2;
+            std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
             break;
         }
       }
@@ -541,7 +542,9 @@ class expression_statement : public Node{
     expression_statement(Nodeptr _l) : expression(_l){}
 
     virtual void python(std::string &dst) const override{
-      std::cerr<<"entering expression_statement\n";
+      std::string str;
+      expression->python(str);
+      dst = str;
     }
 };
 

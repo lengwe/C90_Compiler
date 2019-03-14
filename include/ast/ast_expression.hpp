@@ -67,20 +67,50 @@ class postfix_expression : public Node{
     postfix_expression(int type_in, Nodeptr _p, std::string *string_in) : type(type_in), p(_p), string(string_in){}
 
 		virtual void python(std::string &dst) const override{
+			std::string str, str2;
+			switch (type) {
+				case 1:
+					l->python(str);
+					r->python(str2);
+					dst = str+"["+str+"]";
+				break;
 
+				case 2:
+					p->python(str);
+					dst = str+"()";
+				break;
+
+				case 3:
+					l->python(str);
+					r->python(str2);
+					dst = str+"("+str2+")";
+				break;
+
+				case 4:
+					l->python(str);
+					dst = str+"."+(*string);
+				break;
+
+				case 5:
+				case 6:
+				case 7:
+				break;
+			}
 		}
 };
 
 class argument_expression_list : public Node{
 	private:
 		int type;
-		Nodeptr p;
 		Nodeptr l,r;
 	public:
 		argument_expression_list(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
 
 		virtual void python(std::string &dst) const override{
-
+			std::string str,str2;
+			l->python(str);
+			r->python(str2);
+			dst = str+","+str2;
 		}
 
 };
@@ -100,7 +130,21 @@ class unary_expression : public Node{
 		unary_expression(int type_in, std::string* string_in, Nodeptr _p) : type(type_in), string(string_in), p(_p) {}
 
 		virtual void python(std::string &dst) const override{
+			std::cerr<<"entering unary_expression\n";
+			std::string str;
+			switch (type) {
+				case 3:
+					p->python(str);
+					dst = (*string)+str;
+					std::cout<<"string in unary_expression "<<*string<<'\n';
+				break;
 
+				case 1:
+				case 2:
+				case 4:
+				case 5:
+				break;
+			}
 		}
 };
 
@@ -366,7 +410,11 @@ class expression : public Node{
 		expression(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
 
 		virtual void python(std::string &dst) const override{
+			std::string str, str2;
 			std::cerr<<"entering expression\n";
+			l->python(str);
+			r->python(str2);
+			dst = str+","+str2;
 		}
 
 };
