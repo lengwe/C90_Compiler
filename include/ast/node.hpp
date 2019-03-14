@@ -4,14 +4,16 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <regex>
 
 class Node;
+
+extern std::vector<std::string> global;
 
 typedef const Node* Nodeptr;
 
 class Node{
-	// protected:
-	// 	std::vector<std::string> global;
+
 	public:
 		 ~Node() {}
 
@@ -27,7 +29,7 @@ class Node{
 		    pos++;
 		  }
 
-		  dst.insert(0,1,'\t');
+		  //dst.insert(0,1,'\t');
 		}
 
 };
@@ -81,15 +83,12 @@ class external_declaration: public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::cerr<<"entering external_declaration\n";
-			std::string str;
+			std::string str,g;
+			std::regex id("^.*()$");
 			switch (type) {
 				case 1:{
 					//print global variable
-					std::string g;
 					p->python(str);
-					// for(int i=0;i<global.size();i++){
-					// 	g = "global" + global[i] +"\n";
-					// }
 					dst = str;
 					std::cerr<<"case 1 in ex: "<<dst<<std::endl;
 				}
@@ -99,6 +98,15 @@ class external_declaration: public Node{
 				//print value of global variable
 					p->python(str);
 					dst = str;
+					std::size_t pos = str.find("=");
+					std::string variable(str,0,pos);
+					if(!regex_match(variable,id)){
+						std::cout<<"regex\n";
+						global.push_back(variable);
+					}
+					for(int i=0; i<global.size(); i++){
+						std::cout<<"global"<<global[i];
+					}
 					std::cerr<<"case 2 in ex: "<<dst<<std::endl;
 				}
 				break;
@@ -126,6 +134,8 @@ public:
 	  		declarator->python(str1);
 				declaration_list->python(str2);
 				compound_statement->python(str3);
+				indent(str2);
+				indent(str3);
 				dst = "def " + str1 + str2 + str3;
 				std::cerr<<"case 1 in func: "<<dst<<std::endl;
 			break;
@@ -133,6 +143,7 @@ public:
 			case 2:
 				declarator->python(str1);
 				compound_statement->python(str2);
+				indent(str2);
 				dst = "def " + str1 + str2;
 				std::cerr<<"case 2 in func: "<<dst<<std::endl;
 			break;

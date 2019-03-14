@@ -1,4 +1,5 @@
 #include "ast.hpp"
+std::vector<std::string> global;
 
 int main()
 {

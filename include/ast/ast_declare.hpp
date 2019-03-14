@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <regex>
 #include "node.hpp"
 
 // class abstract_declarator : public Node{
@@ -33,6 +34,7 @@ class compound_statement : public Node{
 		 	declaration_list(_r){}
 
       virtual void python(std::string &dst) const override{
+
         std::string str1, str2;
         switch (type) {
           case 1:
@@ -41,22 +43,20 @@ class compound_statement : public Node{
 
           case 2:
             statement_list->python(str1);
-            indent(str1);
             dst = ":\n" + str1;
           break;
 
           case 3:
             declaration_list->python(str1);
-            indent(str1);
             dst = ":\n" + str1;
           break;
 
           case 4:
             declaration_list->python(str1);
             statement_list->python(str2);
-            indent(str1);
-            indent(str2);
             dst = ":\n" + str1 + str2;
+            std::cout<<"str1: "<<str1<<'\n';
+            std::cout<<"str2: "<<str2<<'\n';
             std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
             break;
         }
@@ -350,7 +350,6 @@ class direct_declarator : public Node{
         switch (type) {
           case 1:
             dst = *identifier;
-            //global.push_back(dst);
             std::cerr<<"case 1 in direct_declarator: "<<dst<<std::endl;
           break;
 
@@ -528,7 +527,9 @@ class statement_list : public Node{
         else{
           statement_listptr->python(str);
           statement->python(str2);
-          dst = str+str2;
+          dst = str+'\n'+str2;
+          std::cerr<<"str in statement_list: "<<str<<'\n';
+          std::cerr<<"str2 in statement_list: "<<str2<<'\n';
         }
       }
 };
