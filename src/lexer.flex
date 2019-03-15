@@ -25,7 +25,6 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 {OPERATOR}        {
   std::string op(yytext);
-  std::cerr << op << '\n';
   if(op == "="){
     return '=';
   }

@@ -594,6 +594,14 @@ class iteration_statement : public Node{
 
       virtual void python(std::string &dst) const override{
         std::cerr<<"entering iteration_statement\n";
+        std::string name, str1, str2;
+        if(type == 1){
+          name = "while ";
+        }
+        expression->python(str1);
+        statement->python(str2);
+        indent(str2);
+        dst = name+str1+str2;
       }
 };
 
