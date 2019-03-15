@@ -42,23 +42,23 @@ class compound_statement : public Node{
         std::string str1, str2;
         switch (type) {
           case 1:
-            dst = ":\n" + g;
+            dst = g;
           break;
 
           case 2:
             statement_list->python(str1);
-            dst = ":\n" + g + str1;
+            dst = g + str1;
           break;
 
           case 3:
             declaration_list->python(str1);
-            dst = ":\n" + g + str1;
+            dst = g + str1;
           break;
 
           case 4:
             declaration_list->python(str1);
             statement_list->python(str2);
-            dst = ":\n" + g + str1 + str2;
+            dst = g + str1 + str2;
             std::cout<<"str1: "<<str1<<'\n';
             std::cout<<"str2: "<<str2<<'\n';
             std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';

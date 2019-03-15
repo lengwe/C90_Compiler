@@ -24,12 +24,12 @@ class Node{
 		void indent(std::string &dst) const{
 
 		  std::size_t pos = 0;
-		  while((pos=dst.find('\n', pos))!=std::string::npos){
+		  while((pos=dst.find('\n', pos+1))!=std::string::npos){
 		    dst.insert(pos+1,1,'\t');
-		    pos++;
+		    //pos++;
 		  }
 
-		  //dst.insert(0,1,'\t');
+		  dst.insert(0,1,'\t');
 		}
 
 };
@@ -136,20 +136,20 @@ public:
 				compound_statement->python(str3);
 				indent(str2);
 				indent(str3);
-				dst = "def " + str1 + str2 + str3;
+				dst = "def " + str1 + ":\n" + str2 + str3;
 				std::cerr<<"case 1 in func: "<<dst<<std::endl;
-			break;
+				break;
 
-			case 2:
+				case 2:
 				declarator->python(str1);
 				compound_statement->python(str2);
 				indent(str2);
-				dst = "def " + str1 + str2;
-//                                std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
-//                                std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
+				dst = "def " + str1 + ":\n" + str2 ;
+				std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
+				std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
 				std::cerr<<"case 2 in func: "<<dst<<std::endl;
-			break;
-		}
+				break;
+			}
 
 	}
 
