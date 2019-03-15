@@ -84,7 +84,7 @@ class external_declaration: public Node{
 		virtual void python(std::string &dst) const override{
 			std::cerr<<"entering external_declaration\n";
 			std::string str,g;
-			std::regex id("^.*()$");
+                        std::regex id("^.*[(].*[)]$");
 			switch (type) {
 				case 1:{
 					//print global variable
@@ -101,12 +101,12 @@ class external_declaration: public Node{
 					std::size_t pos = str.find("=");
 					std::string variable(str,0,pos);
 					if(!regex_match(variable,id)){
-						std::cout<<"regex\n";
+                                                //std::cout<<"regex\n";
 						global.push_back(variable);
 					}
-					for(int i=0; i<global.size(); i++){
-						std::cout<<"global"<<global[i];
-					}
+                                        for(int i=0; i<global.size(); i++){
+                                                std::cout<<"global"<<global[i];
+                                        }
 					std::cerr<<"case 2 in ex: "<<dst<<std::endl;
 				}
 				break;
@@ -145,6 +145,8 @@ public:
 				compound_statement->python(str2);
 				indent(str2);
 				dst = "def " + str1 + str2;
+//                                std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
+//                                std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
 				std::cerr<<"case 2 in func: "<<dst<<std::endl;
 			break;
 		}

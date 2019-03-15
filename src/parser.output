@@ -14,13 +14,9 @@ Terminals unused in grammar
    INT_NUM
    CHAR_CONSTANT
    MOD_ASSGIN
+   ELLIPSIS
 
 
-State 90 conflicts: 2 shift/reduce
-State 243 conflicts: 2 shift/reduce
-State 244 conflicts: 2 shift/reduce
-State 245 conflicts: 2 shift/reduce
-State 246 conflicts: 2 shift/reduce
 State 291 conflicts: 1 shift/reduce
 
 
@@ -78,8 +74,8 @@ Grammar
    39                 | shift_expression '>' '>' additive_expression
 
    40 relational_expression: shift_expression
-   41                      | relational_expression '<' shift_expression
-   42                      | relational_expression '>' shift_expression
+   41                      | relational_expression LESS shift_expression
+   42                      | relational_expression MORE shift_expression
    43                      | relational_expression LE_OP shift_expression
    44                      | relational_expression GE_OP shift_expression
 
@@ -279,9 +275,9 @@ $end (0) 0
 '/' (47) 32
 ':' (58) 59 132 133 174 175 176
 ';' (59) 114 115 123 152 153 154 155 156 165 166 171
-'<' (60) 38 41
+'<' (60) 38
 '=' (61) 62 83 140
-'>' (62) 39 42
+'>' (62) 39
 '?' (63) 59
 '[' (91) 7 143 144
 ']' (93) 7 143 144
@@ -350,130 +346,133 @@ CHAR_CONSTANT (313)
 CONSTANT (314) 3
 MOD_ASSGIN (315)
 STRING_LITERAL (316) 4
+MORE (317) 42
+LESS (318) 41
+ELLIPSIS (319)
 
 
 Nonterminals, with rules where they appear
 
-$accept (86)
+$accept (89)
     on left: 0
-ROOT (87)
+ROOT (90)
     on left: 1, on right: 0
-primary_expression (88)
+primary_expression (91)
     on left: 2 3 4 5, on right: 6
-postfix_expression (89)
+postfix_expression (92)
     on left: 6 7 8 9 10 11 12 13, on right: 7 8 9 10 11 12 13 16
-argument_expression_list (90)
+argument_expression_list (93)
     on left: 14 15, on right: 9 15
-unary_expression (91)
+unary_expression (94)
     on left: 16 17 18 19 20 21, on right: 17 18 20 28 61
-unary_operator (92)
+unary_operator (95)
     on left: 22 23 24 25 26 27, on right: 19
-cast_expression (93)
+cast_expression (96)
     on left: 28 29, on right: 19 29 30 31 32 33
-multiplicative_expression (94)
+multiplicative_expression (97)
     on left: 30 31 32 33, on right: 31 32 33 34 35 36
-additive_expression (95)
+additive_expression (98)
     on left: 34 35 36, on right: 35 36 37 38 39
-shift_expression (96)
+shift_expression (99)
     on left: 37 38 39, on right: 38 39 40 41 42 43 44
-relational_expression (97)
+relational_expression (100)
     on left: 40 41 42 43 44, on right: 41 42 43 44 45 46 47
-equality_expression (98)
+equality_expression (101)
     on left: 45 46 47, on right: 46 47 48 49
-and_expression (99)
+and_expression (102)
     on left: 48 49, on right: 49 50 51
-exclusive_or_expression (100)
+exclusive_or_expression (103)
     on left: 50 51, on right: 51 52 53
-inclusive_or_expression (101)
+inclusive_or_expression (104)
     on left: 52 53, on right: 53 54 55
-logical_and_expression (102)
+logical_and_expression (105)
     on left: 54 55, on right: 55 56 57
-logical_or_expression (103)
+logical_or_expression (106)
     on left: 56 57, on right: 57 58 59
-conditional_expression (104)
+conditional_expression (107)
     on left: 58 59, on right: 59 60 75
-assignment_expression (105)
+assignment_expression (108)
     on left: 60 61, on right: 14 15 61 73 74 116
-assignment_operator (106)
+assignment_operator (109)
     on left: 62 63 64 65 66 67 68 69 70 71 72, on right: 61
-expression (107)
+expression (110)
     on left: 73 74, on right: 5 7 59 74 156 166 167 168 169 170 171
     173
-constant_expression (108)
+constant_expression (111)
     on left: 75, on right: 132 133 140 143 175
-declaration_specifiers (109)
+declaration_specifiers (112)
     on left: 76 77 78 79, on right: 77 79 105 106 114 115 150 151
-init_declarator_list (110)
+init_declarator_list (113)
     on left: 80 81, on right: 81 115
-init_declarator (111)
+init_declarator (114)
     on left: 82 83, on right: 80 81
-storage_class_specifier (112)
+storage_class_specifier (115)
     on left: 84 85 86, on right: 76 77
-translation_unit (113)
+translation_unit (116)
     on left: 87 88, on right: 1 88
-external_declaration (114)
+external_declaration (117)
     on left: 89 90, on right: 87 88
-type_specifier (115)
+type_specifier (118)
     on left: 91 92 93 94 95 96 97 98 99 100 101, on right: 78 79 127
     128
-struct_or_union_specifier (116)
+struct_or_union_specifier (119)
     on left: 102 103 104, on right: 100
-function_definition (117)
+function_definition (120)
     on left: 105 106, on right: 89
-compound_statement (118)
+compound_statement (121)
     on left: 107 108 109 110, on right: 105 106 158
-declaration_list (119)
+declaration_list (122)
     on left: 111 112, on right: 105 109 110 112
-declarator (120)
+declarator (123)
     on left: 113, on right: 82 83 105 106 131 133 142 150
-declaration (121)
+declaration (124)
     on left: 114 115, on right: 90 111 112
-initializer (122)
+initializer (125)
     on left: 116 117 118, on right: 83 119 120
-initializer_list (123)
+initializer_list (126)
     on left: 119 120, on right: 117 118 120
-struct_declaration_list (124)
+struct_declaration_list (127)
     on left: 121 122, on right: 102 103 122
-struct_declaration (125)
+struct_declaration (128)
     on left: 123, on right: 121 122
-struct_or_union (126)
+struct_or_union (129)
     on left: 124 125, on right: 102 103 104
-type_name (127)
+type_name (130)
     on left: 126, on right: 21 29
-specifier_qualifier_list (128)
+specifier_qualifier_list (131)
     on left: 127 128, on right: 123 126 127
-struct_declarator_list (129)
+struct_declarator_list (132)
     on left: 129 130, on right: 123 130
-struct_declarator (130)
+struct_declarator (133)
     on left: 131 132 133, on right: 129 130
-enum_specifier (131)
+enum_specifier (134)
     on left: 134 135 136, on right: 101
-enumerator_list (132)
+enumerator_list (135)
     on left: 137 138, on right: 134 135 138
-enumerator (133)
+enumerator (136)
     on left: 139 140, on right: 137 138
-direct_declarator (134)
+direct_declarator (137)
     on left: 141 142 143 144 145 146, on right: 113 143 144 145 146
-parameter_list (135)
+parameter_list (138)
     on left: 147 148, on right: 148 149
-parameter_type_list (136)
+parameter_type_list (139)
     on left: 149, on right: 145
-parameter_declaration (137)
+parameter_declaration (140)
     on left: 150 151, on right: 147 148
-jump_statement (138)
+jump_statement (141)
     on left: 152 153 154 155 156, on right: 162
-statement (139)
+statement (142)
     on left: 157 158 159 160 161 162, on right: 163 164 167 168 169
     170 171 172 173 174 175 176
-statement_list (140)
+statement_list (143)
     on left: 163 164, on right: 108 110 164
-expression_statement (141)
+expression_statement (144)
     on left: 165 166, on right: 159 172 173
-selection_statement (142)
+selection_statement (145)
     on left: 167 168 169, on right: 160
-iteration_statement (143)
+iteration_statement (146)
     on left: 170 171 172 173, on right: 161
-labeled_statement (144)
+labeled_statement (147)
     on left: 174 175 176, on right: 157
 
 
@@ -1818,23 +1817,21 @@ State 90
     '<'  shift, and go to state 182
     '>'  shift, and go to state 183
 
-    '<'       [reduce using rule 40 (relational_expression)]
-    '>'       [reduce using rule 40 (relational_expression)]
     $default  reduce using rule 40 (relational_expression)
 
 
 State 91
 
-   41 relational_expression: relational_expression . '<' shift_expression
-   42                      | relational_expression . '>' shift_expression
+   41 relational_expression: relational_expression . LESS shift_expression
+   42                      | relational_expression . MORE shift_expression
    43                      | relational_expression . LE_OP shift_expression
    44                      | relational_expression . GE_OP shift_expression
    45 equality_expression: relational_expression .
 
     GE_OP  shift, and go to state 184
     LE_OP  shift, and go to state 185
-    '<'    shift, and go to state 186
-    '>'    shift, and go to state 187
+    MORE   shift, and go to state 186
+    LESS   shift, and go to state 187
 
     $default  reduce using rule 45 (equality_expression)
 
@@ -3151,7 +3148,7 @@ State 185
 
 State 186
 
-   41 relational_expression: relational_expression '<' . shift_expression
+   42 relational_expression: relational_expression MORE . shift_expression
 
     SIZEOF          shift, and go to state 69
     INC_OP          shift, and go to state 70
@@ -3179,7 +3176,7 @@ State 186
 
 State 187
 
-   42 relational_expression: relational_expression '>' . shift_expression
+   41 relational_expression: relational_expression LESS . shift_expression
 
     SIZEOF          shift, and go to state 69
     INC_OP          shift, and go to state 70
@@ -4282,8 +4279,6 @@ State 243
     '<'  shift, and go to state 182
     '>'  shift, and go to state 183
 
-    '<'       [reduce using rule 44 (relational_expression)]
-    '>'       [reduce using rule 44 (relational_expression)]
     $default  reduce using rule 44 (relational_expression)
 
 
@@ -4296,8 +4291,6 @@ State 244
     '<'  shift, and go to state 182
     '>'  shift, and go to state 183
 
-    '<'       [reduce using rule 43 (relational_expression)]
-    '>'       [reduce using rule 43 (relational_expression)]
     $default  reduce using rule 43 (relational_expression)
 
 
@@ -4305,58 +4298,54 @@ State 245
 
    38 shift_expression: shift_expression . '<' '<' additive_expression
    39                 | shift_expression . '>' '>' additive_expression
-   41 relational_expression: relational_expression '<' shift_expression .
+   42 relational_expression: relational_expression MORE shift_expression .
 
     '<'  shift, and go to state 182
     '>'  shift, and go to state 183
 
-    '<'       [reduce using rule 41 (relational_expression)]
-    '>'       [reduce using rule 41 (relational_expression)]
-    $default  reduce using rule 41 (relational_expression)
+    $default  reduce using rule 42 (relational_expression)
 
 
 State 246
 
    38 shift_expression: shift_expression . '<' '<' additive_expression
    39                 | shift_expression . '>' '>' additive_expression
-   42 relational_expression: relational_expression '>' shift_expression .
+   41 relational_expression: relational_expression LESS shift_expression .
 
     '<'  shift, and go to state 182
     '>'  shift, and go to state 183
 
-    '<'       [reduce using rule 42 (relational_expression)]
-    '>'       [reduce using rule 42 (relational_expression)]
-    $default  reduce using rule 42 (relational_expression)
+    $default  reduce using rule 41 (relational_expression)
 
 
 State 247
 
-   41 relational_expression: relational_expression . '<' shift_expression
-   42                      | relational_expression . '>' shift_expression
+   41 relational_expression: relational_expression . LESS shift_expression
+   42                      | relational_expression . MORE shift_expression
    43                      | relational_expression . LE_OP shift_expression
    44                      | relational_expression . GE_OP shift_expression
    46 equality_expression: equality_expression EQ_OP relational_expression .
 
     GE_OP  shift, and go to state 184
     LE_OP  shift, and go to state 185
-    '<'    shift, and go to state 186
-    '>'    shift, and go to state 187
+    MORE   shift, and go to state 186
+    LESS   shift, and go to state 187
 
     $default  reduce using rule 46 (equality_expression)
 
 
 State 248
 
-   41 relational_expression: relational_expression . '<' shift_expression
-   42                      | relational_expression . '>' shift_expression
+   41 relational_expression: relational_expression . LESS shift_expression
+   42                      | relational_expression . MORE shift_expression
    43                      | relational_expression . LE_OP shift_expression
    44                      | relational_expression . GE_OP shift_expression
    47 equality_expression: equality_expression NE_OP relational_expression .
 
     GE_OP  shift, and go to state 184
     LE_OP  shift, and go to state 185
-    '<'    shift, and go to state 186
-    '>'    shift, and go to state 187
+    MORE   shift, and go to state 186
+    LESS   shift, and go to state 187
 
     $default  reduce using rule 47 (equality_expression)
 
