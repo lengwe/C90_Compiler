@@ -115,7 +115,9 @@ extern int yydebug;
     CHAR_CONSTANT = 313,
     CONSTANT = 314,
     MOD_ASSGIN = 315,
-    STRING_LITERAL = 316
+    STRING_LITERAL = 316,
+    MORE = 317,
+    LESS = 318
   };
 #endif
 
@@ -129,7 +131,7 @@ union YYSTYPE
   std::string *str;
   Node* node;
 
-#line 133 "src/parser.tab.hpp" /* yacc.c:1909  */
+#line 135 "src/parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

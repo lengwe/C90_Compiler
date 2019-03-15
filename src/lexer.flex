@@ -90,10 +90,10 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
     return NE_OP;
   }
   else if(op == ">"){
-    return '>';
+    return MORE;
   }
   else if(op == "<"){
-    return '<';
+    return LESS;
   }
   else if(op == ">="){
     return GE_OP;

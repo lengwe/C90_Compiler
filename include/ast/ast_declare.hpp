@@ -560,8 +560,23 @@ class selection_statement : public Node{
     selection_statement(int type_in,  Nodeptr _l, Nodeptr _r, Nodeptr _s) : type(type_in), expression(_l),
 		 	statement_1(_r), statement_2(_s){}
 
+
       virtual void python(std::string &dst) const override{
         std::cerr<<"entering selection_statement\n";
+        std::string name, str1, str2,str3; // str1=exp str2 = if str3 = else
+        if(type == 1 || type == 2){
+          name = "if ";
+        }
+        expression->python(str1);
+        statement_1->python(str2);
+        indent(str2);
+        if(statement_2 != NULL){
+          statement_2->python(str3);
+          indent(str3);
+          dst = name + str1  + str2 + "\nelse" + str3;
+          return;
+        }
+      dst = name + str1 + str2;
       }
 };
 

@@ -18,7 +18,7 @@
 /*OPERATOR*/
 %token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
 %token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP GOTO UNION VOLATILE
-%token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM CHAR_CONSTANT CONSTANT MOD_ASSGIN STRING_LITERAL
+%token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM CHAR_CONSTANT CONSTANT MOD_ASSGIN STRING_LITERAL MORE LESS
 
 
 %type <str> IDENTIFIER VOID CHAR SHORT INT LONG FLOAT DOUBLE SIGNED UNSIGNED STRING_LITERAL CHAR_CONSTANT CONSTANT SIZEOF STRUCT UNION ENUM CONST
@@ -111,8 +111,8 @@ shift_expression
 
 relational_expression
 : shift_expression                                   {$$ = $1;}
-| relational_expression '<' shift_expression         {$$ = new relational_expression(1,$1,$3);}
-| relational_expression '>' shift_expression         {$$ = new relational_expression(2,$1,$3);}
+| relational_expression LESS shift_expression         {$$ = new relational_expression(1,$1,$3);}
+| relational_expression MORE shift_expression         {$$ = new relational_expression(2,$1,$3);}
 | relational_expression LE_OP shift_expression       {$$ = new relational_expression(3,$1,$3);}
 | relational_expression GE_OP shift_expression       {$$ = new relational_expression(4,$1,$3);}
 ;
