@@ -349,7 +349,7 @@ class logical_and_expression : public Node{
 			std::cerr<<"entering logical_and_expression\n";
 					l->python(str1);
 					r->python(str2);
-					dst = str1 + "and" + str2;
+					dst = str1 + " and " + str2;
 		}
 
 
@@ -367,7 +367,7 @@ class logical_or_expression : public Node{
 			std::cerr<<"entering logical_or_expression\n";
 					l->python(str1);
 					r->python(str2);
-					dst = str1 + "or" + str2;
+					dst = str1 + " or " + str2;
 		}
 
 };
