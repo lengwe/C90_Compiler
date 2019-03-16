@@ -84,7 +84,7 @@ class external_declaration: public Node{
 		virtual void python(std::string &dst) const override{
 			std::cerr<<"entering external_declaration\n";
 			std::string str,g;
-                        std::regex id("^.*[(].*[)]$");
+      std::regex id("^.*[(].*[)]$");
 			switch (type) {
 				case 1:{
 					//print global variable
@@ -97,16 +97,16 @@ class external_declaration: public Node{
 				case 2:{
 				//print value of global variable
 					p->python(str);
-					dst = str;
+					dst = str + "\n";
 					std::size_t pos = str.find("=");
 					std::string variable(str,0,pos);
 					if(!regex_match(variable,id)){
                                                 //std::cout<<"regex\n";
 						global.push_back(variable);
 					}
-                                        for(int i=0; i<global.size(); i++){
-                                                std::cout<<"global"<<global[i];
-                                        }
+					// for(int i=0; i<global.size(); i++){
+          //   std::cout<<"global"<<global[i];
+          // }
 					std::cerr<<"case 2 in ex: "<<dst<<std::endl;
 				}
 				break;
@@ -129,29 +129,47 @@ public:
 	virtual void python(std::string &dst) const override{
 		std::cerr<<"entering function definition\n";
 		std::string str1, str2, str3;
-		switch (type) {
-			case 1:
-	  		declarator->python(str1);
-				declaration_list->python(str2);
-				compound_statement->python(str3);
-				indent(str2);
-				indent(str3);
-				dst = "def " + str1 + ":\n" + str2 + str3;
-				std::cerr<<"case 1 in func: "<<dst<<std::endl;
-				break;
+		// switch (type) {
+		// 	case 1:
+	  // 		declarator->python(str1);
+		// 		declaration_list->python(str2);
+		// 		compound_statement->python(str3);
+		// 		indent(str2);
+		// 		indent(str3);
+		// 		dst = "def " + str1 + ":\n" + str2 + str3;
+		// 		std::cerr<<"case 1 in func: "<<dst<<std::endl;
+		// 		break;
+		//
+		// 		case 2:
+		// 		declarator->python(str1);
+		// 		compound_statement->python(str2);
+		// 		std::cerr<<"case 2: str2 in func before: "<<str2<<std::endl;
+		// 		indent(str2);
+		// 		dst = "def " + str1 + ":\n" + str2 ;
+		// 		std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
+		// 		std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
+		// 		std::cerr<<"case 2 in func: "<<dst<<std::endl;
+		// 		break;
+		// 	}
+		if(declarator!=NULL){
+			declarator->python(str1);
+		}
 
-				case 2:
-				declarator->python(str1);
-				compound_statement->python(str2);
-				indent(str2);
-				dst = "def " + str1 + ":\n" + str2 ;
-				std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
-				std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
-				std::cerr<<"case 2 in func: "<<dst<<std::endl;
-				break;
-			}
+		if(declaration_list!=NULL){
+			declaration_list->python(str2);
+		}
 
+		if(compound_statement!=NULL){
+			compound_statement->python(str3);
+		}
+
+		dst = "def " + str1 + ":\n" + str2 + str3 + "\n";
+				// std::cerr<<"str1 in func: "<<str1<<std::endl;
+				// std::cerr<<"str2 in func: "<<str2<<std::endl;
+				// std::cerr<<"str3 in func: "<<str3<<std::endl;
+				// std::cerr<<"dst in func: "<<dst<<std::endl;
 	}
+//int main(){int a; int y; return x;} int x(){int f;}
 
 };
 

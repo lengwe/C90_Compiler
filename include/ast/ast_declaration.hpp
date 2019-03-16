@@ -58,7 +58,7 @@ class init_declarator : public Node{
         return;
       }
       initializer->python(str2);
-      dst = str1 + "=" + str2 + '\n';
+      dst = str1 + "=" + str2;
     }
 };
 
@@ -71,42 +71,6 @@ class type_specifier: public Node{
 		// virtual void print(std::ostream &dst) const /*override*/{
 		// 	dst << type;
 		// }
-		//this function only checks the tree
- 		std::string c() const /*override*/{
-      switch (type) {
-				case 1:
-					return "void";
-				break;
-				case 2:
-					return "char";
-				break;
-				case 3:
-					return "short";
-				break;
-				case 4:
-					return "int";
-				break;
-				case 5:
-					return "long";
-				break;
-				case 6:
-					return "float";
-				break;
-				case 7:
-					return "double";
-				break;
-				case 8:
-					return "signed";
-				break;
-				case 9:
-					return "unsigned";
-				break;
-
-				default:
-				throw std::runtime_error ("Unknow construct");
-				break;
-			}
-		}
 
 		//code-gen python
 		virtual void python(std::string &dst) const override{

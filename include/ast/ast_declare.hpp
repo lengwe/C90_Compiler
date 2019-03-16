@@ -34,6 +34,7 @@ class compound_statement : public Node{
 		 	declaration_list(_r){}
 
       virtual void python(std::string &dst) const override{
+        std::cerr<<"entering compound_statement\n";
         std::string g;
         for(int i=0; i<global.size();i++){
             g += "global "+global[i] + '\n';
@@ -42,28 +43,41 @@ class compound_statement : public Node{
         std::string str1, str2;
         switch (type) {
           case 1:
-            dst = g;
+            dst = g + "\n";
           break;
 
           case 2:
             statement_list->python(str1);
-            dst = g + str1;
+            dst = g + str1+"\n";
+            std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
           break;
 
           case 3:
             declaration_list->python(str1);
-            dst = g + str1;
+            dst = g + str1+"\n";
+            std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
           break;
 
           case 4:
             declaration_list->python(str1);
             statement_list->python(str2);
-            dst = g + str1 + str2;
+            dst = g + str1 +"\n" + str2;
             std::cout<<"str1: "<<str1<<'\n';
             std::cout<<"str2: "<<str2<<'\n';
             std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
             break;
         }
+        // if(declaration_list!=NULL){
+        //   declaration_list->python(str1);
+        // }
+        // if(statement_list!=NULL){
+        //   statement_list->python(str2);
+        // }
+        //
+        // dst = str1 + "\n" + str2;
+        // std::cerr<<"str1 in func: "<<str1<<std::endl;
+        // std::cerr<<"str2 in func: "<<str2<<std::endl;
+        // //std::cerr<<"str3 in func: "<<str3<<std::endl;
       }
 };
 
@@ -88,7 +102,7 @@ class declaration_list : public Node{
           if(declaration_listptr!=NULL){
             declaration_listptr->python(str);
             declaration->python(str2);
-            dst = str + str2;
+            dst = str + "\n" + str2;
           }
           else{
             declaration->python(str);
@@ -131,8 +145,9 @@ class declaration : public Node{
         std::string str1, str2;
         declaration_specifiers->python(str1);
         init_declarator_list -> python(str2);
+        std::cerr << "str1 in declaration "<<str1 << '\n';
         std::cerr << "str2 in declaration "<<str2 << '\n';
-        dst = str1+str2+"\n";
+        dst = str1+str2;
       }
 };
 
@@ -486,12 +501,12 @@ class jump_statement : public Node{
           break;
 
           case 4:
-            dst = "return";
+            dst = "return\n";
           break;
 
           case 5:
             expression->python(str);
-            dst = "return " + str;
+            dst = "return " + str + "\n";
           break;
         }
       }
