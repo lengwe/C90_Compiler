@@ -7,8 +7,6 @@ extern "C" int fileno(FILE *stream);
 #include "parser.tab.hpp"
 #include <string>
 #include <iostream>
-
-
 %}
 KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|sizeof|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
@@ -24,6 +22,7 @@ CHAR_CONSTANT  ['](([\\]['])|([^']))+[']
 WHITESPACE  [ \t\r\f\v]+
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 %%
+
 "+=" {return ADD_ASSIGN;}
 
 "..."			{  return  (ELLIPSIS); }
@@ -92,12 +91,77 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
   else if(op == "|"){
     return '|';
   }
-
+  else if(op == "+="){
+    return ADD_ASSIGN;
+  }
+  else if(op == "-="){
+    return SUB_ASSIGN;
+  }
+  else if(op == "*="){
+    return MUL_ASSIGN;
+  }
+  else if(op == "/="){
+    return DIV_ASSIGN;
+  }
+  else if(op == "%="){
+    return MOD_ASSGIN;
+  }
+  else if(op == ">>="){
+    return RIGHT_ASSIGN;
+  }
+  else if(op == "<<="){
+    return LEFT_ASSIGN;
+  }
+  else if(op == "&="){
+    return AND_ASSIGN;
+  }
+  else if(op == "^="){
+    return XOR_ASSIGN;
+  }
+  else if(op == "|="){
+    return OR_ASSIGN;
+  }
+  else if(op == "++"){
+    return INC_OP;
+  }
+  else if(op == "--"){
+    return DEC_OP;
+  }
+  else if(op == "=="){
+    return EQ_OP;
+  }
+  else if(op == "!="){
+    return NE_OP;
+  }
+  else if(op == ">"){
+    return MORE;
+  }
+  else if(op == "<"){
+    return LESS;
+  }
+  else if(op == ">="){
+    return GE_OP;
+  }
+  else if(op == "<="){
+    return LE_OP;
+  }
   else if(op == "!"){
     return '!';
   }
+  else if(op == "||"){
+    return OR_OP;
+  }
+  else if(op == "&&"){
+    return AND_OP;
+  }
   else if(op == "?"){
     return '?';
+  }
+  else if(op == "<<"){
+    return LEFT_OP;
+  }
+  else if(op == ">>"){
+    return RIGHT_OP;
   }
   else if(op == "("){
     return '(';
@@ -126,6 +190,9 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
   else if(op == ";"){
     return ';';
   }
+  else if(op == "->"){
+    return PTR_OP;
+  }
   else if(op == "."){
     return '.';
   }
@@ -133,7 +200,6 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
     return '&';
   }
 }
-
 {DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
 
 {DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {

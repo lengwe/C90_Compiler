@@ -592,10 +592,10 @@ class selection_statement : public Node{
         if(statement_2 != NULL){
           statement_2->python(str3);
           indent(str3);
-          dst = name + str1  + str2 + "\nelse" + str3;
+          dst = name + str1 + ":" + '\n' + str2 + "\nelse:\n" + str3;
           return;
         }
-      dst = name + str1 + str2;
+      dst = name +  str1 + ":" + '\n' +str2;
       }
 };
 
