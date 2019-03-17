@@ -93,7 +93,12 @@ class postfix_expression : public Node{
 
 				case 5:
 				case 6:
+					p->python(str);
+					dst = str+"+=1";
+					break;
 				case 7:
+					p->python(str);
+					dst = str+"-=1";
 				break;
 			}
 		}

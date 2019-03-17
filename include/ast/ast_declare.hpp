@@ -620,7 +620,7 @@ class iteration_statement : public Node{
         expression->python(str1);
         statement->python(str2);
         indent(str2);
-        dst = name+str1+str2;
+        dst = name+str1+":\n"+str2;
       }
 };
 
