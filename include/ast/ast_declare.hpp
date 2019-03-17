@@ -34,7 +34,7 @@ class compound_statement : public Node{
 		 	declaration_list(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering compound_statement\n";
+        //std::cerr<<"entering compound_statement\n";
         std::string g;
         for(int i=0; i<global.size();i++){
             g += "global "+global[i] + '\n';
@@ -49,22 +49,22 @@ class compound_statement : public Node{
           case 2:
             statement_list->python(str1);
             dst = g + str1+"\n";
-            std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
+            //std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
           break;
 
           case 3:
             declaration_list->python(str1);
             dst = g + str1+"\n";
-            std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
+            //std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
           break;
 
           case 4:
             declaration_list->python(str1);
             statement_list->python(str2);
-            dst = g + str1 +"\n" + str2;
-            std::cout<<"str1: "<<str1<<'\n';
-            std::cout<<"str2: "<<str2<<'\n';
-            std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
+            dst = g + str1 +"\n" + str2 + "\n";
+            //std::cout<<"str1: "<<str1<<'\n';
+            //std::cout<<"str2: "<<str2<<'\n';
+            //std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
             break;
         }
         // if(declaration_list!=NULL){
@@ -75,9 +75,9 @@ class compound_statement : public Node{
         // }
         //
         // dst = str1 + "\n" + str2;
-        // std::cerr<<"str1 in func: "<<str1<<std::endl;
-        // std::cerr<<"str2 in func: "<<str2<<std::endl;
-        // //std::cerr<<"str3 in func: "<<str3<<std::endl;
+        // //std::cerr<<"str1 in func: "<<str1<<std::endl;
+        // //std::cerr<<"str2 in func: "<<str2<<std::endl;
+        // //std::cout<<"str3 in func: "<<str3<<std::endl;
       }
 };
 
@@ -93,7 +93,7 @@ class declaration_list : public Node{
 		 	declaration_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr << "enter declaration_list" << '\n';
+        //std::cerr << "enter declaration_list" << '\n';
           std::string str, str2;
           // declaration->python(str);
           // if(declaration_listptr != NULL){
@@ -124,7 +124,7 @@ class declarator : public Node{
 		 	direct_declarator(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering declarator\n";
+        //std::cerr<<"entering declarator\n";
 
       }
 };
@@ -141,12 +141,12 @@ class declaration : public Node{
 		 	init_declarator_list(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr << "declaration" << '\n';
+        //std::cerr << "declaration" << '\n';
         std::string str1, str2;
         declaration_specifiers->python(str1);
         init_declarator_list -> python(str2);
-        std::cerr << "str1 in declaration "<<str1 << '\n';
-        std::cerr << "str2 in declaration "<<str2 << '\n';
+        //std::cerr << "str1 in declaration "<<str1 << '\n';
+        //std::cerr << "str2 in declaration "<<str2 << '\n';
         dst = str1+str2;
       }
 };
@@ -163,7 +163,7 @@ class initializer : public Node{
 		 	initializer_list(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering initializer\n";
+        //std::cerr<<"entering initializer\n";
       }
 };
 
@@ -179,7 +179,7 @@ class struct_declaration_list : public Node{
 		 	struct_declarator_list(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering struct_declaration_list\n";
+          //std::cerr<<"entering struct_declaration_list\n";
       }
 };
 
@@ -195,7 +195,7 @@ class struct_declaration : public Node{
 		 	struct_declarator_list(_r){}
 
       virtual void python(std::string &dst) const override{
-            std::cerr<<"entering struct_declaration\n";
+            //std::cerr<<"entering struct_declaration\n";
       }
 };
 
@@ -224,7 +224,7 @@ class type_name : public Node{
 		 	abstract_declarator(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering struct_or_union\n";
+          //std::cerr<<"entering struct_or_union\n";
   		}
 };
 
@@ -240,7 +240,7 @@ class specifier_qualifier_list : public Node{
 		 	specifier_qualifier_listptr(_r), type_qualifier(_s){}
 
       virtual void python(std::string &dst) const override{
-			std::cerr<<"entering specifier_qualifier_list\n";
+			//std::cerr<<"entering specifier_qualifier_list\n";
   		}
 };
 
@@ -256,7 +256,7 @@ class struct_declarator_list : public Node{
 		 	struct_declarator_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering struct_declarator_list\n";
+          //std::cerr<<"entering struct_declarator_list\n";
   		}
 };
 
@@ -274,7 +274,7 @@ class enum_specifier : public Node{
 		 	identifier(_r), enumerator_list(_s){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering enum_specifier\n";
+          //std::cerr<<"entering enum_specifier\n";
       }
 };
 
@@ -290,7 +290,7 @@ class enumerator_list : public Node{
 		 	enumerator_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<"entering enumerator_list\n";
+          //std::cerr<<"entering enumerator_list\n";
       }
 };
 
@@ -306,7 +306,7 @@ class enumerator : public Node{
 		constant_expression(_r){}
 
     virtual void python(std::string &dst) const override{
-        std::cerr<<"entering enumerator\n";
+        //std::cerr<<"entering enumerator\n";
     }
 };
 
@@ -334,7 +334,7 @@ class identifier_list : public Node{
 		identifier_listptr(_r){}
 
     virtual void python(std::string &dst) const override{
-        std::cerr<<"entering identifier_list\n";
+        //std::cerr<<"entering identifier_list\n";
       std::string str;
       switch (type) {
         case 1:
@@ -364,18 +364,18 @@ class direct_declarator : public Node{
 		 	declarator(_r), constant_expression(_p),parameter_type_list(_q){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering direct_declarator\n";
+        //std::cerr<<"entering direct_declarator\n";
         std::string str1, str2;
         switch (type) {
           case 1:
             dst = *identifier;
-            std::cerr<<"case 1 in direct_declarator: "<<dst<<std::endl;
+            //std::cerr<<"case 1 in direct_declarator: "<<dst<<std::endl;
           break;
 
           case 2:
             declarator->python(str1);
             dst = "(" + str1 +")";
-            std::cerr<<"case 2 in direct_declarator: "<<dst<<std::endl;
+            //std::cerr<<"case 2 in direct_declarator: "<<dst<<std::endl;
           break;
 
           case 3:
@@ -383,7 +383,7 @@ class direct_declarator : public Node{
           break;
 
           case 5:
-            std::cerr<<"case 5 in direct_declarator\n";
+            //std::cerr<<"case 5 in direct_declarator\n";
             direct_declaratorptr->python(str1);
             parameter_type_list->python(str2);
             dst = str1 + "(" + str2 + ")";
@@ -392,7 +392,7 @@ class direct_declarator : public Node{
           case 6:
             direct_declaratorptr->python(str1);
             dst = str1 + "()";
-            std::cerr<<"case 6 in direct_declarator: "<<dst<<'\n';
+            //std::cerr<<"case 6 in direct_declarator: "<<dst<<'\n';
           break;
         }
       }
@@ -410,7 +410,7 @@ class parameter_list : public Node{
 		 	parameter_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering parameter_list\n";
+        //std::cerr<<"entering parameter_list\n";
         std::string str1, str2 = "";
         parameter_declaration->python(str1);
         if(parameter_listptr == NULL){
@@ -453,7 +453,7 @@ class parameter_declaration : public Node{
 		 	declarator(_r), abstract_declarator(_s){}
 
       virtual void python(std::string &dst) const override{
-          std::cerr<<" entering parameter_declaration\n";
+          //std::cerr<<" entering parameter_declaration\n";
           std::string str1, str2;
           declarator->python(str1);
           declaration_specifiers->python(str2);
@@ -473,7 +473,7 @@ class type_qualifier_list : public Node{
 		 	type_qualifier_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-                std::cerr<<"entering type_qualifier_list\n";
+                //std::cerr<<"entering type_qualifier_list\n";
       }
 };
 
@@ -493,7 +493,7 @@ class jump_statement : public Node{
 
       virtual void python(std::string &dst) const override{
         std::string str;
-        std::cerr<<"entering jump_statement\n";
+        //std::cerr<<"entering jump_statement\n";
         switch(type){
           case 1:
           case 2:
@@ -521,7 +521,7 @@ class statement : public Node{
     statement(int type_in,  Nodeptr _l) : type(type_in), statementptr(_l){}
 
     virtual void python(std::string &dst) const override{
-      std::cerr<<"entering statement\n";
+      //std::cerr<<"entering statement\n";
     }
 };
 
@@ -538,7 +538,7 @@ class statement_list : public Node{
 
       virtual void python(std::string &dst) const override{
         std::string str, str2;
-        std::cerr<<"entering statement_list\n";
+        //std::cerr<<"entering statement_list\n";
         if(statement_listptr==NULL){
           statement->python(str);
           dst = str;
@@ -547,8 +547,8 @@ class statement_list : public Node{
           statement_listptr->python(str);
           statement->python(str2);
           dst = str+'\n'+str2;
-          std::cerr<<"str in statement_list: "<<str<<'\n';
-          std::cerr<<"str2 in statement_list: "<<str2<<'\n';
+          //std::cerr<<"str in statement_list: "<<str<<'\n';
+          //std::cerr<<"str2 in statement_list: "<<str2<<'\n';
         }
       }
 };
@@ -581,7 +581,7 @@ class selection_statement : public Node{
 
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering selection_statement\n";
+        //std::cerr<<"entering selection_statement\n";
         std::string name, str1, str2,str3; // str1=exp str2 = if str3 = else
         if(type == 1 || type == 2){
           name = "if ";
@@ -612,7 +612,7 @@ class iteration_statement : public Node{
 		 	statement(_r), expression_statement_1(_p),expression_statement_2(_q){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering iteration_statement\n";
+        //std::cerr<<"entering iteration_statement\n";
         std::string name, str1, str2;
         if(type == 1){
           name = "while ";
@@ -637,7 +637,7 @@ class labeled_statement : public Node{
 		 	keyword(_keyword), constant_expression(_l), statement(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering labeled_statement\n";
+        //std::cerr<<"entering labeled_statement\n";
   		}
 };
 
@@ -653,7 +653,7 @@ class initializer_list : public Node{
 		 	initializer_listptr(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering initializer_list\n";
+        //std::cerr<<"entering initializer_list\n";
   		}
 };
 
@@ -668,7 +668,7 @@ class struct_declarator : public Node{
 		 	constant_expression(_r){}
 
       virtual void python(std::string &dst) const override{
-        std::cerr<<"entering struct_declarator\n";
+        //std::cerr<<"entering struct_declarator\n";
   		}
 };
 

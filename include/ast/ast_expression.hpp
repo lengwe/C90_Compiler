@@ -19,14 +19,14 @@ class primary_expression : public Node{
 		// }
 
 		virtual void python(std::string &dst) const override{
-			std::cerr<<"entering primary_expression\n";;
+			//std::cerr<<"entering primary_expression\n";;
 			std::string str;
 			switch (type) {
 				case 1:
 				case 2:
 				case 3:
 					dst=*string;
-					//std::cout<<dst<<std::endl;
+					////std::cout<<dst<<std::endl;
 				break;
 				case 4:
 					p->python(str);
@@ -130,13 +130,13 @@ class unary_expression : public Node{
 		unary_expression(int type_in, std::string* string_in, Nodeptr _p) : type(type_in), string(string_in), p(_p) {}
 
 		virtual void python(std::string &dst) const override{
-			std::cerr<<"entering unary_expression\n";
+			//std::cerr<<"entering unary_expression\n";
 			std::string str;
 			switch (type) {
 				case 3:
 					p->python(str);
 					dst = (*string)+str;
-					std::cout<<"string in unary_expression "<<*string<<'\n';
+					//std::cout<<"string in unary_expression "<<*string<<'\n';
 				break;
 
 				case 1:
@@ -171,7 +171,7 @@ class multiplicative_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str1, str2;
-			std::cerr<<"entering multiplicative_expression\n";;
+			//std::cerr<<"entering multiplicative_expression\n";;
 			switch (type) {
 				case 1:
 					l->python(str1);
@@ -193,7 +193,7 @@ class additive_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str1, str2;
-			std::cerr<<"entering additive_expression\n";;
+			//std::cerr<<"entering additive_expression\n";;
 			switch(type){
 				case 1:
 				l->python(str1);
@@ -246,7 +246,7 @@ class relational_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str1, str2;
-			std::cerr<<"entering relational_expression\n";
+			//std::cerr<<"entering relational_expression\n";
 			switch(type){
 				case 1:
 				l->python(str1);
@@ -277,7 +277,7 @@ class equality_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str1, str2;
-			std::cerr<<"entering equality_expression\n";
+			//std::cerr<<"entering equality_expression\n";
 			switch(type){
 				case 1:
 				l->python(str1);
@@ -346,7 +346,7 @@ class logical_and_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str1, str2;
-			std::cerr<<"entering logical_and_expression\n";
+			//std::cerr<<"entering logical_and_expression\n";
 					l->python(str1);
 					r->python(str2);
 					dst = str1 + " and " + str2;
@@ -364,7 +364,7 @@ class logical_or_expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str1, str2;
-			std::cerr<<"entering logical_or_expression\n";
+			//std::cerr<<"entering logical_or_expression\n";
 					l->python(str1);
 					r->python(str2);
 					dst = str1 + " or " + str2;
@@ -411,7 +411,7 @@ class expression : public Node{
 
 		virtual void python(std::string &dst) const override{
 			std::string str, str2;
-			std::cerr<<"entering expression\n";
+			//std::cerr<<"entering expression\n";
 			l->python(str);
 			r->python(str2);
 			dst = str+","+str2;

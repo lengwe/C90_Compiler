@@ -48,25 +48,25 @@ class translation_unit: public Node{
 		translation_unit(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in),l(_l),r(_r) {}
 
 		void python(std::string &dst) const override {
-			std::cerr<<"entering translation_unit\n";
+			//std::cerr<<"entering translation_unit\n";
 			std::string str1,str2;
 			switch (type) {
 				case 1:
 					p->python(str1);
 					dst = str1;
-					std::cerr<<"case 1 in trans: "<<dst<<std::endl;
+					//std::cerr<<"case 1 in trans: "<<dst<<std::endl;
 					break;
 				case 2:
 					if(l!=NULL){
 						l->python(str1);
 						r->python(str2);
 						dst = str1 + str2;
-						std::cerr<<"case 2 in trans: "<<dst<<std::endl;
+						//std::cerr<<"case 2 in trans: "<<dst<<std::endl;
 					}
 					else{
 						r->python(str2);
 						dst = str2;
-						std::cerr<<"case 2 in trans: "<<dst<<std::endl;
+						//std::cerr<<"case 2 in trans: "<<dst<<std::endl;
 					}
 				break;
 			}
@@ -82,7 +82,7 @@ class external_declaration: public Node{
 		external_declaration(int type_in, Nodeptr _p) : type(type_in), p(_p){}
 
 		virtual void python(std::string &dst) const override{
-			std::cerr<<"entering external_declaration\n";
+			//std::cerr<<"entering external_declaration\n";
 			std::string str,g;
       std::regex id("^.*[(].*[)]$");
 			switch (type) {
@@ -90,7 +90,7 @@ class external_declaration: public Node{
 					//print global variable
 					p->python(str);
 					dst = str;
-					std::cerr<<"case 1 in ex: "<<dst<<std::endl;
+					//std::cerr<<"case 1 in ex: "<<dst<<std::endl;
 				}
 				break;
 
@@ -101,13 +101,13 @@ class external_declaration: public Node{
 					std::size_t pos = str.find("=");
 					std::string variable(str,0,pos);
 					if(!regex_match(variable,id)){
-                                                //std::cout<<"regex\n";
+                                                ////std::cout<<"regex\n";
 						global.push_back(variable);
 					}
 					// for(int i=0; i<global.size(); i++){
-          //   std::cout<<"global"<<global[i];
+          //   //std::cout<<"global"<<global[i];
           // }
-					std::cerr<<"case 2 in ex: "<<dst<<std::endl;
+					//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
 				}
 				break;
 			}
@@ -127,7 +127,7 @@ public:
 	type(_type), declaration_specifiers(_declaration_specifiers), declarator(_declarator), declaration_list(_declarator_list), compound_statement(_compound_statement){}
 
 	virtual void python(std::string &dst) const override{
-		std::cerr<<"entering function definition\n";
+		//std::cerr<<"entering function definition\n";
 		std::string str1, str2, str3;
 		// switch (type) {
 		// 	case 1:
@@ -137,18 +137,18 @@ public:
 		// 		indent(str2);
 		// 		indent(str3);
 		// 		dst = "def " + str1 + ":\n" + str2 + str3;
-		// 		std::cerr<<"case 1 in func: "<<dst<<std::endl;
+		// 		//std::cerr<<"case 1 in func: "<<dst<<std::endl;
 		// 		break;
 		//
 		// 		case 2:
 		// 		declarator->python(str1);
 		// 		compound_statement->python(str2);
-		// 		std::cerr<<"case 2: str2 in func before: "<<str2<<std::endl;
+		// 		//std::cerr<<"case 2: str2 in func before: "<<str2<<std::endl;
 		// 		indent(str2);
 		// 		dst = "def " + str1 + ":\n" + str2 ;
-		// 		std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
-		// 		std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
-		// 		std::cerr<<"case 2 in func: "<<dst<<std::endl;
+		// 		//std::cerr<<"case 2: str1 in func: "<<str1<<std::endl;
+		// 		//std::cerr<<"case 2: str2 in func: "<<str2<<std::endl;
+		// 		//std::cerr<<"case 2 in func: "<<dst<<std::endl;
 		// 		break;
 		// 	}
 		if(declarator!=NULL){
@@ -163,11 +163,14 @@ public:
 			compound_statement->python(str3);
 		}
 
+		//indent(str2);
+		indent(str3);
+
 		dst = "def " + str1 + ":\n" + str2 + str3 + "\n";
-				// std::cerr<<"str1 in func: "<<str1<<std::endl;
-				// std::cerr<<"str2 in func: "<<str2<<std::endl;
-				// std::cerr<<"str3 in func: "<<str3<<std::endl;
-				// std::cerr<<"dst in func: "<<dst<<std::endl;
+				// //std::cerr<<"str1 in func: "<<str1<<std::endl;
+				// //std::cerr<<"str2 in func: "<<str2<<std::endl;
+				// //std::cerr<<"str3 in func: "<<str3<<std::endl;
+				// //std::cerr<<"dst in func: "<<dst<<std::endl;
 	}
 //int main(){int a; int y; return x;} int x(){int f;}
 
