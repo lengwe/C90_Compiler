@@ -8,12 +8,13 @@ extern "C" int fileno(FILE *stream);
 #include <string>
 #include <iostream>
 %}
-KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|if|long|register|return|short|signed|unsigned|sizeof|static|struct|switch|typedef|union|void|volatile|while]
+KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|sizeof|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
-OPERATOR [\=|\+|\-|\*|\/|\%|\||\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>|<|>=|<=|!|\|\||&&|\?|<<|>>|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|&]
+OPERATOR [\=|\+|\-|\*|\/|\%|\||>|<|!|\|\||\?|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|]
+ASS_OP [\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>=|<=|<<|>>|&&];
 EXPONENT    [eE][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
-DECIMAL_CONSTANT  [1-9][0-9]*
+DECIMAL_CONSTANT  ([1-9][0-9]*)|[0]*
 HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
 FLOAT_SUFFIX      [f|F|l|L]
 INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
@@ -22,22 +23,199 @@ WHITESPACE  [ \t\r\f\v]+
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 %%
 
-{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.int_num = atoi(yytext);return INT_NUM;}
+"+=" {return ADD_ASSIGN;}
 
-[+-]?{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
-  yylval.int_num = atoi(yytext);
-  return HEX_NUM;
+"..."			{  return  (ELLIPSIS); }
+
+">>="			{  return  (RIGHT_ASSIGN); }
+
+"<<="		{  return  (LEFT_ASSIGN); }
+
+"+="			{  return  (ADD_ASSIGN); }
+
+"-="			{  return  (SUB_ASSIGN); }
+
+"*="			{  return  (MUL_ASSIGN); }
+
+"/="			{  return  (DIV_ASSIGN); }
+
+"%="			{  return  (MOD_ASSIGN); }
+
+"&="			{  return  (AND_ASSIGN); }
+
+"^="			{  return  (XOR_ASSIGN); }
+
+"|="			{  return  (OR_ASSIGN); }
+
+">>"			{  return  (RIGHT_OP); }
+
+"<<"			{  return  (LEFT_OP); }
+
+"++"			{  return  (INC_OP); }
+
+"--"			{  return  (DEC_OP); }
+
+"->"			{  return  (PTR_OP); }
+
+"&&"			{  return  (AND_OP); }
+
+"||"			{  return  (OR_OP); }
+
+"<="			{  return  (LE_OP); }
+
+">="			{  return  (GE_OP); }
+
+"=="			{  return  (EQ_OP); }
+
+
+{OPERATOR}        {
+  std::string op(yytext);
+  if(op == "="){
+    return '=';
+  }
+  else if(op == "+"){
+    return '+';
+  }
+  else if(op == "-"){
+    return '-';
+  }
+  else if(op == "*"){
+    return '*';
+  }
+  else if(op == "/"){
+    return '/';
+  }
+  else if(op == "%"){
+    return '%';
+  }
+  else if(op == "|"){
+    return '|';
+  }
+  else if(op == "+="){
+    return ADD_ASSIGN;
+  }
+  else if(op == "-="){
+    return SUB_ASSIGN;
+  }
+  else if(op == "*="){
+    return MUL_ASSIGN;
+  }
+  else if(op == "/="){
+    return DIV_ASSIGN;
+  }
+  else if(op == "%="){
+    return MOD_ASSGIN;
+  }
+  else if(op == ">>="){
+    return RIGHT_ASSIGN;
+  }
+  else if(op == "<<="){
+    return LEFT_ASSIGN;
+  }
+  else if(op == "&="){
+    return AND_ASSIGN;
+  }
+  else if(op == "^="){
+    return XOR_ASSIGN;
+  }
+  else if(op == "|="){
+    return OR_ASSIGN;
+  }
+  else if(op == "++"){
+    return INC_OP;
+  }
+  else if(op == "--"){
+    return DEC_OP;
+  }
+  else if(op == "=="){
+    return EQ_OP;
+  }
+  else if(op == "!="){
+    return NE_OP;
+  }
+  else if(op == ">"){
+    return MORE;
+  }
+  else if(op == "<"){
+    return LESS;
+  }
+  else if(op == ">="){
+    return GE_OP;
+  }
+  else if(op == "<="){
+    return LE_OP;
+  }
+  else if(op == "!"){
+    return '!';
+  }
+  else if(op == "||"){
+    return OR_OP;
+  }
+  else if(op == "&&"){
+    return AND_OP;
+  }
+  else if(op == "?"){
+    return '?';
+  }
+  else if(op == "<<"){
+    return LEFT_OP;
+  }
+  else if(op == ">>"){
+    return RIGHT_OP;
+  }
+  else if(op == "("){
+    return '(';
+  }
+  else if(op == ")"){
+    return ')';
+  }
+  else if(op == "["){
+    return '[';
+  }
+  else if(op == "]"){
+    return ']';
+  }
+  else if(op == "{"){
+    return '{';
+  }
+  else if(op == "}"){
+    return '}';
+  }
+  else if(op == ":"){
+    return ':';
+  }
+  else if(op == ","){
+    return ',';
+  }
+  else if(op == ";"){
+    return ';';
+  }
+  else if(op == "->"){
+    return PTR_OP;
+  }
+  else if(op == "."){
+    return '.';
+  }
+  else if(op == "&"){
+    return '&';
+  }
+}
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
+
+{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
+  yylval.str = new std::string (yytext);
+  return CONSTANT;
 }
 
 
-([+-])?{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
-  yylval.float_num = atof(yytext);
-  return FLOAT_NUM;
+{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
+  yylval.str = new std::string (yytext);
+  return CONSTANT;
 }
 
-([+-])?([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
-  yylval.float_num = atof(yytext);
-  return FLOAT_NUM;
+([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
+  yylval.str = new std::string (yytext);
+  return CONSTANT;
 }
 
 auto {return AUTO;}
@@ -51,26 +229,24 @@ do {return DO;}
 double {return DOUBLE;}
 else {return ELSE;}
 enum {return ENUM;}
-extern {return EXTERN;}
 for {return FOR;}
 if {return IF;}
 int {return INT;}
 long {return LONG;}
-register {return REGISTER;}
 return {return RETURN;}
 short {return SHORT;}
 signed {return SIGNED;}
 unsigned {return UNSIGNED;}
-sizeof {return SIZEOF;}
 static {return STATIC;}
 struct {return STRUCT;}
 switch {return SWITCH;}
 typedef {return TYPEDEF;}
-union {return UNION;}
 void {return VOID;}
-volatile {return VOLATILE;}
 while {return WHILE;}
-
+sizeof {return SIZEOF;}
+goto {return GOTO;}
+union {return UNION;}
+volatile {return VOLATILE;}
 
 
 {IDENTIFIER}      {
@@ -79,138 +255,6 @@ while {return WHILE;}
                     return IDENTIFIER;
                   }
 
-{OPERATOR}        {
-                    std::string op(yytext);
-                    if(op == "="){
-                      return '=';
-                    }
-                    else if(op == "+"){
-                      return '+';
-                    }
-                    else if(op == "-"){
-                      return '-';
-                    }
-                    else if(op == "*"){
-                      return '*';
-                    }
-                    else if(op == "/"){
-                      return '/';
-                    }
-                    else if(op == "%"){
-                      return '%';
-                    }
-                    else if(op == "|"){
-                      return '|';
-                    }
-                    else if(op == "+="){
-                      return ADD_ASSIGN;
-                    }
-                    else if(op == "-="){
-                      return SUB_ASSIGN;
-                    }
-                    else if(op == "*="){
-                      return MUL_ASSIGN;
-                    }
-                    else if(op == "/="){
-                      return DIV_ASSIGN;
-                    }
-                    else if(op == "%="){
-                      return MOD_ASSGIN;
-                    }
-                    else if(op == ">>="){
-                      return RIGHT_ASSIGN;
-                    }
-                    else if(op == "<<="){
-                      return LEFT_ASSIGN;
-                    }
-                    else if(op == "&="){
-                      return AND_ASSIGN;
-                    }
-                    else if(op == "^="){
-                      return XOR_ASSIGN;
-                    }
-                    else if(op == "|="){
-                      return OR_ASSIGN;
-                    }
-                    else if(op == "++"){
-                      return INC_OP;
-                    }
-                    else if(op == "--"){
-                      return DEC_OP;
-                    }
-                    else if(op == "=="){
-                      return EQ_OP;
-                    }
-                    else if(op == "!="){
-                      return NE_OP;
-                    }
-                    else if(op == ">"){
-                      return '>';
-                    }
-                    else if(op == "<"){
-                      return '<';
-                    }
-                    else if(op == ">="){
-                      return GE_OP;
-                    }
-                    else if(op == "<="){
-                      return LE_OP;
-                    }
-                    else if(op == "!"){
-                      return '!';
-                    }
-                    else if(op == "||"){
-                      return OR_OP;
-                    }
-                    else if(op == "&&"){
-                      return AND_OP;
-                    }
-                    else if(op == "?"){
-                      return '?';
-                    }
-                    else if(op == "<<"){
-                      return LEFT_OP;
-                    }
-                    else if(op == ">>"){
-                      return RIGHT_OP;
-                    }
-                    else if(op == "("){
-                      return '(';
-                    }
-                    else if(op == ")"){
-                      return ')';
-                    }
-                    else if(op == "["){
-                      return '[';
-                    }
-                    else if(op == "]"){
-                      return ']';
-                    }
-                    else if(op == "{"){
-                      return '{';
-                    }
-                    else if(op == "}"){
-                      return '}';
-                    }
-                    else if(op == ":"){
-                      return ':';
-                    }
-                    else if(op == ","){
-                      return ',';
-                    }
-                    else if(op == ";"){
-                      return ';';
-                    }
-                    else if(op == "->"){
-                      return PTR_OP;
-                    }
-                    else if(op == "."){
-                      return '.';
-                    }
-                    else if(op == "&"){
-                      return '&';
-                    }
-                  }
 
 
 
