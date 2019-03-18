@@ -15,7 +15,7 @@ typedef const Node* Nodeptr;
 class Node{
 
 	public:
-		 ~Node() {}
+		virtual ~Node() {}
 
 		std::string c()const;
 		//void print(std::ostream &dst) const=0;
@@ -46,6 +46,11 @@ class translation_unit: public Node{
 		//function overloading for constructor
 		translation_unit(int type_in, Nodeptr _p) : type(type_in), p(_p) {}
 		translation_unit(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in),l(_l),r(_r) {}
+		~translation_unit(){
+				delete l;
+				delete r;
+				delete p;
+		}
 
 		void python(std::string &dst) const override {
 			//std::cerr<<"entering translation_unit\n";
@@ -80,6 +85,10 @@ class external_declaration: public Node{
 
 	public:
 		external_declaration(int type_in, Nodeptr _p) : type(type_in), p(_p){}
+		~external_declaration(){
+				delete p;
+		}
+
 
 		virtual void python(std::string &dst) const override{
 			//std::cerr<<"entering external_declaration\n";
@@ -125,6 +134,13 @@ private:
 public:
 	function_definition(int _type, Nodeptr _declaration_specifiers, Nodeptr _declarator, Nodeptr _declarator_list, Nodeptr _compound_statement):
 	type(_type), declaration_specifiers(_declaration_specifiers), declarator(_declarator), declaration_list(_declarator_list), compound_statement(_compound_statement){}
+
+	~function_definition(){
+			delete declaration_specifiers;
+			delete declarator;
+			delete declaration_list;
+			delete compound_statement;
+	}
 
 	virtual void python(std::string &dst) const override{
 		//std::cerr<<"entering function definition\n";

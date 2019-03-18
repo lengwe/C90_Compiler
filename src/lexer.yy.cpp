@@ -595,9 +595,7 @@ extern "C" int fileno(FILE *stream);
 #include "parser.tab.hpp"
 #include <string>
 #include <iostream>
-
-
-#line 601 "src/lexer.yy.cpp"
+#line 599 "src/lexer.yy.cpp"
 
 #define INITIAL 0
 
@@ -815,9 +813,10 @@ YY_DECL
 		}
 
 	{
-#line 26 "src/lexer.flex"
+#line 24 "src/lexer.flex"
 
-#line 821 "src/lexer.yy.cpp"
+
+#line 820 "src/lexer.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -876,117 +875,117 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 27 "src/lexer.flex"
+#line 26 "src/lexer.flex"
 {return ADD_ASSIGN;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 29 "src/lexer.flex"
+#line 28 "src/lexer.flex"
 {  return  (ELLIPSIS); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "src/lexer.flex"
+#line 30 "src/lexer.flex"
 {  return  (RIGHT_ASSIGN); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 33 "src/lexer.flex"
+#line 32 "src/lexer.flex"
 {  return  (LEFT_ASSIGN); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 35 "src/lexer.flex"
+#line 34 "src/lexer.flex"
 {  return  (ADD_ASSIGN); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 37 "src/lexer.flex"
+#line 36 "src/lexer.flex"
 {  return  (SUB_ASSIGN); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 39 "src/lexer.flex"
+#line 38 "src/lexer.flex"
 {  return  (MUL_ASSIGN); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 41 "src/lexer.flex"
+#line 40 "src/lexer.flex"
 {  return  (DIV_ASSIGN); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 43 "src/lexer.flex"
+#line 42 "src/lexer.flex"
 {  return  (MOD_ASSIGN); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 45 "src/lexer.flex"
+#line 44 "src/lexer.flex"
 {  return  (AND_ASSIGN); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 47 "src/lexer.flex"
+#line 46 "src/lexer.flex"
 {  return  (XOR_ASSIGN); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 49 "src/lexer.flex"
+#line 48 "src/lexer.flex"
 {  return  (OR_ASSIGN); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 51 "src/lexer.flex"
+#line 50 "src/lexer.flex"
 {  return  (RIGHT_OP); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 53 "src/lexer.flex"
+#line 52 "src/lexer.flex"
 {  return  (LEFT_OP); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 55 "src/lexer.flex"
+#line 54 "src/lexer.flex"
 {  return  (INC_OP); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 57 "src/lexer.flex"
+#line 56 "src/lexer.flex"
 {  return  (DEC_OP); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 59 "src/lexer.flex"
+#line 58 "src/lexer.flex"
 {  return  (PTR_OP); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 61 "src/lexer.flex"
+#line 60 "src/lexer.flex"
 {  return  (AND_OP); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 63 "src/lexer.flex"
+#line 62 "src/lexer.flex"
 {  return  (OR_OP); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 65 "src/lexer.flex"
+#line 64 "src/lexer.flex"
 {  return  (LE_OP); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 67 "src/lexer.flex"
+#line 66 "src/lexer.flex"
 {  return  (GE_OP); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 69 "src/lexer.flex"
+#line 68 "src/lexer.flex"
 {  return  (EQ_OP); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 72 "src/lexer.flex"
+#line 71 "src/lexer.flex"
 {
   std::string op(yytext);
   if(op == "="){
@@ -1010,12 +1009,77 @@ YY_RULE_SETUP
   else if(op == "|"){
     return '|';
   }
-
+  else if(op == "+="){
+    return ADD_ASSIGN;
+  }
+  else if(op == "-="){
+    return SUB_ASSIGN;
+  }
+  else if(op == "*="){
+    return MUL_ASSIGN;
+  }
+  else if(op == "/="){
+    return DIV_ASSIGN;
+  }
+  else if(op == "%="){
+    return MOD_ASSGIN;
+  }
+  else if(op == ">>="){
+    return RIGHT_ASSIGN;
+  }
+  else if(op == "<<="){
+    return LEFT_ASSIGN;
+  }
+  else if(op == "&="){
+    return AND_ASSIGN;
+  }
+  else if(op == "^="){
+    return XOR_ASSIGN;
+  }
+  else if(op == "|="){
+    return OR_ASSIGN;
+  }
+  else if(op == "++"){
+    return INC_OP;
+  }
+  else if(op == "--"){
+    return DEC_OP;
+  }
+  else if(op == "=="){
+    return EQ_OP;
+  }
+  else if(op == "!="){
+    return NE_OP;
+  }
+  else if(op == ">"){
+    return MORE;
+  }
+  else if(op == "<"){
+    return LESS;
+  }
+  else if(op == ">="){
+    return GE_OP;
+  }
+  else if(op == "<="){
+    return LE_OP;
+  }
   else if(op == "!"){
     return '!';
   }
+  else if(op == "||"){
+    return OR_OP;
+  }
+  else if(op == "&&"){
+    return AND_OP;
+  }
   else if(op == "?"){
     return '?';
+  }
+  else if(op == "<<"){
+    return LEFT_OP;
+  }
+  else if(op == ">>"){
+    return RIGHT_OP;
   }
   else if(op == "("){
     return '(';
@@ -1044,6 +1108,9 @@ YY_RULE_SETUP
   else if(op == ";"){
     return ';';
   }
+  else if(op == "->"){
+    return PTR_OP;
+  }
   else if(op == "."){
     return '.';
   }
@@ -1054,12 +1121,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 137 "src/lexer.flex"
+#line 203 "src/lexer.flex"
 {yylval.str = new std::string (yytext); return CONSTANT;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 139 "src/lexer.flex"
+#line 205 "src/lexer.flex"
 {
   yylval.str = new std::string (yytext);
   return CONSTANT;
@@ -1067,7 +1134,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 145 "src/lexer.flex"
+#line 211 "src/lexer.flex"
 {
   yylval.str = new std::string (yytext);
   return CONSTANT;
@@ -1075,7 +1142,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 150 "src/lexer.flex"
+#line 216 "src/lexer.flex"
 {
   yylval.str = new std::string (yytext);
   return CONSTANT;
@@ -1083,152 +1150,152 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 155 "src/lexer.flex"
+#line 221 "src/lexer.flex"
 {return AUTO;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 156 "src/lexer.flex"
+#line 222 "src/lexer.flex"
 {return BREAK;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 157 "src/lexer.flex"
+#line 223 "src/lexer.flex"
 {return CASE;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 158 "src/lexer.flex"
+#line 224 "src/lexer.flex"
 {return CHAR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 159 "src/lexer.flex"
+#line 225 "src/lexer.flex"
 {return CONST;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 160 "src/lexer.flex"
+#line 226 "src/lexer.flex"
 {return CONTINUE;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 161 "src/lexer.flex"
+#line 227 "src/lexer.flex"
 {return DEFAULT;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 162 "src/lexer.flex"
+#line 228 "src/lexer.flex"
 {return DO;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 163 "src/lexer.flex"
+#line 229 "src/lexer.flex"
 {return DOUBLE;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 164 "src/lexer.flex"
+#line 230 "src/lexer.flex"
 {return ELSE;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 165 "src/lexer.flex"
+#line 231 "src/lexer.flex"
 {return ENUM;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 166 "src/lexer.flex"
+#line 232 "src/lexer.flex"
 {return FOR;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 167 "src/lexer.flex"
+#line 233 "src/lexer.flex"
 {return IF;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 168 "src/lexer.flex"
+#line 234 "src/lexer.flex"
 {return INT;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 169 "src/lexer.flex"
+#line 235 "src/lexer.flex"
 {return LONG;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 170 "src/lexer.flex"
+#line 236 "src/lexer.flex"
 {return RETURN;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 171 "src/lexer.flex"
+#line 237 "src/lexer.flex"
 {return SHORT;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 172 "src/lexer.flex"
+#line 238 "src/lexer.flex"
 {return SIGNED;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 173 "src/lexer.flex"
+#line 239 "src/lexer.flex"
 {return UNSIGNED;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 174 "src/lexer.flex"
+#line 240 "src/lexer.flex"
 {return STATIC;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 175 "src/lexer.flex"
+#line 241 "src/lexer.flex"
 {return STRUCT;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 176 "src/lexer.flex"
+#line 242 "src/lexer.flex"
 {return SWITCH;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 177 "src/lexer.flex"
+#line 243 "src/lexer.flex"
 {return TYPEDEF;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 178 "src/lexer.flex"
+#line 244 "src/lexer.flex"
 {return VOID;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 179 "src/lexer.flex"
+#line 245 "src/lexer.flex"
 {return WHILE;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 180 "src/lexer.flex"
+#line 246 "src/lexer.flex"
 {return SIZEOF;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 181 "src/lexer.flex"
+#line 247 "src/lexer.flex"
 {return GOTO;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 182 "src/lexer.flex"
+#line 248 "src/lexer.flex"
 {return UNION;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 183 "src/lexer.flex"
+#line 249 "src/lexer.flex"
 {return VOLATILE;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 186 "src/lexer.flex"
+#line 252 "src/lexer.flex"
 {
                     //duplicate the string to yylval.str(which defined in parser.y)
                     yylval.str = new std::string (yytext);
@@ -1237,20 +1304,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 195 "src/lexer.flex"
+#line 261 "src/lexer.flex"
 {;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 197 "src/lexer.flex"
+#line 263 "src/lexer.flex"
 { }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 202 "src/lexer.flex"
+#line 268 "src/lexer.flex"
 ECHO;
 	YY_BREAK
-#line 1254 "src/lexer.yy.cpp"
+#line 1321 "src/lexer.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2251,7 +2318,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 202 "src/lexer.flex"
+#line 268 "src/lexer.flex"
 
 
 

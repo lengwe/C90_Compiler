@@ -32,6 +32,10 @@ class compound_statement : public Node{
   public:
     compound_statement(int type_in, Nodeptr _l,Nodeptr _r) : type(type_in), statement_list(_l),
 		 	declaration_list(_r){}
+    ~compound_statement(){
+      delete statement_list;
+      delete declaration_list;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering compound_statement\n";
@@ -91,6 +95,10 @@ class declaration_list : public Node{
   public:
     declaration_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declaration(_l),
 		 	declaration_listptr(_r){}
+    ~declaration_list(){
+      delete declaration;
+      delete declaration_listptr;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr << "enter declaration_list" << '\n';
@@ -122,6 +130,10 @@ class declarator : public Node{
   public:
     declarator(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), pointer(_l),
 		 	direct_declarator(_r){}
+    ~declarator(){
+      delete pointer;
+      delete direct_declarator;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering declarator\n";
@@ -139,6 +151,10 @@ class declaration : public Node{
   public:
     declaration(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declaration_specifiers(_l),
 		 	init_declarator_list(_r){}
+    ~declaration(){
+      delete declaration_specifiers;
+      delete init_declarator_list;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr << "declaration" << '\n';
@@ -161,6 +177,10 @@ class initializer : public Node{
   public:
     initializer(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), assignment_expression(_l),
 		 	initializer_list(_r){}
+    ~initializer(){
+      delete assignment_expression;
+      delete initializer_list;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering initializer\n";
@@ -222,6 +242,10 @@ class type_name : public Node{
   public:
     type_name(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), specifier_qualifier_list(_l),
 		 	abstract_declarator(_r){}
+    ~type_name(){
+      delete specifier_qualifier_list;
+      delete abstract_declarator;
+    }
 
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering struct_or_union\n";
@@ -238,6 +262,11 @@ class specifier_qualifier_list : public Node{
   public:
     specifier_qualifier_list(int type_in,  Nodeptr _l, Nodeptr _r, Nodeptr _s) : type(type_in), type_specifier(_l),
 		 	specifier_qualifier_listptr(_r), type_qualifier(_s){}
+    ~specifier_qualifier_list(){
+      delete type_specifier;
+      delete specifier_qualifier_listptr;
+      delete type_qualifier;
+    }
 
       virtual void python(std::string &dst) const override{
 			//std::cerr<<"entering specifier_qualifier_list\n";
@@ -254,6 +283,10 @@ class struct_declarator_list : public Node{
   public:
     struct_declarator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), struct_declarator(_l),
 		 	struct_declarator_listptr(_r){}
+    ~struct_declarator_list(){
+      delete struct_declarator;
+      delete struct_declarator_listptr;
+    }
 
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering struct_declarator_list\n";
@@ -272,6 +305,9 @@ class enum_specifier : public Node{
   public:
     enum_specifier(int type_in,  std::string* _l,std::string* _r, Nodeptr _s) : type(type_in), num(_l),
 		 	identifier(_r), enumerator_list(_s){}
+    ~enum_specifier(){
+      delete enumerator_list;
+    }
 
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering enum_specifier\n";
@@ -288,6 +324,10 @@ class enumerator_list : public Node{
   public:
     enumerator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), enumerator(_l),
 		 	enumerator_listptr(_r){}
+    ~enumerator_list(){
+      delete enumerator;
+      delete enumerator_listptr;
+    }
 
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering enumerator_list\n";
@@ -304,6 +344,10 @@ class enumerator : public Node{
   public:
     enumerator(int type_in,  std::string* _l, Nodeptr _r) : type(type_in), IDENTIFIER(_l),
 		constant_expression(_r){}
+
+    ~enumerator(){
+      delete constant_expression;
+    }
 
     virtual void python(std::string &dst) const override{
         //std::cerr<<"entering enumerator\n";
@@ -332,6 +376,10 @@ class identifier_list : public Node{
   public:
     identifier_list(int type_in,  std::string* _l, Nodeptr _r) : type(type_in), IDENTIFIER(_l),
 		identifier_listptr(_r){}
+
+    ~identifier_list(){
+      delete identifier_listptr;
+    }
 
     virtual void python(std::string &dst) const override{
         //std::cerr<<"entering identifier_list\n";
@@ -362,6 +410,12 @@ class direct_declarator : public Node{
   public:
     direct_declarator(int type_in,std::string* _id ,Nodeptr _l, Nodeptr _r, Nodeptr _p, Nodeptr _q) : type(type_in), identifier(_id), direct_declaratorptr(_l),
 		 	declarator(_r), constant_expression(_p),parameter_type_list(_q){}
+    ~direct_declarator(){
+      delete direct_declaratorptr;
+      delete declarator;
+      delete constant_expression;
+      delete parameter_type_list;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering direct_declarator\n";
@@ -409,6 +463,11 @@ class parameter_list : public Node{
     parameter_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), parameter_declaration(_l),
 		 	parameter_listptr(_r){}
 
+    ~parameter_list(){
+      delete parameter_declaration;
+      delete parameter_listptr;
+    }
+
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering parameter_list\n";
         std::string str1, str2 = "";
@@ -431,6 +490,9 @@ class parameter_type_list : public Node{
   public:
     parameter_type_list(int type_in,  Nodeptr _l,std::string* _r) : type(type_in), parameter_list(_l),
 		 	ellipsis(_r){}
+    ~parameter_type_list(){
+      delete parameter_list;
+    }
 
       virtual void python(std::string &dst) const override{
         std::string str;
@@ -451,6 +513,11 @@ class parameter_declaration : public Node{
   public:
     parameter_declaration(int type_in,  Nodeptr _l, Nodeptr _r, Nodeptr _s) : type(type_in), declaration_specifiers(_l),
 		 	declarator(_r), abstract_declarator(_s){}
+    ~parameter_declaration(){
+      delete declaration_specifiers;
+      delete declarator;
+      delete abstract_declarator;
+    }
 
       virtual void python(std::string &dst) const override{
           //std::cerr<<" entering parameter_declaration\n";
@@ -472,6 +539,11 @@ class type_qualifier_list : public Node{
     type_qualifier_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), type_qualifier(_l),
 		 	type_qualifier_listptr(_r){}
 
+    ~type_qualifier_list(){
+      delete type_qualifier;
+      delete type_qualifier_listptr;
+    }
+
       virtual void python(std::string &dst) const override{
                 //std::cerr<<"entering type_qualifier_list\n";
       }
@@ -490,6 +562,10 @@ class jump_statement : public Node{
   public:
     jump_statement(int type_in,  std::string* _keyword, std::string* _id, Nodeptr _l) : type(type_in), keyword(_keyword),
 		 	id(_id), expression(_l){}
+
+    ~jump_statement(){
+      delete expression;
+    }
 
       virtual void python(std::string &dst) const override{
         std::string str;
@@ -519,6 +595,9 @@ class statement : public Node{
 
   public:
     statement(int type_in,  Nodeptr _l) : type(type_in), statementptr(_l){}
+    ~statement(){
+      delete statementptr;
+    }
 
     virtual void python(std::string &dst) const override{
       //std::cerr<<"entering statement\n";
@@ -535,6 +614,10 @@ class statement_list : public Node{
   public:
     statement_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), statement(_l),
 		 	statement_listptr(_r){}
+    ~statement_list(){
+      delete statement;
+      delete statement_listptr;
+    }
 
       virtual void python(std::string &dst) const override{
         std::string str, str2;
@@ -560,6 +643,9 @@ class expression_statement : public Node{
 
   public:
     expression_statement(Nodeptr _l) : expression(_l){}
+    ~expression_statement(){
+      delete expression;
+    }
 
     virtual void python(std::string &dst) const override{
       std::string str;
@@ -579,6 +665,12 @@ class selection_statement : public Node{
     selection_statement(int type_in,  Nodeptr _l, Nodeptr _r, Nodeptr _s) : type(type_in), expression(_l),
 		 	statement_1(_r), statement_2(_s){}
 
+    ~selection_statement(){
+      delete expression;
+      delete statement_1;
+      delete statement_2;
+    }
+
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering selection_statement\n";
@@ -595,7 +687,7 @@ class selection_statement : public Node{
           dst = name + str1 + ":" + '\n' + str2 + "\nelse:\n" + str3;
           return;
         }
-      dst = name +  str1 + ":" + '\n' +str2;
+        dst = name +  str1 + ":" + '\n' +str2;
       }
 };
 
@@ -610,6 +702,13 @@ class iteration_statement : public Node{
   public:
     iteration_statement(int type_in, Nodeptr _l, Nodeptr _r, Nodeptr _p, Nodeptr _q) : type(type_in), expression(_l),
 		 	statement(_r), expression_statement_1(_p),expression_statement_2(_q){}
+
+    ~iteration_statement(){
+      delete expression;
+      delete statement;
+      delete expression_statement_1;
+      delete expression_statement_2;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering iteration_statement\n";
@@ -636,6 +735,11 @@ class labeled_statement : public Node{
     labeled_statement(int type_in,  std::string* _id,std::string* _keyword, Nodeptr _l, Nodeptr _r) : type(type_in), id(_id),
 		 	keyword(_keyword), constant_expression(_l), statement(_r){}
 
+    ~labeled_statement(){
+      delete constant_expression;
+      delete statement;
+    }
+
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering labeled_statement\n";
   		}
@@ -652,6 +756,11 @@ class initializer_list : public Node{
     initializer_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), initializer(_l),
 		 	initializer_listptr(_r){}
 
+    ~initializer_list(){
+      delete initializer;
+      delete initializer_listptr;
+    }
+
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering initializer_list\n";
   		}
@@ -666,6 +775,11 @@ class struct_declarator : public Node{
   public:
     struct_declarator(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declarator(_l),
 		 	constant_expression(_r){}
+
+    ~struct_declarator(){
+      delete declarator;
+      delete constant_expression;
+    }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering struct_declarator\n";
