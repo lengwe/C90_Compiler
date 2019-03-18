@@ -44,7 +44,11 @@ class init_declarator_list : public Node{
     }
 
     virtual void python(std::string &dst) const override{
-      //std::cerr<<" entering init_declarator_list\n";
+      std::cerr<<" entering init_declarator_list\n";
+      std::string str1, str2;
+      l->python(str1);
+      r->python(str2);
+      dst = str1 + "\n" + str2;
     }
 
 };
