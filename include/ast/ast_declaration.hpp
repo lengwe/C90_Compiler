@@ -15,6 +15,11 @@ class declaration_specifiers : public Node{
   public:
 
     declaration_specifiers(int type_in, Nodeptr _l, Nodeptr _s, Nodeptr _r) : type(type_in), _declaration_specifiers(_l), declarator(_r), s(_s){}
+    ~declaration_specifiers(){
+      delete _declaration_specifiers;
+      delete declarator;
+      delete s;
+    }
 
     virtual void python(std::string &dst) const override{
       //std::cerr<<" entering declaration_specifiers\n";
@@ -33,6 +38,10 @@ class init_declarator_list : public Node{
     Nodeptr r;
   public:
     init_declarator_list(Nodeptr _l, Nodeptr _r) : l(_l), r(_r){}
+    ~init_declarator_list(){
+      delete l;
+      delete r;
+    }
 
     virtual void python(std::string &dst) const override{
       //std::cerr<<" entering init_declarator_list\n";
@@ -47,6 +56,10 @@ class init_declarator : public Node{
 
   public:
     init_declarator(Nodeptr _l, Nodeptr _r) : declarator(_l), initializer(_r){}
+    ~init_declarator(){
+      delete declarator;
+      delete initializer;
+    }
 
     virtual void python(std::string &dst) const override{
       //std::cerr<<" entering init_declarator\n";
