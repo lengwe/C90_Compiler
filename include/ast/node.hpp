@@ -20,6 +20,7 @@ class Node{
 		std::string c()const;
 		//void print(std::ostream &dst) const=0;
 		virtual void python(std::string &dst)const=0;
+		virtual void mips(std::string &dst, std::string &destReg)const=0;
 
 		void indent(std::string &dst) const{
 
@@ -76,6 +77,30 @@ class translation_unit: public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override {
+			// std::string str1,str2;
+			// switch (type) {
+			// 	case 1:
+			// 		p->mips(str1);
+			// 		dst = str1;
+			// 		//std::cerr<<"case 1 in trans: "<<dst<<std::endl;
+			// 		break;
+			// 	case 2:
+			// 		if(l!=NULL){
+			// 			l->mips(str1);
+			// 			r->mips(str2);
+			// 			dst = str1 + str2;
+			// 			//std::cerr<<"case 2 in trans: "<<dst<<std::endl;
+			// 		}
+			// 		else{
+			// 			r->mips(str2);
+			// 			dst = str2;
+			// 			//std::cerr<<"case 2 in trans: "<<dst<<std::endl;
+			// 		}
+			// 	break;
+			// }
+		}
 };
 
 class external_declaration: public Node{
@@ -110,7 +135,7 @@ class external_declaration: public Node{
 					std::size_t pos = str.find("=");
 					std::string variable(str,0,pos);
 					if(!regex_match(variable,id)){
-                                                ////std::cout<<"regex\n";
+          //std::cout<<"regex\n";
 						global.push_back(variable);
 					}
 					// for(int i=0; i<global.size(); i++){
@@ -120,6 +145,11 @@ class external_declaration: public Node{
 				}
 				break;
 			}
+		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			// std::string str;
+			// p->mips(str);
 		}
 };
 
@@ -189,6 +219,11 @@ public:
 				// //std::cerr<<"dst in func: "<<dst<<std::endl;
 	}
 //int main(){int a; int y; return x;} int x(){int f;}
+	virtual void mips(std::string &dst, std::string &destReg) const override{
+		if(declarator!=NULL){
+
+		}
+	}
 
 };
 

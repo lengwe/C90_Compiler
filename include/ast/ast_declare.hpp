@@ -118,6 +118,8 @@ class declaration_list : public Node{
           }
           //dst = str+","+str2;
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class declarator : public Node{
@@ -139,6 +141,8 @@ class declarator : public Node{
         //std::cerr<<"entering declarator\n";
 
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class declaration : public Node{
@@ -165,6 +169,8 @@ class declaration : public Node{
         //std::cerr << "str2 in declaration "<<str2 << '\n';
         dst = str1+str2;
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class initializer : public Node{
@@ -185,6 +191,8 @@ class initializer : public Node{
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering initializer\n";
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class struct_declaration_list : public Node{
@@ -201,6 +209,8 @@ class struct_declaration_list : public Node{
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering struct_declaration_list\n";
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class struct_declaration : public Node{
@@ -217,6 +227,8 @@ class struct_declaration : public Node{
       virtual void python(std::string &dst) const override{
             //std::cerr<<"entering struct_declaration\n";
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class struct_or_union : public Node{
@@ -230,6 +242,8 @@ class struct_or_union : public Node{
     virtual void python(std::string &dst) const override{
       //not implement
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class type_name : public Node{
@@ -250,6 +264,8 @@ class type_name : public Node{
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering struct_or_union\n";
   		}
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class specifier_qualifier_list : public Node{
@@ -271,6 +287,8 @@ class specifier_qualifier_list : public Node{
       virtual void python(std::string &dst) const override{
 			//std::cerr<<"entering specifier_qualifier_list\n";
   		}
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class struct_declarator_list : public Node{
@@ -291,6 +309,8 @@ class struct_declarator_list : public Node{
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering struct_declarator_list\n";
   		}
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 
@@ -312,6 +332,8 @@ class enum_specifier : public Node{
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering enum_specifier\n";
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class enumerator_list : public Node{
@@ -332,6 +354,8 @@ class enumerator_list : public Node{
       virtual void python(std::string &dst) const override{
           //std::cerr<<"entering enumerator_list\n";
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class enumerator : public Node{
@@ -352,6 +376,8 @@ class enumerator : public Node{
     virtual void python(std::string &dst) const override{
         //std::cerr<<"entering enumerator\n";
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 // class type_qualifier : public Node{
@@ -395,6 +421,8 @@ class identifier_list : public Node{
         break;
       }
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class direct_declarator : public Node{
@@ -450,6 +478,8 @@ class direct_declarator : public Node{
           break;
         }
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class parameter_list : public Node{
@@ -479,6 +509,8 @@ class parameter_list : public Node{
         parameter_listptr->python(str2);
         dst = str2+ ", " + str1;
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class parameter_type_list : public Node{
@@ -501,6 +533,8 @@ class parameter_type_list : public Node{
           dst = str;
         }
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class parameter_declaration : public Node{
@@ -526,6 +560,8 @@ class parameter_declaration : public Node{
           declaration_specifiers->python(str2);
           dst = str1 + str2;
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class type_qualifier_list : public Node{
@@ -547,6 +583,8 @@ class type_qualifier_list : public Node{
       virtual void python(std::string &dst) const override{
                 //std::cerr<<"entering type_qualifier_list\n";
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 
@@ -586,6 +624,8 @@ class jump_statement : public Node{
           break;
         }
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class statement : public Node{
@@ -602,6 +642,8 @@ class statement : public Node{
     virtual void python(std::string &dst) const override{
       //std::cerr<<"entering statement\n";
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class statement_list : public Node{
@@ -634,6 +676,8 @@ class statement_list : public Node{
           //std::cerr<<"str2 in statement_list: "<<str2<<'\n';
         }
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class expression_statement : public Node{
@@ -652,6 +696,8 @@ class expression_statement : public Node{
       expression->python(str);
       dst = str;
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class selection_statement : public Node{
@@ -689,6 +735,8 @@ class selection_statement : public Node{
         }
         dst = name +  str1 + ":" + '\n' +str2;
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class iteration_statement : public Node{
@@ -721,6 +769,8 @@ class iteration_statement : public Node{
         indent(str2);
         dst = name+str1+":\n"+str2;
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class labeled_statement : public Node{
@@ -743,6 +793,8 @@ class labeled_statement : public Node{
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering labeled_statement\n";
   		}
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class initializer_list : public Node{
@@ -764,6 +816,8 @@ class initializer_list : public Node{
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering initializer_list\n";
   		}
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class struct_declarator : public Node{
@@ -784,6 +838,8 @@ class struct_declarator : public Node{
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering struct_declarator\n";
   		}
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 
@@ -797,6 +853,8 @@ class storage_class_specifier : public Node{
     virtual void python(std::string &dst) const override{
       //not implement
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 #endif

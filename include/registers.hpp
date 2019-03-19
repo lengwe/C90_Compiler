@@ -24,7 +24,7 @@ private:
 
 	void spill(int n){
 		usage.pop_front();
-		std::cerr << "spill" << n+1 << '\n';
+		std::cerr << "spill" << n << '\n';
 
 	}
 
@@ -36,7 +36,7 @@ private:
 public:
 	std::list<int> usage;
 	registers(){
-		reg.resize(9,"0");
+		reg.resize(10,"0");
 	}
 	std::string newVar(std::string name, std::string& dst){
 		std::string out;
@@ -47,8 +47,8 @@ public:
 		}
 		reg[n] = name;
 		usage.push_back(n);
-		std::cout << "push" << n+1 << "in" << '\n';
-		out = "$t"+std::to_string(n+1); //plus one cos register t0 is reserved.
+		std::cout << "push" << n << "in" << '\n';
+		out = "$t"+std::to_string(n); //plus one cos register t0 is reserved.
 		return out;
 	}
 
@@ -67,7 +67,7 @@ public:
 		std::list<int>::iterator it2 = std::find(usage.begin(),usage.end(),n);
 		usage.splice( usage.end(), usage, it2);
 		//
-		out = "$t"+std::to_string(n+1); //plus one cos register t0 is reserved.
+		out = "$t"+std::to_string(n); //plus one cos register t0 is reserved.
 		return out;
 	}
 

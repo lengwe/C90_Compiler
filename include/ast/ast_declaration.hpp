@@ -30,6 +30,8 @@ class declaration_specifiers : public Node{
       }
     }
 
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
+
 };
 
 class init_declarator_list : public Node{
@@ -50,6 +52,9 @@ class init_declarator_list : public Node{
       r->python(str2);
       dst = str1 + "\n" + str2;
     }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
+
 
 };
 
@@ -77,6 +82,19 @@ class init_declarator : public Node{
       initializer->python(str2);
       dst = str1 + "=" + str2;
     }
+
+    // virtual void mips(std::string &dst) const override{
+    //   std::string str, str2;
+    //   declarator->mips(str);
+    //   str = Context.makeVar(str);
+    //   if(initializer == NULL){
+    //       std::cout << "/* message */" << '\n';
+    //     return ;
+    //   }
+    //   initializer->mips(str);
+    // }
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class type_specifier: public Node{
@@ -94,6 +112,8 @@ class type_specifier: public Node{
       //do nothing
       //std::cerr<<"entering type_specifier"<<std::endl;
 		}
+
+    virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class struct_or_union_specifier : public Node {
@@ -109,6 +129,8 @@ class struct_or_union_specifier : public Node {
       virtual void python(std::string &dst) const override{
 
       }
+
+      virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 // class direct_abstract_declarator : public Node {

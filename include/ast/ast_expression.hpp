@@ -43,15 +43,8 @@ class primary_expression : public Node{
 			}
 		}
 
-		// std::string c() const /*override*/{
-		// 	switch (type) {
-		// 		case 1:
-		// 		case 2:
-		// 		case 3:
-		// 		 return *string;
-			// 	break;
-			// }
-		// }
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
+
 		};
 
 class postfix_expression : public Node{
@@ -109,6 +102,8 @@ class postfix_expression : public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class argument_expression_list : public Node{
@@ -128,6 +123,8 @@ class argument_expression_list : public Node{
 			r->python(str2);
 			dst = str+","+str2;
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 
 };
 
@@ -168,6 +165,8 @@ class unary_expression : public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class cast_expression :public Node{
@@ -183,6 +182,8 @@ class cast_expression :public Node{
 		virtual void python(std::string &dst) const override{
 
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class multiplicative_expression : public Node{
@@ -209,6 +210,8 @@ class multiplicative_expression : public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class additive_expression : public Node{
@@ -245,6 +248,8 @@ class additive_expression : public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class shift_expression : public Node{
@@ -271,6 +276,8 @@ class shift_expression : public Node{
 			}
 			dst = str1 + op + str2;
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class relational_expression : public Node{
@@ -306,6 +313,8 @@ class relational_expression : public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class equality_expression : public Node{
@@ -341,6 +350,8 @@ class equality_expression : public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class and_expression : public Node{
@@ -357,6 +368,8 @@ class and_expression : public Node{
 		virtual void python(std::string &dst) const override{
 
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 
 };
 
@@ -375,6 +388,8 @@ class exclusive_or_expression : public Node{
 
 		}
 
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
+
 };
 
 class inclusive_or_expression : public Node{
@@ -391,6 +406,8 @@ class inclusive_or_expression : public Node{
 		virtual void python(std::string &dst) const override{
 
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 
 };
 
@@ -413,6 +430,7 @@ class logical_and_expression : public Node{
 					dst = str1 + " and " + str2;
 		}
 
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 
 };
 
@@ -435,6 +453,8 @@ class logical_or_expression : public Node{
 					dst = str1 + " or " + str2;
 		}
 
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
+
 };
 
 class conditional_expression : public Node{
@@ -450,6 +470,8 @@ class conditional_expression : public Node{
 		virtual void python(std::string &dst) const override{
 
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 
 };
 
@@ -472,6 +494,8 @@ class assignment_expression : public Node{
 
 			dst = str1 + *assign_op + str2;
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 };
 
 class expression : public Node{
@@ -493,6 +517,8 @@ class expression : public Node{
 			r->python(str2);
 			dst = str+","+str2;
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg) const override{}
 
 };
 
