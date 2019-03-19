@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <queue>
+#include <list>
 
 class registers{
 private:
@@ -17,33 +17,56 @@ private:
 		int n = it - reg.begin();
 		return n;
 	}
-	int last_used(){
-		return usage.front();
+	int to_spill(){
+		return *(usage.begin());
 
 	}
 
 	void spill(int n){
+		usage.pop_front();
 		std::cerr << "spill" << n+1 << '\n';
 
 	}
 
+	int callstack(std::string name){
+		std::cerr << "call stack" << '\n';
+		return -1;
+	}
+
 public:
-	std::queue<int> usage;
+	std::list<int> usage;
 	registers(){
 		reg.resize(9,"0");
 	}
 	std::string newVar(std::string name, std::string& dst){
-		std::cerr << "adding" << name << '\n';
 		std::string out;
 		int n = find_empty();
 		if(n < 0){
-			n = last_used();
-			usage.pop();
+			n = to_spill();
 			spill(n);
 		}
 		reg[n] = name;
-		usage.push(n);
+		usage.push_back(n);
 		std::cout << "push" << n+1 << "in" << '\n';
+		out = "$t"+std::to_string(n+1); //plus one cos register t0 is reserved.
+		return out;
+	}
+
+	std::string findVar(std::string name, std::string& dst){
+		std::vector<std::string>::iterator it;
+		std::string out;
+		it = find (reg.begin(), reg.end(),name);
+		int n;
+		if(it == reg.end()){
+			n = callstack(name);
+		}
+		else{
+			n = it - reg.begin();
+		}
+		//move it to back of the queue
+		std::list<int>::iterator it2 = std::find(usage.begin(),usage.end(),n);
+		usage.splice( usage.end(), usage, it2);
+		//
 		out = "$t"+std::to_string(n+1); //plus one cos register t0 is reserved.
 		return out;
 	}
