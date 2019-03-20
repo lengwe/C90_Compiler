@@ -94,7 +94,19 @@ class init_declarator : public Node{
     //   initializer->mips(str);
     // }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg) const override{
+      std::string str1,str2;
+      declarator->mips(str1, destReg);
+      if(initializer == NULL){
+      std::cout << "addi " << str1<< ", $zero, $zero" << '\n';
+        return;
+      }
+      initializer->mips(str2, str1);
+      std::cerr << "str2 in init_declarator" << str2 <<  '\n';
+      if(str2[0] != '$'){
+        std::cout << "addi " << str1 << ", $zero, " << str2 << '\n';
+      }
+    }
 };
 
 class type_specifier: public Node{

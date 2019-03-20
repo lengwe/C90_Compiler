@@ -36,6 +36,7 @@ class primary_expression : public Node{
 					dst = "("+str+")";
 				break;
 				case 5:
+				break;
 				case 6:
 					dst = "-" + *string;
 				break;
@@ -43,8 +44,17 @@ class primary_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
-
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::cerr << "in primary expression" << '\n';
+			switch(type){
+				case 1:
+					dst = Context.findVar(*string, dst);
+					break;
+				case 2:
+					dst = *string;
+					break;
+			}
+		}
 		};
 
 class postfix_expression : public Node{
@@ -249,7 +259,54 @@ class additive_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::string str1, str2;
+			switch(type){
+				case 1:
+				l->mips(str1, destReg);
+				r->mips(str2, destReg);
+				if(str1[0] == '$' && str2[0] == '$'){
+				std::cout << "add " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				}
+				else if(str1[0] != '$' && str2[0] != '$'){
+					std::cout << "li " << destReg << ", " << (std::stoi(str1)+std::stoi(str2)) << std::endl;
+				}
+				else if (str1[0] != '$'){
+					std::cout << "addi " << destReg << ", " << str2 << ", " << str1 << std::endl;
+				}
+				else{
+					std::cout << "addi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				}
+				dst = destReg;
+				//TODO
+				break;
+
+				case 2:
+				l->mips(str1, destReg);
+				r->mips(str2, destReg);
+				if(str1[0] == '$' && str2[0] == '$'){
+				std::cout << "sub " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				}
+				else if(str1[0] != '$' && str2[0] != '$'){
+					std::cout << "li " << destReg << ", " << (std::stoi(str1)-std::stoi(str2)) << std::endl;
+				}
+				else if (str1[0] != '$'){
+					std::cout << "addi " << destReg << ", " << str2 << ", " << "-"+str1 << std::endl;
+					std::cout << "sub " << destReg << ", $zero, " << destReg << std::endl;
+				}
+				else{
+					std::cout << "addi " << destReg << ", " << str1 << ", " << "-"+str2 << std::endl;
+				}
+				dst = destReg;
+				//TODO
+				break;
+
+				default:
+				throw std::runtime_error ("Unknow construct");
+				break;
+			}
+
+		}
 };
 
 class shift_expression : public Node{
@@ -430,7 +487,25 @@ class logical_and_expression : public Node{
 					dst = str1 + " and " + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::string str1, str2;
+			l->mips(str1, destReg);
+			r->mips(str2, destReg);
+			if(str1[0] == '$' && str2[0] == '$'){
+			std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			else if(str1[0] != '$' && str2[0] != '$'){
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)&&std::stoi(str2)) << std::endl;
+			}
+			else if (str1[0] != '$'){
+				std::cout << "andi " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			}
+			else{
+				std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			dst = destReg;
+			//TODO
+		}
 
 };
 
@@ -453,7 +528,26 @@ class logical_or_expression : public Node{
 					dst = str1 + " or " + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::string str1, str2;
+			l->mips(str1, destReg);
+			r->mips(str2, destReg);
+			if(str1[0] == '$' && str2[0] == '$'){
+			std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			else if(str1[0] != '$' && str2[0] != '$'){
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)||std::stoi(str2)) << std::endl;
+			}
+			else if (str1[0] != '$'){
+				std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			}
+			else{
+				std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			dst = destReg;
+			//TODO
+
+		}
 
 };
 
@@ -495,7 +589,15 @@ class assignment_expression : public Node{
 			dst = str1 + *assign_op + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::cerr << "in ass, assop = " << *assign_op << '\n';
+			std::string str, str2;
+			if(*assign_op == "="){
+				std::cerr << "in = " << '\n';
+				l->mips(str, destReg);
+				r->mips(str2, str);
+			}
+		}
 };
 
 class expression : public Node{

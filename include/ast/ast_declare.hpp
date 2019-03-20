@@ -83,6 +83,38 @@ class compound_statement : public Node{
         // //std::cerr<<"str2 in func: "<<str2<<std::endl;
         // //std::cout<<"str3 in func: "<<str3<<std::endl;
       }
+      virtual void mips(std::string &dst, std::string &destReg) const override{
+        std::string str1,str2;
+        switch (type) {
+          // case 1:
+          //   dst = g + "\n";
+          // break;
+
+          case 2:
+            statement_list->mips(str1,destReg);
+                        std::cerr << "2" << '\n';
+            // dst = g + str1+"\n";
+            //std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
+          break;
+
+          case 3:
+            declaration_list->mips(str1,destReg);
+              std::cerr << "3" << '\n';
+            // dst = g + str1+"\n";
+            //std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
+          break;
+
+          case 4:
+            declaration_list->mips(str1,destReg);
+            statement_list->mips(str2,destReg);
+            std::cerr << "4" << '\n';
+            // dst = g + str1 +"\n" + str2 + "\n";
+            //std::cout<<"str1: "<<str1<<'\n';
+            //std::cout<<"str2: "<<str2<<'\n';
+            //std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
+            break;
+        }
+      }
 };
 
 class declaration_list : public Node{
@@ -119,7 +151,17 @@ class declaration_list : public Node{
           //dst = str+","+str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg) const override{
+        std::string str, str2;
+
+        if(declaration_listptr!=NULL){
+          declaration_listptr->mips(str, destReg);
+          declaration->mips(str2, destReg);
+        }
+        else{
+          declaration->mips(str, destReg);
+        }
+      }
 };
 
 class declarator : public Node{
@@ -142,7 +184,8 @@ class declarator : public Node{
 
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg) const override{
+      }
 };
 
 class declaration : public Node{
@@ -170,7 +213,10 @@ class declaration : public Node{
         dst = str1+str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg) const override{
+        std::string str1;
+        init_declarator_list -> mips(str1, destReg);
+      }
 };
 
 class initializer : public Node{
@@ -479,7 +525,13 @@ class direct_declarator : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg) const override{
+        switch (type) {
+          case 1:
+            dst = Context.newVar(*identifier, dst);
+          break;
+      }
+    }
 };
 
 class parameter_list : public Node{
@@ -677,7 +729,20 @@ class statement_list : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg) const override{
+        std::string str, str2;
+        if(statement_listptr==NULL){
+          statement->mips(str, destReg);
+          dst = str;
+        }
+        else{
+          statement_listptr->mips(str, destReg);
+          statement->mips(str2, destReg);
+          dst = str+'\n'+str2;
+          //std::cerr<<"str in statement_list: "<<str<<'\n';
+          //std::cerr<<"str2 in statement_list: "<<str2<<'\n';
+        }
+      }
 };
 
 class expression_statement : public Node{
@@ -697,7 +762,11 @@ class expression_statement : public Node{
       dst = str;
     }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg) const override{
+      if(expression != NULL){
+        expression -> mips(dst,destReg);
+      }
+    }
 };
 
 class selection_statement : public Node{

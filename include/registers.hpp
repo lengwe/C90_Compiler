@@ -1,3 +1,6 @@
+#ifndef REGISTERS_HPP
+#define REGISTERS_HPP
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -5,9 +8,12 @@
 #include <algorithm>
 #include <list>
 
+
+
 class registers{
 private:
 	std::vector<std::string> reg;
+	std::map<std::string, int> allVar; // 1 in reg 2 in
 	int find_empty(){
 		std::vector<std::string>::iterator it;
 		it = find (reg.begin(), reg.end(),"0");
@@ -24,6 +30,7 @@ private:
 
 	void spill(int n){
 		usage.pop_front();
+		allVar[reg[n]] = 2;
 		std::cerr << "spill" << n << '\n';
 
 	}
@@ -40,6 +47,7 @@ public:
 	}
 	std::string newVar(std::string name, std::string& dst){
 		std::string out;
+		allVar[name] = 1;
 		int n = find_empty();
 		if(n < 0){
 			n = to_spill();
@@ -47,7 +55,6 @@ public:
 		}
 		reg[n] = name;
 		usage.push_back(n);
-		std::cout << "push" << n << "in" << '\n';
 		out = "$t"+std::to_string(n); //plus one cos register t0 is reserved.
 		return out;
 	}
@@ -71,7 +78,13 @@ public:
 		return out;
 	}
 
-
+	void killVar(std::string name){
+	auto it = find (reg.begin(), reg.end(),name);
+	*it = "0";
+}
 
 
 };
+
+
+#endif
