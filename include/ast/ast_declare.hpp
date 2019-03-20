@@ -92,14 +92,14 @@ class compound_statement : public Node{
 
           case 2:
             statement_list->mips(str1,destReg);
-                        std::cerr << "2" << '\n';
+            std::cerr << "2" << '\n';
             // dst = g + str1+"\n";
             //std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
           break;
 
           case 3:
             declaration_list->mips(str1,destReg);
-              std::cerr << "3" << '\n';
+            std::cerr << "3" << '\n';
             // dst = g + str1+"\n";
             //std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
           break;

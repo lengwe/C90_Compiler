@@ -1,9 +1,8 @@
-int main(){
-  int x=5;
-  if(x==5){
-    return x;
+int f(int x, int y){
+  if(x>0){
+    return y;
   }
   else{
-    return 0;
+    return x;
   }
 }
