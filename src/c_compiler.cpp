@@ -39,7 +39,7 @@ int main (int argc, char *argv[])
 		const Node* ast=parseAST();
 		std::string str1, destReg = "$2";
 		ast->mips(str1, destReg);
-		std::cout<<str1;
+		//TODO:put into file
 		fclose (stdin);
 		fclose (stdout);
 	}
