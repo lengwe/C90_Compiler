@@ -40,7 +40,7 @@
 
 %%
 
-ROOT:  translation_unit  {g_root = $1;}
+ROOT:  compound_statement  {g_root = $1;}
 
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
@@ -116,6 +116,7 @@ relational_expression
 | relational_expression LE_OP shift_expression       {$$ = new relational_expression(3,$1,$3);}
 | relational_expression GE_OP shift_expression       {$$ = new relational_expression(4,$1,$3);}
 ;
+
 
 equality_expression
 : relational_expression                              {$$ = $1;}

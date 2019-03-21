@@ -6,11 +6,14 @@
 #include <vector>
 #include <regex>
 #include "../registers.hpp"
+#include "../global_functions.hpp"
 class Node;
-
 extern std::vector<std::string> global;
 extern registers Context;
 typedef const Node* Nodeptr;
+extern int makeNameUnq;
+
+std::string makeName(std::string base);
 
 class Node{
 

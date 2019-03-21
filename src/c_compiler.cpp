@@ -1,10 +1,12 @@
 #include "ast.hpp"
 // #include <fstream>
+#include <stdio.h>
 #include <iostream>
 std::vector<std::string> global;
-
+int makeNameUnq = 0;
 registers Context;
-#include <stdio.h>
+
+
 
 int main (int argc, char *argv[])
 {

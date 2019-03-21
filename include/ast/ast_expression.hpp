@@ -221,7 +221,121 @@ class multiplicative_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::string str1, str2;
+			switch(type){
+				case 1:
+				l->mips(str1, destReg);
+				r->mips(str2, destReg);
+				if(str1[0] == '$' && str2[0] == '$'){
+				std::cout << "mult " << str1 << ", " << str2 << std::endl;
+				std::cout << "mflo " << destReg <<  std::endl;
+				//TODO handle non int
+				}
+				else if(str1[0] != '$' && str2[0] != '$'){
+					std::cout << "li " << destReg << ", " << (std::stoi(str1)*std::stoi(str2)) << std::endl;
+				}
+				//TODO check for overflow
+				else if (str1[0] != '$'){
+					std::string s = Context.newVar("0tmp", dst);
+					std::cerr << "create 0tmp" << '\n';
+					std::cout << "li " << s << ", " << str1 << '\n';
+					std::cerr << "used 0tmp" << '\n';
+					std::cout << "mult " << destReg << ", " << str2 << ", " << s << std::endl;
+					std::cout << "mflo " << destReg <<  std::endl;
+					Context.killVar("0tmp");
+					std::cerr << "destroy 0tmp" << '\n';
+				}
+				else{
+					std::string s = Context.newVar("0tmp", dst);
+					std::cerr << "create 0tmp" << '\n';
+					std::cout << "li " << s << ", " << str2 << '\n';
+					std::cerr << "used 0tmp" << '\n';
+					std::cout << "mult " << destReg << ", " << str1 << ", " << s << std::endl;
+					std::cout << "mflo " << destReg <<  std::endl;
+					Context.killVar("0tmp");
+					std::cerr << "destroy 0tmp" << '\n';
+				}
+				dst = destReg;
+				//TODO
+				break;
+
+				case 2:
+					l->mips(str1, destReg);
+					r->mips(str2, destReg);
+					if(str1[0] == '$' && str2[0] == '$'){
+					std::cout << "div " << str1 << ", " << str2 << std::endl;
+					std::cout << "mflo " << destReg <<  std::endl;
+					//TODO handle non int
+					}
+					else if(str1[0] != '$' && str2[0] != '$'){
+						std::cout << "li " << destReg << ", " << (std::stoi(str1)/std::stoi(str2)) << std::endl;
+					}
+					//TODO check for overflow
+					else if (str1[0] != '$'){
+						std::string s = Context.newVar("0tmp", dst);
+						std::cerr << "create 0tmp" << '\n';
+						std::cout << "li " << s << ", " << str1 << '\n';
+						std::cerr << "used 0tmp" << '\n';
+						std::cout << "div " << destReg << ", " << str2 << ", " << s << std::endl;
+						std::cout << "mflo " << destReg <<  std::endl;
+						Context.killVar("0tmp");
+						std::cerr << "destroy 0tmp" << '\n';
+					}
+					else{
+						std::string s = Context.newVar("0tmp", dst);
+						std::cerr << "create 0tmp" << '\n';
+						std::cout << "li " << s << ", " << str2 << '\n';
+						std::cerr << "used 0tmp" << '\n';
+						std::cout << "div " << destReg << ", " << str1 << ", " << s << std::endl;
+						std::cout << "mflo " << destReg <<  std::endl;
+						Context.killVar("0tmp");
+						std::cerr << "destroy 0tmp" << '\n';
+					}
+					dst = destReg;
+				break;
+
+				default:
+				throw std::runtime_error ("Unknow construct");
+				break;
+
+				case 3:
+				std::string str1, str2;
+					l->mips(str1, destReg);
+					r->mips(str2, destReg);
+					if(str1[0] == '$' && str2[0] == '$'){
+						std::cout << "div " << str1 << ", " << str2 << std::endl;
+						std::cout << "mfhi " << destReg <<  std::endl;
+						//TODO handle non int
+					}
+					else if(str1[0] != '$' && str2[0] != '$'){
+						std::cout << "li " << destReg << ", " << (std::stoi(str1)%std::stoi(str2)) << std::endl;
+					}
+					//TODO check for overflow
+					else if (str1[0] != '$'){
+						std::string s = Context.newVar("0tmp", dst);
+						std::cerr << "create 0tmp" << '\n';
+						std::cout << "li " << s << ", " << str1 << '\n';
+						std::cerr << "used 0tmp" << '\n';
+						std::cout << "div " << destReg << ", " << str2 << ", " << s << std::endl;
+						std::cout << "mfhi " << destReg <<  std::endl;
+						Context.killVar("0tmp");
+						std::cerr << "destroy 0tmp" << '\n';
+					}
+					else{
+						std::string s = Context.newVar("0tmp", dst);
+						std::cerr << "create 0tmp" << '\n';
+						std::cout << "li " << s << ", " << str2 << '\n';
+						std::cerr << "used 0tmp" << '\n';
+						std::cout << "div " << destReg << ", " << str1 << ", " << s << std::endl;
+						std::cout << "mfhi " << destReg <<  std::endl;
+						Context.killVar("0tmp");
+						std::cerr << "destroy 0tmp" << '\n';
+					}
+					dst = destReg;
+				break;
+			}
+		}
 };
 
 class additive_expression : public Node{
@@ -371,7 +485,33 @@ class relational_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+			std::string str1, str2, tmp;
+			l->mips(str1, destReg);
+			r->mips(str2, destReg);
+			if(type == 2){
+				tmp = str1;
+				str1 = str2;
+				str2 = tmp;
+			}
+			std::cout << str1 <<  " " << str2 << '\n';
+			if(str1[0] == '$' && str2[0] == '$'){
+			std::cout << "slt " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			else if(str1[0] != '$' && str2[0] != '$'){
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)<std::stoi(str2)) << std::endl;
+			}
+			else if (str1[0] != '$'){
+				std::cout << "slti " << destReg << ", " << str2 << ", " << str1 << std::endl;
+				std::cout << "nor " << destReg << ", " << destReg << ", " << destReg << std::endl;
+			}
+			else{
+				std::cout << "slti " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			dst = destReg;
+
+
+		}
 };
 
 class equality_expression : public Node{
@@ -565,7 +705,10 @@ class conditional_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg) const override{
+
+
+		}
 
 };
 

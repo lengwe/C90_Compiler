@@ -1,6 +1,7 @@
 #include "ast.hpp"
 std::vector<std::string> global;
 registers Context;
+int makeNameUnq = 0;
 int main()
 {
     //std::cout<<"1"<<std::endl;
