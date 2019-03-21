@@ -1,7 +1,6 @@
-int main(){
-  int x = 5;
-  if(x==5){
+int f(int x){
+  if(x){
     return x;
   }
-  return 0;
+  return x+10;
 }
