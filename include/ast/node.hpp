@@ -135,18 +135,42 @@ class external_declaration: public Node{
 				//print value of global variable
 					p->python(str);
 					dst = str + "\n";
-					std::size_t pos = str.find("=");
-					std::string variable(str,0,pos);
-					if(!regex_match(variable,id)){
-          //std::cout<<"regex\n";
-						global.push_back(variable);
+					std::size_t pos = 0;
+					while((pos=str.find('=',pos+1))!=std::string::npos){
+						// //std::cout<<"pos: "<<pos<<std::endl;
+
+						pos=str.find("=",pos);
+						//std::cout<<"pos: "<<pos<<std::endl;
+						std::string variable(str,pos-1,1);
+						//std::cout<<"id: "<<variable<<std::endl;
+						if(!regex_match(variable,id)){
+						////std::cout<<"regex\n";
+							global.push_back(variable);
+						}
 					}
-					// for(int i=0; i<global.size(); i++){
-          //   //std::cout<<"global"<<global[i];
-          // }
-					//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
-				}
+					for(int i=0; i<global.size(); i++){
+	           //std::cout<<"global"<<global[i]<<std::endl;
+	         }
+						//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
+			}
 				break;
+
+				// case 2:{
+				// //print value of global variable
+				// 	p->python(str);
+				// 	dst = str + "\n";
+				// 	std::size_t pos = str.find("=");
+				// 	std::string variable(str,0,pos);
+				// 	if(!regex_match(variable,id)){
+        //   ////std::cout<<"regex\n";
+				// 		global.push_back(variable);
+				// 	}
+				// 	// for(int i=0; i<global.size(); i++){
+        //   //   ////std::cout<<"global"<<global[i];
+        //   // }
+				// 	//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
+				// }
+				// break;
 			}
 		}
 

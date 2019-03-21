@@ -40,7 +40,7 @@
 
 %%
 
-ROOT:  compound_statement  {g_root = $1;}
+ROOT:  translation_unit  {g_root = $1;}
 
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
