@@ -83,7 +83,7 @@ class compound_statement : public Node{
         // //std::cerr<<"str2 in func: "<<str2<<std::endl;
         // //std::cout<<"str3 in func: "<<str3<<std::endl;
       }
-      virtual void mips(std::string &dst, std::string &destReg) const override{
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string str1,str2;
         switch (type) {
           // case 1:
@@ -91,22 +91,22 @@ class compound_statement : public Node{
           // break;
 
           case 2:
-            statement_list->mips(str1,destReg);
+            statement_list->mips(str1,destReg, Context);
                         std::cerr << "2" << '\n';
             // dst = g + str1+"\n";
             //std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
           break;
 
           case 3:
-            declaration_list->mips(str1,destReg);
+            declaration_list->mips(str1,destReg, Context);
               std::cerr << "3" << '\n';
             // dst = g + str1+"\n";
             //std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
           break;
 
           case 4:
-            declaration_list->mips(str1,destReg);
-            statement_list->mips(str2,destReg);
+            declaration_list->mips(str1,destReg, Context);
+            statement_list->mips(str2,destReg, Context);
             std::cerr << "4" << '\n';
             // dst = g + str1 +"\n" + str2 + "\n";
             //std::cout<<"str1: "<<str1<<'\n';
@@ -117,312 +117,7 @@ class compound_statement : public Node{
       }
 };
 
-class declaration_list : public Node{
-  private:
-    int type;
-    Nodeptr declaration;
-		Nodeptr declaration_listptr;
 
-
-  public:
-    declaration_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declaration(_l),
-		 	declaration_listptr(_r){}
-    ~declaration_list(){
-      delete declaration;
-      delete declaration_listptr;
-    }
-
-      virtual void python(std::string &dst) const override{
-        //std::cerr << "enter declaration_list" << '\n';
-          std::string str, str2;
-          // declaration->python(str);
-          // if(declaration_listptr != NULL){
-          //   declaration_listptr->python(str2);
-          // }
-          if(declaration_listptr!=NULL){
-            declaration_listptr->python(str);
-            declaration->python(str2);
-            dst = str + "\n" + str2;
-          }
-          else{
-            declaration->python(str);
-            dst = str;
-          }
-          //dst = str+","+str2;
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{
-        std::string str, str2;
-
-        if(declaration_listptr!=NULL){
-          declaration_listptr->mips(str, destReg);
-          declaration->mips(str2, destReg);
-        }
-        else{
-          declaration->mips(str, destReg);
-        }
-      }
-};
-
-class declarator : public Node{
-  private:
-    int type;
-    Nodeptr pointer;
-		Nodeptr direct_declarator;
-
-
-  public:
-    declarator(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), pointer(_l),
-		 	direct_declarator(_r){}
-    ~declarator(){
-      delete pointer;
-      delete direct_declarator;
-    }
-
-      virtual void python(std::string &dst) const override{
-        //std::cerr<<"entering declarator\n";
-
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{
-      }
-};
-
-class declaration : public Node{
-  private:
-    int type;
-    Nodeptr declaration_specifiers;
-		Nodeptr init_declarator_list;
-
-
-  public:
-    declaration(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declaration_specifiers(_l),
-		 	init_declarator_list(_r){}
-    ~declaration(){
-      delete declaration_specifiers;
-      delete init_declarator_list;
-    }
-
-      virtual void python(std::string &dst) const override{
-        //std::cerr << "declaration" << '\n';
-        std::string str1, str2;
-        declaration_specifiers->python(str1);
-        init_declarator_list -> python(str2);
-        //std::cerr << "str1 in declaration "<<str1 << '\n';
-        //std::cerr << "str2 in declaration "<<str2 << '\n';
-        dst = str1+str2;
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{
-        std::string str1;
-        init_declarator_list -> mips(str1, destReg);
-      }
-};
-
-class initializer : public Node{
-  private:
-    int type;
-    Nodeptr assignment_expression;
-		Nodeptr initializer_list;
-
-
-  public:
-    initializer(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), assignment_expression(_l),
-		 	initializer_list(_r){}
-    ~initializer(){
-      delete assignment_expression;
-      delete initializer_list;
-    }
-
-      virtual void python(std::string &dst) const override{
-        //std::cerr<<"entering initializer\n";
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class struct_declaration_list : public Node{
-  private:
-    int type;
-    Nodeptr struct_declarator;
-		Nodeptr struct_declarator_list;
-
-
-  public:
-    struct_declaration_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), struct_declarator(_l),
-		 	struct_declarator_list(_r){}
-
-      virtual void python(std::string &dst) const override{
-          //std::cerr<<"entering struct_declaration_list\n";
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class struct_declaration : public Node{
-  private:
-    int type;
-    Nodeptr specifier_qualifier_list;
-		Nodeptr struct_declarator_list;
-
-
-  public:
-    struct_declaration(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), specifier_qualifier_list(_l),
-		 	struct_declarator_list(_r){}
-
-      virtual void python(std::string &dst) const override{
-            //std::cerr<<"entering struct_declaration\n";
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class struct_or_union : public Node{
-  private:
-    int type;
-    std::string* keyword;
-
-  public:
-    struct_or_union(int type_in,  std::string* _l) : type(type_in), keyword(_l){}
-
-    virtual void python(std::string &dst) const override{
-      //not implement
-    }
-
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class type_name : public Node{
-  private:
-    int type;
-    Nodeptr specifier_qualifier_list;
-		Nodeptr abstract_declarator;
-
-
-  public:
-    type_name(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), specifier_qualifier_list(_l),
-		 	abstract_declarator(_r){}
-    ~type_name(){
-      delete specifier_qualifier_list;
-      delete abstract_declarator;
-    }
-
-      virtual void python(std::string &dst) const override{
-          //std::cerr<<"entering struct_or_union\n";
-  		}
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class specifier_qualifier_list : public Node{
-  private:
-    int type;
-    Nodeptr type_specifier;
-		Nodeptr specifier_qualifier_listptr;
-		Nodeptr type_qualifier;
-
-  public:
-    specifier_qualifier_list(int type_in,  Nodeptr _l, Nodeptr _r, Nodeptr _s) : type(type_in), type_specifier(_l),
-		 	specifier_qualifier_listptr(_r), type_qualifier(_s){}
-    ~specifier_qualifier_list(){
-      delete type_specifier;
-      delete specifier_qualifier_listptr;
-      delete type_qualifier;
-    }
-
-      virtual void python(std::string &dst) const override{
-			//std::cerr<<"entering specifier_qualifier_list\n";
-  		}
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class struct_declarator_list : public Node{
-  private:
-    int type;
-    Nodeptr struct_declarator;
-		Nodeptr struct_declarator_listptr;
-
-
-  public:
-    struct_declarator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), struct_declarator(_l),
-		 	struct_declarator_listptr(_r){}
-    ~struct_declarator_list(){
-      delete struct_declarator;
-      delete struct_declarator_listptr;
-    }
-
-      virtual void python(std::string &dst) const override{
-          //std::cerr<<"entering struct_declarator_list\n";
-  		}
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class enum_specifier : public Node{
-  private:
-    int type;
-    std::string* num;
-		std::string* identifier;
-		Nodeptr enumerator_list;
-
-  public:
-    enum_specifier(int type_in,  std::string* _l,std::string* _r, Nodeptr _s) : type(type_in), num(_l),
-		 	identifier(_r), enumerator_list(_s){}
-    ~enum_specifier(){
-      delete enumerator_list;
-    }
-
-      virtual void python(std::string &dst) const override{
-          //std::cerr<<"entering enum_specifier\n";
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class enumerator_list : public Node{
-  private:
-    int type;
-    Nodeptr enumerator;
-		Nodeptr enumerator_listptr;
-
-
-  public:
-    enumerator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), enumerator(_l),
-		 	enumerator_listptr(_r){}
-    ~enumerator_list(){
-      delete enumerator;
-      delete enumerator_listptr;
-    }
-
-      virtual void python(std::string &dst) const override{
-          //std::cerr<<"entering enumerator_list\n";
-      }
-
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
-
-class enumerator : public Node{
-  private:
-    int type;
-    std::string* IDENTIFIER;
-		Nodeptr constant_expression;
-
-
-  public:
-    enumerator(int type_in,  std::string* _l, Nodeptr _r) : type(type_in), IDENTIFIER(_l),
-		constant_expression(_r){}
-
-    ~enumerator(){
-      delete constant_expression;
-    }
-
-    virtual void python(std::string &dst) const override{
-        //std::cerr<<"entering enumerator\n";
-    }
-
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
-};
 
 // class type_qualifier : public Node{
 //   private:
@@ -474,7 +169,16 @@ class jump_statement : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        std::string str;
+        if(type == 4 || type == 5){
+          if(expression != NULL){
+            expression -> mips(str, destReg, Context);
+            std::cout << "addu " << destReg <<", $zero, " << str << '\n';
+          }
+          std::cout << "j " << Context.getScope()+"_end" << '\n';
+        }
+      }
 };
 
 class statement : public Node{
@@ -492,7 +196,7 @@ class statement : public Node{
       //std::cerr<<"entering statement\n";
     }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class statement_list : public Node{
@@ -526,15 +230,15 @@ class statement_list : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string str, str2;
         if(statement_listptr==NULL){
-          statement->mips(str, destReg);
+          statement->mips(str, destReg, Context);
           dst = str;
         }
         else{
-          statement_listptr->mips(str, destReg);
-          statement->mips(str2, destReg);
+          statement_listptr->mips(str, destReg, Context);
+          statement->mips(str2, destReg, Context);
           dst = str+'\n'+str2;
           //std::cerr<<"str in statement_list: "<<str<<'\n';
           //std::cerr<<"str2 in statement_list: "<<str2<<'\n';
@@ -559,9 +263,9 @@ class expression_statement : public Node{
       dst = str;
     }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
       if(expression != NULL){
-        expression -> mips(dst,destReg);
+        expression -> mips(dst,destReg, Context);
       }
     }
 };
@@ -602,18 +306,18 @@ class selection_statement : public Node{
         dst = name +  str1 + ":" + '\n' +str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         if(type == 1 || type == 2){
           std::string c = Context.newVar(makeName("condition"),dst);
           std::string end1 = makeName("end1");
-          expression-> mips(dst ,c);
+          expression-> mips(dst ,c, Context);
           std::cout << "beq " << c << " $zero, " << end1 << std::endl;
-          statement_1->mips(dst, destReg);
+          statement_1->mips(dst, destReg, Context);
           if(statement_2 != NULL){
             std::string end2 = makeName("end2");
             std::cout << "beq $zero, $zero, " << end2 << std::endl;
             std::cout << ":" << end1 << std::endl;
-            statement_2->mips(dst, destReg);
+            statement_2->mips(dst, destReg, Context);
             std::cout << ":" << end2 << std::endl;
           }
           else{
@@ -654,7 +358,7 @@ class iteration_statement : public Node{
         dst = name+str1+":\n"+str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class labeled_statement : public Node{
@@ -678,7 +382,7 @@ class labeled_statement : public Node{
         //std::cerr<<"entering labeled_statement\n";
   		}
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 

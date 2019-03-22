@@ -9,7 +9,7 @@
 #include "../global_functions.hpp"
 class Node;
 extern std::vector<std::string> global;
-extern registers Context;
+
 typedef const Node* Nodeptr;
 extern int makeNameUnq;
 
@@ -23,7 +23,7 @@ class Node{
 		std::string c()const;
 		//void print(std::ostream &dst) const=0;
 		virtual void python(std::string &dst)const=0;
-		virtual void mips(std::string &dst, std::string &destReg)const=0;
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context)const=0;
 
 		void indent(std::string &dst) const{
 
@@ -81,8 +81,8 @@ class translation_unit: public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override {
-			// std::string str1,str2;
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override {
+			 std::string str1,str2;
 			// switch (type) {
 			// 	case 1:
 			// 		p->mips(str1);
@@ -103,7 +103,13 @@ class translation_unit: public Node{
 			// 		}
 			// 	break;
 			// }
+			switch (type) {
+				case 1:
+					p->mips(str1,destReg, Context);
+					//std::cerr<<"case 1 in trans: "<<dst<<std::endl;
+					break;
 		}
+	}
 };
 
 class external_declaration: public Node{
@@ -150,9 +156,12 @@ class external_declaration: public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
-			// std::string str;
-			// p->mips(str);
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+				switch(type){
+					case 1:
+						p -> mips(dst, destReg, Context);
+						break;
+				}
 		}
 };
 
@@ -222,10 +231,32 @@ public:
 				// //std::cerr<<"dst in func: "<<dst<<std::endl;
 	}
 //int main(){int a; int y; return x;} int x(){int f;}
-	virtual void mips(std::string &dst, std::string &destReg) const override{
-		if(declarator!=NULL){
+	virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+		std::string str;
+		declarator->mips(str, destReg, Context);
+		registers function_scope(str);
+		std::cout << ".text" << '\n';
+		std::cout << ".align 2" << '\n';
+		std::cout << ".globl " << function_scope.getScope() <<'\n';
+		std::cout << ".ent    " << function_scope.getScope() << '\n';
+		std::cout << ".type "<<function_scope.getScope()<<",@function" << '\n';
 
-		}
+
+
+
+
+		std::cout << str << ":" << '\n';
+		std::cout << "addiu   $sp,$sp,-24" << '\n';
+		std::cout << "sw      $fp,20($sp)" << '\n';
+		std::cout << "move    $fp,$sp" << '\n';
+		compound_statement -> mips(dst, destReg, function_scope);
+		std::cout << function_scope.getScope()+"_end" << ":" << '\n';
+		std::cout << "move    $sp,$fp" << '\n';
+		std::cout << "lw      $fp,20($sp)" << '\n';
+		std::cout << "addiu   $sp,$sp,24" << '\n';
+		std::cout << "j	$31" << '\n';
+		std::cout << "nop" << '\n';
+		std::cout << ".end	" << function_scope.getScope() << '\n';
 	}
 
 };

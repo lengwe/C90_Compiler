@@ -44,7 +44,7 @@ class primary_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::cerr << "in primary expression" << '\n';
 			switch(type){
 				case 1:
@@ -113,7 +113,7 @@ class postfix_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class argument_expression_list : public Node{
@@ -134,7 +134,7 @@ class argument_expression_list : public Node{
 			dst = str+","+str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 };
 
@@ -176,7 +176,7 @@ class unary_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class cast_expression :public Node{
@@ -193,7 +193,7 @@ class cast_expression :public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class multiplicative_expression : public Node{
@@ -221,12 +221,12 @@ class multiplicative_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::string str1, str2;
 			switch(type){
 				case 1:
-				l->mips(str1, destReg);
-				r->mips(str2, destReg);
+				l->mips(str1, destReg, Context);
+				r->mips(str2, destReg, Context);
 				if(str1[0] == '$' && str2[0] == '$'){
 				std::cout << "mult " << str1 << ", " << str2 << std::endl;
 				std::cout << "mflo " << destReg <<  std::endl;
@@ -241,7 +241,7 @@ class multiplicative_expression : public Node{
 					std::cerr << "create 0tmp" << '\n';
 					std::cout << "li " << s << ", " << str1 << '\n';
 					std::cerr << "used 0tmp" << '\n';
-					std::cout << "mult " << destReg << ", " << str2 << ", " << s << std::endl;
+					std::cout << "mult "  << str2 << ", " << s << std::endl;
 					std::cout << "mflo " << destReg <<  std::endl;
 					Context.killVar("0tmp");
 					std::cerr << "destroy 0tmp" << '\n';
@@ -251,7 +251,7 @@ class multiplicative_expression : public Node{
 					std::cerr << "create 0tmp" << '\n';
 					std::cout << "li " << s << ", " << str2 << '\n';
 					std::cerr << "used 0tmp" << '\n';
-					std::cout << "mult " << destReg << ", " << str1 << ", " << s << std::endl;
+					std::cout << "mult " << str1 << ", " << s << std::endl;
 					std::cout << "mflo " << destReg <<  std::endl;
 					Context.killVar("0tmp");
 					std::cerr << "destroy 0tmp" << '\n';
@@ -261,8 +261,8 @@ class multiplicative_expression : public Node{
 				break;
 
 				case 2:
-					l->mips(str1, destReg);
-					r->mips(str2, destReg);
+					l->mips(str1, destReg, Context);
+					r->mips(str2, destReg, Context);
 					if(str1[0] == '$' && str2[0] == '$'){
 					std::cout << "div " << str1 << ", " << str2 << std::endl;
 					std::cout << "mflo " << destReg <<  std::endl;
@@ -301,8 +301,8 @@ class multiplicative_expression : public Node{
 
 				case 3:
 				std::string str1, str2;
-					l->mips(str1, destReg);
-					r->mips(str2, destReg);
+					l->mips(str1, destReg, Context);
+					r->mips(str2, destReg, Context);
 					if(str1[0] == '$' && str2[0] == '$'){
 						std::cout << "div " << str1 << ", " << str2 << std::endl;
 						std::cout << "mfhi " << destReg <<  std::endl;
@@ -373,12 +373,12 @@ class additive_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::string str1, str2;
 			switch(type){
 				case 1:
-				l->mips(str1, destReg);
-				r->mips(str2, destReg);
+				l->mips(str1, destReg, Context);
+				r->mips(str2, destReg, Context);
 				if(str1[0] == '$' && str2[0] == '$'){
 				std::cout << "add " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				}
@@ -386,18 +386,18 @@ class additive_expression : public Node{
 					std::cout << "li " << destReg << ", " << (std::stoi(str1)+std::stoi(str2)) << std::endl;
 				}
 				else if (str1[0] != '$'){
-					std::cout << "addi " << destReg << ", " << str2 << ", " << str1 << std::endl;
+					std::cout << "addiu " << destReg << ", " << str2 << ", " << str1 << std::endl;
 				}
 				else{
-					std::cout << "addi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+					std::cout << "addiu " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				}
 				dst = destReg;
 				//TODO
 				break;
 
 				case 2:
-				l->mips(str1, destReg);
-				r->mips(str2, destReg);
+				l->mips(str1, destReg, Context);
+				r->mips(str2, destReg, Context);
 				if(str1[0] == '$' && str2[0] == '$'){
 				std::cout << "sub " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				}
@@ -405,11 +405,11 @@ class additive_expression : public Node{
 					std::cout << "li " << destReg << ", " << (std::stoi(str1)-std::stoi(str2)) << std::endl;
 				}
 				else if (str1[0] != '$'){
-					std::cout << "addi " << destReg << ", " << str2 << ", " << "-"+str1 << std::endl;
+					std::cout << "addiu " << destReg << ", " << str2 << ", " << "-"+str1 << std::endl;
 					std::cout << "sub " << destReg << ", $zero, " << destReg << std::endl;
 				}
 				else{
-					std::cout << "addi " << destReg << ", " << str1 << ", " << "-"+str2 << std::endl;
+					std::cout << "addiu " << destReg << ", " << str1 << ", " << "-"+str2 << std::endl;
 				}
 				dst = destReg;
 				//TODO
@@ -448,7 +448,7 @@ class shift_expression : public Node{
 			dst = str1 + op + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class relational_expression : public Node{
@@ -485,10 +485,10 @@ class relational_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::string str1, str2, tmp;
-			l->mips(str1, destReg);
-			r->mips(str2, destReg);
+			l->mips(str1, destReg, Context);
+			r->mips(str2, destReg, Context);
 			if(type == 2){
 				tmp = str1;
 				str1 = str2;
@@ -548,7 +548,7 @@ class equality_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class and_expression : public Node{
@@ -566,7 +566,7 @@ class and_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 };
 
@@ -585,7 +585,7 @@ class exclusive_or_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 };
 
@@ -604,7 +604,7 @@ class inclusive_or_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 };
 
@@ -627,10 +627,10 @@ class logical_and_expression : public Node{
 					dst = str1 + " and " + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::string str1, str2;
-			l->mips(str1, destReg);
-			r->mips(str2, destReg);
+			l->mips(str1, destReg, Context);
+			r->mips(str2, destReg, Context);
 			if(str1[0] == '$' && str2[0] == '$'){
 			std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
@@ -668,10 +668,10 @@ class logical_or_expression : public Node{
 					dst = str1 + " or " + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::string str1, str2;
-			l->mips(str1, destReg);
-			r->mips(str2, destReg);
+			l->mips(str1, destReg, Context);
+			r->mips(str2, destReg, Context);
 			if(str1[0] == '$' && str2[0] == '$'){
 			std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
@@ -705,7 +705,7 @@ class conditional_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 
 
 		}
@@ -732,13 +732,13 @@ class assignment_expression : public Node{
 			dst = str1 + *assign_op + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::cerr << "in ass, assop = " << *assign_op << '\n';
 			std::string str, str2;
 			if(*assign_op == "="){
 				std::cerr << "in = " << '\n';
-				l->mips(str, destReg);
-				r->mips(str2, str);
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
 			}
 		}
 };
@@ -763,7 +763,7 @@ class expression : public Node{
 			dst = str+","+str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 };
 

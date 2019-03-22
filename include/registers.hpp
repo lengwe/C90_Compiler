@@ -27,23 +27,23 @@ private:
 		return *(usage.begin());
 
 	}
-
 	void spill(int n){
 		usage.pop_front();
 		allVar[reg[n]] = 2;
 		std::cerr << "spill" << n << '\n';
 
 	}
-
 	int callstack(std::string name){
 		std::cerr << "call stack" << '\n';
 		return -1;
 	}
+	std::string scope_name;
 
 public:
 	std::list<int> usage;
-	registers(){
+	registers(std::string _scope_name){
 		reg.resize(10,"0");
+		scope_name = _scope_name;
 	}
 	std::string newVar(std::string name, std::string& dst){
 		std::string out;
@@ -57,6 +57,9 @@ public:
 		usage.push_back(n);
 		out = "$t"+std::to_string(n); //plus one cos register t0 is reserved.
 		return out;
+	}
+	std::string getScope(){
+		return scope_name;
 	}
 
 	std::string findVar(std::string name, std::string& dst){

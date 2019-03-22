@@ -30,7 +30,7 @@ class declaration_specifiers : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 };
 
@@ -53,7 +53,7 @@ class init_declarator_list : public Node{
       dst = str1 + "\n" + str2;
     }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 
 
 };
@@ -94,17 +94,17 @@ class init_declarator : public Node{
     //   initializer->mips(str);
     // }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
       std::string str1,str2;
-      declarator->mips(str1, destReg);
+      declarator->mips(str1, destReg, Context);
       if(initializer == NULL){
-      std::cout << "addi " << str1<< ", $zero, $zero" << '\n';
+      std::cout << "addiu " << str1<< ", $zero, $zero" << '\n';
         return;
       }
-      initializer->mips(str2, str1);
+      initializer->mips(str2, str1, Context);
       std::cerr << "str2 in init_declarator" << str2 <<  '\n';
       if(str2[0] != '$'){
-        std::cout << "addi " << str1 << ", $zero, " << str2 << '\n';
+        std::cout << "addiu " << str1 << ", $zero, " << str2 << '\n';
       }
     }
 };
@@ -125,7 +125,7 @@ class type_specifier: public Node{
       //std::cerr<<"entering type_specifier"<<std::endl;
 		}
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class struct_or_union_specifier : public Node {
@@ -142,7 +142,7 @@ class struct_or_union_specifier : public Node {
 
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 // class direct_abstract_declarator : public Node {
@@ -197,7 +197,7 @@ class identifier_list : public Node{
       }
     }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class direct_declarator : public Node{
@@ -254,10 +254,20 @@ class direct_declarator : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+
         switch (type) {
           case 1:
-            dst = Context.newVar(*identifier, dst);
+          if(dst == "func"){
+            dst = *identifier;
+            return;
+          }
+            dst = Context.newVar(*identifier, destReg);
+          break;
+          case 6:
+          std::string str("func");
+            direct_declaratorptr->mips(str, destReg, Context);
+            dst = str;
           break;
       }
     }
@@ -291,7 +301,7 @@ class parameter_list : public Node{
         dst = str2+ ", " + str1;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class parameter_type_list : public Node{
@@ -315,7 +325,7 @@ class parameter_type_list : public Node{
         }
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class parameter_declaration : public Node{
@@ -342,7 +352,7 @@ class parameter_declaration : public Node{
           dst = str1 + str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class type_qualifier_list : public Node{
@@ -365,7 +375,7 @@ class type_qualifier_list : public Node{
                 //std::cerr<<"entering type_qualifier_list\n";
       }
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class initializer_list : public Node{
@@ -388,7 +398,7 @@ class initializer_list : public Node{
         //std::cerr<<"entering initializer_list\n";
   		}
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class struct_declarator : public Node{
@@ -410,7 +420,7 @@ class struct_declarator : public Node{
         //std::cerr<<"entering struct_declarator\n";
   		}
 
-      virtual void mips(std::string &dst, std::string &destReg) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
 
 class storage_class_specifier : public Node{
@@ -424,7 +434,320 @@ class storage_class_specifier : public Node{
       //not implement
     }
 
-    virtual void mips(std::string &dst, std::string &destReg) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
 };
+
+class declaration : public Node{
+  private:
+    int type;
+    Nodeptr declaration_specifiers;
+		Nodeptr init_declarator_list;
+
+
+  public:
+    declaration(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declaration_specifiers(_l),
+		 	init_declarator_list(_r){}
+    ~declaration(){
+      delete declaration_specifiers;
+      delete init_declarator_list;
+    }
+
+      virtual void python(std::string &dst) const override{
+        //std::cerr << "declaration" << '\n';
+        std::string str1, str2;
+        declaration_specifiers->python(str1);
+        init_declarator_list -> python(str2);
+        //std::cerr << "str1 in declaration "<<str1 << '\n';
+        //std::cerr << "str2 in declaration "<<str2 << '\n';
+        dst = str1+str2;
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        std::string str1;
+        init_declarator_list -> mips(str1, destReg, Context);
+      }
+
+
+};
+
+class declaration_list : public Node{
+  private:
+    int type;
+    Nodeptr declaration;
+		Nodeptr declaration_listptr;
+
+
+  public:
+    declaration_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), declaration(_l),
+		 	declaration_listptr(_r){}
+    ~declaration_list(){
+      delete declaration;
+      delete declaration_listptr;
+    }
+
+      virtual void python(std::string &dst) const override{
+        //std::cerr << "enter declaration_list" << '\n';
+          std::string str, str2;
+          // declaration->python(str);
+          // if(declaration_listptr != NULL){
+          //   declaration_listptr->python(str2);
+          // }
+          if(declaration_listptr!=NULL){
+            declaration_listptr->python(str);
+            declaration->python(str2);
+            dst = str + "\n" + str2;
+          }
+          else{
+            declaration->python(str);
+            dst = str;
+          }
+          //dst = str+","+str2;
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        std::string str, str2;
+
+        if(declaration_listptr!=NULL){
+          declaration_listptr->mips(str, destReg, Context);
+          declaration->mips(str2, destReg, Context);
+        }
+        else{
+          declaration->mips(str, destReg, Context);
+        }
+      }
+};
+
+class declarator : public Node{
+  private:
+    int type;
+    Nodeptr pointer;
+		Nodeptr direct_declarator;
+
+
+  public:
+    declarator(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), pointer(_l),
+		 	direct_declarator(_r){}
+    ~declarator(){
+      delete pointer;
+      delete direct_declarator;
+    }
+
+      virtual void python(std::string &dst) const override{
+        //std::cerr<<"entering declarator\n";
+
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+
+      }
+};
+
+
+
+class initializer : public Node{
+  private:
+    int type;
+    Nodeptr assignment_expression;
+		Nodeptr initializer_list;
+
+
+  public:
+    initializer(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), assignment_expression(_l),
+		 	initializer_list(_r){}
+    ~initializer(){
+      delete assignment_expression;
+      delete initializer_list;
+    }
+
+      virtual void python(std::string &dst) const override{
+        //std::cerr<<"entering initializer\n";
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class struct_declaration_list : public Node{
+  private:
+    int type;
+    Nodeptr struct_declarator;
+		Nodeptr struct_declarator_list;
+
+
+  public:
+    struct_declaration_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), struct_declarator(_l),
+		 	struct_declarator_list(_r){}
+
+      virtual void python(std::string &dst) const override{
+          //std::cerr<<"entering struct_declaration_list\n";
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class struct_declaration : public Node{
+  private:
+    int type;
+    Nodeptr specifier_qualifier_list;
+		Nodeptr struct_declarator_list;
+
+
+  public:
+    struct_declaration(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), specifier_qualifier_list(_l),
+		 	struct_declarator_list(_r){}
+
+      virtual void python(std::string &dst) const override{
+            //std::cerr<<"entering struct_declaration\n";
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class struct_or_union : public Node{
+  private:
+    int type;
+    std::string* keyword;
+
+  public:
+    struct_or_union(int type_in,  std::string* _l) : type(type_in), keyword(_l){}
+
+    virtual void python(std::string &dst) const override{
+      //not implement
+    }
+
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class type_name : public Node{
+  private:
+    int type;
+    Nodeptr specifier_qualifier_list;
+		Nodeptr abstract_declarator;
+
+
+  public:
+    type_name(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), specifier_qualifier_list(_l),
+		 	abstract_declarator(_r){}
+    ~type_name(){
+      delete specifier_qualifier_list;
+      delete abstract_declarator;
+    }
+
+      virtual void python(std::string &dst) const override{
+          //std::cerr<<"entering struct_or_union\n";
+  		}
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class specifier_qualifier_list : public Node{
+  private:
+    int type;
+    Nodeptr type_specifier;
+		Nodeptr specifier_qualifier_listptr;
+		Nodeptr type_qualifier;
+
+  public:
+    specifier_qualifier_list(int type_in,  Nodeptr _l, Nodeptr _r, Nodeptr _s) : type(type_in), type_specifier(_l),
+		 	specifier_qualifier_listptr(_r), type_qualifier(_s){}
+    ~specifier_qualifier_list(){
+      delete type_specifier;
+      delete specifier_qualifier_listptr;
+      delete type_qualifier;
+    }
+
+      virtual void python(std::string &dst) const override{
+			//std::cerr<<"entering specifier_qualifier_list\n";
+  		}
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class struct_declarator_list : public Node{
+  private:
+    int type;
+    Nodeptr struct_declarator;
+		Nodeptr struct_declarator_listptr;
+
+
+  public:
+    struct_declarator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), struct_declarator(_l),
+		 	struct_declarator_listptr(_r){}
+    ~struct_declarator_list(){
+      delete struct_declarator;
+      delete struct_declarator_listptr;
+    }
+
+      virtual void python(std::string &dst) const override{
+          //std::cerr<<"entering struct_declarator_list\n";
+  		}
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class enum_specifier : public Node{
+  private:
+    int type;
+    std::string* num;
+		std::string* identifier;
+		Nodeptr enumerator_list;
+
+  public:
+    enum_specifier(int type_in,  std::string* _l,std::string* _r, Nodeptr _s) : type(type_in), num(_l),
+		 	identifier(_r), enumerator_list(_s){}
+    ~enum_specifier(){
+      delete enumerator_list;
+    }
+
+      virtual void python(std::string &dst) const override{
+          //std::cerr<<"entering enum_specifier\n";
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class enumerator_list : public Node{
+  private:
+    int type;
+    Nodeptr enumerator;
+		Nodeptr enumerator_listptr;
+
+
+  public:
+    enumerator_list(int type_in,  Nodeptr _l,Nodeptr _r) : type(type_in), enumerator(_l),
+		 	enumerator_listptr(_r){}
+    ~enumerator_list(){
+      delete enumerator;
+      delete enumerator_listptr;
+    }
+
+      virtual void python(std::string &dst) const override{
+          //std::cerr<<"entering enumerator_list\n";
+      }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
+class enumerator : public Node{
+  private:
+    int type;
+    std::string* IDENTIFIER;
+		Nodeptr constant_expression;
+
+
+  public:
+    enumerator(int type_in,  std::string* _l, Nodeptr _r) : type(type_in), IDENTIFIER(_l),
+		constant_expression(_r){}
+
+    ~enumerator(){
+      delete constant_expression;
+    }
+
+    virtual void python(std::string &dst) const override{
+        //std::cerr<<"entering enumerator\n";
+    }
+
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+};
+
 
 #endif
