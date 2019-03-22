@@ -7,6 +7,7 @@
 #include <regex>
 #include "../registers.hpp"
 #include "../global_functions.hpp"
+#include <boost/algorithm/string.hpp>
 class Node;
 extern std::vector<std::string> global;
 
@@ -137,30 +138,19 @@ class external_declaration: public Node{
 				}
 				break;
 
-				case 2:{
-				//print value of global variable
-					p->python(str);
-					dst = str + "\n";
-					std::size_t pos = 0;
-					while((pos=str.find('=',pos+1))!=std::string::npos){
-						// //std::cout<<"pos: "<<pos<<std::endl;
-
-						pos=str.find("=",pos);
-						//std::cout<<"pos: "<<pos<<std::endl;
-						std::string variable(str,pos-1,1);
-						//std::cout<<"id: "<<variable<<std::endl;
-						if(!regex_match(variable,id)){
-						////std::cout<<"regex\n";
-							global.push_back(variable);
-						}
-					}
-					for(int i=0; i<global.size(); i++){
-	           //std::cout<<"global"<<global[i]<<std::endl;
-	         }
-						//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
+			case 2:{
+				std::vector<std::string>v;
+				p->python(str);
+				dst = str + "\n";
+				boost::split(v,str,boost::is_any_of("\n"));
+				for(int i=0; i<v.size();i++){
+					std::size_t pos = v[i].find("=");
+					std::string variable(v[i],0,pos);
+					if(!regex_match(variable,id));
+						global.push_back(variable);
+				}
 			}
-				break;
-
+			break;
 				// case 2:{
 				// //print value of global variable
 				// 	p->python(str);
@@ -244,11 +234,15 @@ public:
 		if(compound_statement!=NULL){
 			compound_statement->python(str3);
 		}
-
 		//indent(str2);
 		indent(str3);
 
-		dst = "def " + str1 + ":\n" + str2 + str3 + "\n";
+		std::string g;
+		for(int i=0; i<global.size();i++){
+				g += "\tglobal "+global[i] + '\n';
+		}
+		//indent(g);
+		dst = "def " + str1 + ":\n" + g + str2 + str3 + "\n";
 				// //std::cerr<<"str1 in func: "<<str1<<std::endl;
 				// //std::cerr<<"str2 in func: "<<str2<<std::endl;
 				// //std::cerr<<"str3 in func: "<<str3<<std::endl;
@@ -264,11 +258,6 @@ public:
 		std::cout << ".globl " << function_scope.getScope() <<'\n';
 		std::cout << ".ent    " << function_scope.getScope() << '\n';
 		std::cout << ".type "<<function_scope.getScope()<<",@function" << '\n';
-
-
-
-
-
 		std::cout << str << ":" << '\n';
 		std::cout << "addiu   $sp,$sp,-24" << '\n';
 		std::cout << "sw      $fp,20($sp)" << '\n';

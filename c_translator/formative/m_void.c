@@ -1,8 +1,5 @@
 void voidF()
 {
-    // this does nothing
-    /* test ML comments
-    */
 }
 
 int main()

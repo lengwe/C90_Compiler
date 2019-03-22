@@ -24,8 +24,6 @@ def main():
 	global y
 	if 1:
 		if 1:
-			global x
-			global y
 			if 0:
 				return 67
 				

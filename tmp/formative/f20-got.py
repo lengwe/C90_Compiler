@@ -33,12 +33,10 @@ def main():
 	global c
 	x=32
 	if x<32:
-		global c
 		return f(c)
 		
 		
 	else:
-		global c
 		return 0
 		
 		

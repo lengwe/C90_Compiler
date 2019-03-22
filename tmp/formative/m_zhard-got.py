@@ -61,8 +61,6 @@ def addToGlobal(x, y):
 	global b
 	count=3
 	while count>0:
-		global a
-		global b
 		a=a+x
 		b=b+y
 		count=count-1
@@ -72,15 +70,11 @@ def setGlobal():
 	global a
 	global b
 	if 1<2:
-		global a
-		global b
 		a=1
 		if 1<2:
 			b=1
 		
 	else:
-		global a
-		global b
 		a=0
 		b=0
 		
@@ -100,17 +94,11 @@ def main():
 	res=0
 	setGlobal()
 	while count>2:
-		global a
-		global b
 		addToGlobal(1,1)
 		if count==4 or count==5:
-			global a
-			global b
 			addToGlobal(1,1)
 			
 		else:
-			global a
-			global b
 			if count+3==6:
 				addToGlobal(3,3)
 			else:
@@ -120,8 +108,6 @@ def main():
 		
 	res=oprOnGlobal()
 	if res>0 and res<256:
-		global a
-		global b
 		return 0
 		
 		

@@ -35,8 +35,6 @@ def main():
 	global y
 	if 1:
 		if 0:
-			global x
-			global y
 			if 0:
 				return 67
 				
@@ -46,23 +44,17 @@ def main():
 					
 				else:
 					if 0:
-						global x
-						global y
 						
-						
+					
 					else:
 						return 55
 						
 			
 		else:
 			if 0:
-				global x
-				global y
 				
-				
+			
 			else:
-				global x
-				global y
 				return 977
 				
 				

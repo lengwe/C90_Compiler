@@ -24,16 +24,12 @@ def main():
 		if 0:
 			if 0:
 				if 0:
-					global x
-					global y
 					
-					
+				
 				else:
 					if 0:
-						global x
-						global y
 						
-						
+					
 					else:
 						return 1
 						

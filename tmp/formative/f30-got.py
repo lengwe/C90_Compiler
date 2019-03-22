@@ -21,13 +21,10 @@ def main():
 	global z
 	x=0
 	if 0:
-		global z
 		
-		
+	
 	else:
-		global z
 		if 1:
-			global z
 			return z+1
 			
 			

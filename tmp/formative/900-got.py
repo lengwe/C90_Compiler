@@ -18,12 +18,10 @@ z=4
 def factorial(a):
 	global z
 	if a==1:
-		global z
 		return 1
 		
 		
 	else:
-		global z
 		return a*factorial(a-1)
 		
 		

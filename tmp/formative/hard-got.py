@@ -20,8 +20,6 @@ def main():
 	global y
 	if 1:
 		if 0:
-			global x
-			global y
 			return 67
 			
 			
