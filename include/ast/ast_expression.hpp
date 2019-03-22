@@ -509,8 +509,6 @@ class relational_expression : public Node{
 				std::cout << "slti " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
 			dst = destReg;
-
-
 		}
 };
 
