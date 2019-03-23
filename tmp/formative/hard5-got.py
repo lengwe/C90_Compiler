@@ -24,8 +24,6 @@ def main():
 	global x
 	global y
 	if x>8:
-		global x
-		global y
 		if y==8:
 			x=x+1
 		else:
@@ -36,8 +34,6 @@ def main():
 				
 		
 	else:
-		global x
-		global y
 		return 7
 		
 		

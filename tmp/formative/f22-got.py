@@ -34,7 +34,6 @@ def main():
 	global c
 	x=32
 	while c>0:
-		global c
 		c=c-1
 		
 	return f(x)+c

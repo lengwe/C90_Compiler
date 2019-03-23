@@ -32,12 +32,10 @@ def main():
 	x=3
 	z=5
 	if x==23 or z==5:
-		global c
 		return 45
 		
 		
 	else:
-		global c
 		return 0
 		
 		

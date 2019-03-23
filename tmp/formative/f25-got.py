@@ -31,12 +31,10 @@ def main():
 	global c
 	x=2
 	if x==2 and c==3:
-		global c
 		return f(45)
 		
 		
 	else:
-		global c
 		return -1
 		
 		

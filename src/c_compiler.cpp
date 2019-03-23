@@ -4,12 +4,12 @@
 #include <iostream>
 std::vector<std::string> global;
 int makeNameUnq = 0;
-registers Context;
 
 
 
 int main (int argc, char *argv[])
 {
+	registers Context("foo");
 	std::string argument(argv[1]);
 	std::string file(argv[2]);
 	if(argument == "--translate" && file != "print"){
@@ -40,7 +40,7 @@ int main (int argc, char *argv[])
 		freopen (argv[4],"w",stdout);
 		const Node* ast=parseAST();
 		std::string str1, destReg = "$2";
-		ast->mips(str1, destReg);
+		ast->mips(str1, destReg,Context);
 		//TODO:put into file
 		fclose (stdin);
 		fclose (stdout);
