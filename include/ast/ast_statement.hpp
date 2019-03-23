@@ -361,11 +361,12 @@ class iteration_statement : public Node{
         if(type == 1){
           std::string start = makeName("start");
           std::string exit = makeName("exit");
+          std::string str = start+","+exit;
           std::string condition = Context.newVar(makeName("condition"),dst);
           std::cout << start << ":" << std::endl;
           expression->mips(dst, condition, Context);
           std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
-          statement->mips(dst, destReg, Context);
+          statement->mips(str, destReg, Context);
           std::cout << "beq $zero, $zero, " << start <<  std::endl;
           std::cout << exit << ":" << std::endl;
         }
