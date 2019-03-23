@@ -494,7 +494,7 @@ class relational_expression : public Node{
 				str1 = str2;
 				str2 = tmp;
 			}
-			std::cout << str1 <<  " " << str2 << '\n';
+			std::cerr << str1 <<  " " << str2 << '\n';
 			if(str1[0] == '$' && str2[0] == '$'){
 			std::cout << "slt " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
@@ -502,8 +502,8 @@ class relational_expression : public Node{
 				std::cout << "li " << destReg << ", " << (std::stoi(str1)<std::stoi(str2)) << std::endl;
 			}
 			else if (str1[0] != '$'){
-				std::cout << "slti " << destReg << ", " << str2 << ", " << str1 << std::endl;
-				std::cout << "nor " << destReg << ", " << destReg << ", " << destReg << std::endl;
+				std::cout << "slti " << destReg << ", " << str2 << ", " << std::stoi(str1)+1 << std::endl;
+				std::cout << "xori " << destReg << ", " << destReg << ", 0x1" << std::endl;
 			}
 			else{
 				std::cout << "slti " << destReg << ", " << str1 << ", " << str2 << std::endl;

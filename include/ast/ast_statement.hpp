@@ -311,17 +311,17 @@ class selection_statement : public Node{
           std::string c = Context.newVar(makeName("condition"),dst);
           std::string end1 = makeName("end1");
           expression-> mips(dst ,c, Context);
-          std::cout << "beq " << c << " $zero, " << end1 << std::endl;
+          std::cout << "beq " << c << ", $zero, " << end1 << std::endl;
           statement_1->mips(dst, destReg, Context);
           if(statement_2 != NULL){
             std::string end2 = makeName("end2");
             std::cout << "beq $zero, $zero, " << end2 << std::endl;
-            std::cout << ":" << end1 << std::endl;
+            std::cout <<  end1 <<":" << std::endl;
             statement_2->mips(dst, destReg, Context);
-            std::cout << ":" << end2 << std::endl;
+            std::cout  << end2 << ":" <<std::endl;
           }
           else{
-            std::cout << ":" << end1 << std::endl;
+            std::cout << end1  << ":"<< std::endl;
           }
         }
       }
@@ -358,7 +358,19 @@ class iteration_statement : public Node{
         dst = name+str1+":\n"+str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        if(type == 1){
+          std::string start = makeName("start");
+          std::string exit = makeName("exit");
+          std::string condition = Context.newVar(makeName("condition"),dst);
+          std::cout << start << ":" << std::endl;
+          expression->mips(dst, condition, Context);
+          std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
+          statement->mips(dst, destReg, Context);
+          std::cout << "beq $zero, $zero, " << start <<  std::endl;
+          std::cout << exit << ":" << std::endl;
+        }
+      }
 };
 
 class labeled_statement : public Node{

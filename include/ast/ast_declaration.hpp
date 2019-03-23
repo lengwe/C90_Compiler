@@ -98,7 +98,7 @@ class init_declarator : public Node{
       std::string str1,str2;
       declarator->mips(str1, destReg, Context);
       if(initializer == NULL){
-      std::cout << "addiu " << str1<< ", $zero, $zero" << '\n';
+      std::cout << "addiu " << str1<< ", $zero, 0" << '\n';
         return;
       }
       initializer->mips(str2, str1, Context);
