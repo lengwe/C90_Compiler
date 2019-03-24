@@ -1,9 +1,9 @@
 def main():
     a = 5
     if a < 3:
-        return 1
+        return a-4
     else:
-        return 2
+        return a-3
 
 # Boilerplate
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
 int main(){
 	int a = 5;
 	if(a<3){
-		return 1;
+		return a-4;
 	}
 	else{
-		return 2;
+		return a-3;
 	}
 }

@@ -5,12 +5,17 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include "../registers.hpp"
+#include "../global_functions.hpp"
+#include <boost/algorithm/string.hpp>
 
 class Node;
-
 extern std::vector<std::string> global;
 
 typedef const Node* Nodeptr;
+extern int makeNameUnq;
+
+std::string makeName(std::string base);
 
 class Node{
 
@@ -20,6 +25,7 @@ class Node{
 		std::string c()const;
 		//void print(std::ostream &dst) const=0;
 		virtual void python(std::string &dst)const=0;
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context)const=0;
 
 		void indent(std::string &dst) const{
 
@@ -76,6 +82,40 @@ class translation_unit: public Node{
 				break;
 			}
 		}
+
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override {
+			 std::string str1,str2;
+			// switch (type) {
+			// 	case 1:
+			// 		p->mips(str1);
+			// 		dst = str1;
+			// 		//std::cerr<<"case 1 in trans: "<<dst<<std::endl;
+			// 		break;
+			// 	case 2:
+			// 		if(l!=NULL){
+			// 			l->mips(str1);
+			// 			r->mips(str2);
+			// 			dst = str1 + str2;
+			// 			//std::cerr<<"case 2 in trans: "<<dst<<std::endl;
+			// 		}
+			// 		else{
+			// 			r->mips(str2);
+			// 			dst = str2;
+			// 			//std::cerr<<"case 2 in trans: "<<dst<<std::endl;
+			// 		}
+			// 	break;
+			// }
+			switch (type) {
+				case 1:
+					p->mips(str1,destReg, Context);
+					//std::cerr<<"case 1 in trans: "<<dst<<std::endl;
+					break;
+				case 2:
+				l->mips(str1,destReg, Context);
+				r->mips(str1,destReg, Context);
+					break;
+		}
+	}
 };
 
 class external_declaration: public Node{
@@ -104,22 +144,27 @@ class external_declaration: public Node{
 				break;
 
 				case 2:{
-				//print value of global variable
-					p->python(str);
-					dst = str + "\n";
-					std::size_t pos = str.find("=");
-					std::string variable(str,0,pos);
-					if(!regex_match(variable,id)){
-                                                ////std::cout<<"regex\n";
-						global.push_back(variable);
+						std::vector<std::string>v;
+						p->python(str);
+						dst = str + "\n";
+						boost::split(v,str,boost::is_any_of("\n"));
+						for(int i=0; i<v.size();i++){
+							std::size_t pos = v[i].find("=");
+							std::string variable(v[i],0,pos);
+							if(!regex_match(variable,id));
+								global.push_back(variable);
+						}
 					}
-					// for(int i=0; i<global.size(); i++){
-          //   //std::cout<<"global"<<global[i];
-          // }
-					//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
-				}
 				break;
 			}
+		}
+
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+				switch(type){
+					case 1:
+						p -> mips(dst, destReg, Context);
+						break;
+				}
 		}
 };
 
@@ -182,13 +227,43 @@ public:
 		//indent(str2);
 		indent(str3);
 
-		dst = "def " + str1 + ":\n" + str2 + str3 + "\n";
-				// //std::cerr<<"str1 in func: "<<str1<<std::endl;
-				// //std::cerr<<"str2 in func: "<<str2<<std::endl;
+		std::string g;
+		for(int i=0; i<global.size();i++){
+			g += "\tglobal "+global[i] + '\n';
+		}
+		//indent(g);
+		dst = "def " + str1 + ":\n" + g + str2 + str3 + "\n";
+		// //std::cerr<<"str1 in func: "<<str1<<std::endl;
+		// //std::cerr<<"str2 in func: "<<str2<<std::endl;
 				// //std::cerr<<"str3 in func: "<<str3<<std::endl;
 				// //std::cerr<<"dst in func: "<<dst<<std::endl;
 	}
 //int main(){int a; int y; return x;} int x(){int f;}
+	virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+		std::string str;
+		declarator->mips(str, destReg, Context);
+		registers function_scope(str);
+		std::cout << ".text" << '\n';
+		std::cout << ".align 2" << '\n';
+		std::cout << ".globl " << function_scope.getScope() <<'\n';
+		std::cout << ".ent    " << function_scope.getScope() << '\n';
+		std::cout << ".type "<<function_scope.getScope()<<",@function" << '\n';
+		std::cout << str << ":" << '\n';
+		std::cout << "addiu   $sp,$sp,-200" << '\n';
+		std::cout << "sw      $fp,192($sp)" << '\n';
+		std::cout << "sw			$ra, 196($sp)" << '\n';
+		std::cout << "move    $fp,$sp" << '\n';
+		compound_statement -> mips(dst, destReg, function_scope);
+		std::cout << function_scope.getScope()+"_end" << ":" << '\n';
+		std::cout << "move    $sp,$fp" << '\n';
+		std::cout << "lw      $fp,192($sp)" << '\n';
+		std::cout << "lw			$ra,196($sp)" << '\n';
+		std::cout << "addiu   $sp,$sp,24" << '\n';
+		std::cout << "j	$31" << '\n';
+		std::cout << "nop" << '\n';
+
+		std::cout << ".end	" << function_scope.getScope() << '\n';
+	}
 
 };
 
