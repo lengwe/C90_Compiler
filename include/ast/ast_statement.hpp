@@ -52,6 +52,10 @@ class compound_statement : public Node{
       }
 
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        if(type == 1){
+          return;
+        }
+
         std::string str1,str2;
         block_item_list->mips(dst,destReg, Context);
       }
