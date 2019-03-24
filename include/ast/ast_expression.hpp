@@ -241,7 +241,45 @@ class unary_expression : public Node{
 				p->mips(str, destReg, Context);
 				std::cout << "addiu " << str << " , " << str << ", -1" << '\n';
 			}
-			dst = str;
+
+			else if(type == 3){
+				p->mips(str, destReg, Context);
+				std::cerr << "*string " << *string << '\n';
+					if(*string ==  "-"){
+						if(str[0] != '$'){
+							dst = "-"+str;
+					}
+					else{
+						std::cout << "subu " << str << " , $zero, " << str << '\n';
+						dst = str;
+					}
+				}
+					else if(*string == "~"){
+						std::cerr << "IN" << '\n';
+						if(str[0] != '$'){
+							int a = std::stoi(str);
+							a = ~a;
+							std::cerr << "a: " << a << "~a: " <<  a <<  '\n';
+							dst = std::to_string(a);
+							return;
+						}
+						std::cout << "nor " << str << " , $zero, " << str << '\n';
+						dst = str;
+					}
+
+					else if(*string ==  "!"){
+						if(str[0] != '$'){
+							dst = std::to_string(!std::stoi(str));
+							return;
+						}
+					std::cout << "sltu " << str << " , "<< str << ", 1" << '\n';
+					std::cout << "andi " << str << " , "<< str << ", 0x00ff" << '\n';
+					dst = str;
+				}
+
+			}
+
+
 		}
 };
 
