@@ -7,6 +7,8 @@
 #include <regex>
 #include "../registers.hpp"
 #include "../global_functions.hpp"
+#include <boost/algorithm/string.hpp>
+
 class Node;
 extern std::vector<std::string> global;
 
@@ -142,20 +144,17 @@ class external_declaration: public Node{
 				break;
 
 				case 2:{
-				//print value of global variable
-					p->python(str);
-					dst = str + "\n";
-					std::size_t pos = str.find("=");
-					std::string variable(str,0,pos);
-					if(!regex_match(variable,id)){
-          //std::cout<<"regex\n";
-						global.push_back(variable);
+						std::vector<std::string>v;
+						p->python(str);
+						dst = str + "\n";
+						boost::split(v,str,boost::is_any_of("\n"));
+						for(int i=0; i<v.size();i++){
+							std::size_t pos = v[i].find("=");
+							std::string variable(v[i],0,pos);
+							if(!regex_match(variable,id));
+								global.push_back(variable);
+						}
 					}
-					// for(int i=0; i<global.size(); i++){
-          //   //std::cout<<"global"<<global[i];
-          // }
-					//std::cerr<<"case 2 in ex: "<<dst<<std::endl;
-				}
 				break;
 			}
 		}
@@ -228,9 +227,14 @@ public:
 		//indent(str2);
 		indent(str3);
 
-		dst = "def " + str1 + ":\n" + str2 + str3 + "\n";
-				// //std::cerr<<"str1 in func: "<<str1<<std::endl;
-				// //std::cerr<<"str2 in func: "<<str2<<std::endl;
+		std::string g;
+		for(int i=0; i<global.size();i++){
+			g += "\tglobal "+global[i] + '\n';
+		}
+		//indent(g);
+		dst = "def " + str1 + ":\n" + g + str2 + str3 + "\n";
+		// //std::cerr<<"str1 in func: "<<str1<<std::endl;
+		// //std::cerr<<"str2 in func: "<<str2<<std::endl;
 				// //std::cerr<<"str3 in func: "<<str3<<std::endl;
 				// //std::cerr<<"dst in func: "<<dst<<std::endl;
 	}

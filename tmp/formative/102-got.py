@@ -16,7 +16,6 @@ def main():
 		b=6
 	return b
 	
-	
 if __name__ == "__main__":
 	import sys
 	ret=main()

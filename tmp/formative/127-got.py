@@ -15,12 +15,9 @@ def main():
 	if a<b:
 		return b
 		
-		
 	else:
 		return a
 		
-		
-	
 if __name__ == "__main__":
 	import sys
 	ret=main()
