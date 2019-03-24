@@ -35,7 +35,7 @@
 %type <node>  struct_or_union type_name specifier_qualifier_list struct_declarator_list initializer_list
 %type <node>  direct_declarator parameter_list parameter_type_list parameter_declaration
 %type <node> jump_statement statement statement_list expression_statement selection_statement iteration_statement labeled_statement
-%type <node>  init_declarator enum_specifier enumerator_list enumerator
+%type <node>  init_declarator enum_specifier enumerator_list enumerator block_item block_item_list
 %start ROOT
 
 %%
@@ -266,11 +266,17 @@ function_definition
 // ;
 
 compound_statement
-: '{' '}'                                                      {$$ = new compound_statement(1,NULL,NULL); }
-| '{' statement_list '}'                                       {$$ = new compound_statement(2,$2,NULL); }
-| '{' declaration_list '}'                                     {$$ = new compound_statement(3,NULL,$2); }
-| '{' declaration_list statement_list '}'                      {$$ = new compound_statement(4,$3,$2); }
+: '{' '}'                                                      {$$ = new compound_statement(1,NULL); }
+| '{' block_item_list '}'                                       {$$ = new compound_statement(2,$2); }
 ;
+
+block_item:
+| declaration                                                   {$$=$1;}
+| statement                                                     {$$=$1;}
+
+block_item_list:
+| block_item_list block_item                                   {$$ = new block_item_list(1,$1,$2);}
+| block_item                                                    {$$ = $1;}
 
 declaration_list
 : declaration                                                  {$$ =  $1;}
