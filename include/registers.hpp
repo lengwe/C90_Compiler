@@ -14,6 +14,12 @@ class registers{
 private:
 	std::vector<std::string> reg;
 	std::map<std::string, int> allVar; // 1 in reg 2 in
+	int offset_count;
+	std::string scope_name;
+	std::list<int> usage;
+	std::string regUsed;
+	int argumentcount;
+
 	int find_empty(){
 		std::vector<std::string>::iterator it;
 		it = find (reg.begin(), reg.end(),"0");
@@ -30,10 +36,6 @@ private:
 		std::cerr << "call stack" << '\n';
 		return -1;
 	}
-	int offset_count;
-	std::string scope_name;
-	std::list<int> usage;
-	std::map<std::string,int> stack_map;
 	void spill(int n, std::string to){
 		std::cout << "sw "<< regUsed << n << ", " << offset_count+16 << to <<'\n';
 		allVar[reg[n]] = offset_count;
@@ -41,7 +43,6 @@ private:
 		offset_count += 4;
 		reg[n] = "0";
 	}
-	std::string regUsed;
 	std::string load(std::string name, std::string &dst){
 		std::string n = newVar(name, dst);
 		std::cerr << "name: " << name << '\n';
@@ -154,7 +155,10 @@ public:
 	}
 		//
 	}
-
+	int arginc(){
+		argumentcount++;
+		return argumentcount;
+	} // increase argumentcount
 };
 
 

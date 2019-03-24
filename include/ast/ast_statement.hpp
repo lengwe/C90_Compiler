@@ -25,94 +25,59 @@
 class compound_statement : public Node{
   private:
     int type;
-    Nodeptr statement_list;
-		Nodeptr declaration_list;
+    Nodeptr block_item_list;
+
 
 
   public:
-    compound_statement(int type_in, Nodeptr _l,Nodeptr _r) : type(type_in), statement_list(_l),
-		 	declaration_list(_r){}
+    compound_statement(int type_in, Nodeptr _l) : type(type_in), block_item_list(_l){}
     ~compound_statement(){
-      delete statement_list;
-      delete declaration_list;
+      delete block_item_list;
     }
 
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering compound_statement\n";
+            std::string str1;
+            block_item_list->python(str1);
+            dst = str1;
 
-        std::string str1, str2;
-        switch (type) {
-          case 1:
-            dst = "pass";
-          break;
-
-          case 2:
-            statement_list->python(str1);
-            dst = str1+"\n";
-            //std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
-          break;
-
-          case 3:
-            declaration_list->python(str1);
-            dst = str1+"\n";
-            //std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
-          break;
-
-          case 4:
-            declaration_list->python(str1);
-            statement_list->python(str2);
-            dst = str1 +"\n" + str2 + "\n";
-            //std::cout<<"str1: "<<str1<<'\n';
-            //std::cout<<"str2: "<<str2<<'\n';
-            //std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
-            break;
-        }
-        // if(declaration_list!=NULL){
-        //   declaration_list->python(str1);
-        // }
-        // if(statement_list!=NULL){
-        //   statement_list->python(str2);
-        // }
-        //
-        // dst = str1 + "\n" + str2;
-        // //std::cerr<<"str1 in func: "<<str1<<std::endl;
-        // //std::cerr<<"str2 in func: "<<str2<<std::endl;
-        // //std::cout<<"str3 in func: "<<str3<<std::endl;
       }
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string str1,str2;
-        switch (type) {
-          // case 1:
-          //   dst = g + "\n";
-          // break;
-
-          case 2:
-            statement_list->mips(str1,destReg, Context);
-                        std::cerr << "2" << '\n';
-            // dst = g + str1+"\n";
-            //std::cout<<"str1 in case 2 in compound_statement: "<<str1<<'\n';
-          break;
-
-          case 3:
-            declaration_list->mips(str1,destReg, Context);
-              std::cerr << "3" << '\n';
-            // dst = g + str1+"\n";
-            //std::cout<<"str1 in case 3 in compound_statement: "<<str1<<'\n';
-          break;
-
-          case 4:
-            declaration_list->mips(str1,destReg, Context);
-            statement_list->mips(str2,destReg, Context);
-            std::cerr << "4" << '\n';
-            // dst = g + str1 +"\n" + str2 + "\n";
-            //std::cout<<"str1: "<<str1<<'\n';
-            //std::cout<<"str2: "<<str2<<'\n';
-            //std::cout<<"dst in case 4 in compound_statement "<<dst<<'\n';
-            break;
-        }
+        block_item_list->mips(dst,destReg, Context);
       }
 };
 
+class block_item_list : public Node{
+  private:
+    int type;
+    Nodeptr block_item_listptr;
+    Nodeptr block_item;
+
+
+
+  public:
+    block_item_list(int type_in, Nodeptr _l,Nodeptr _r) : type(type_in), block_item_listptr(_l),
+    block_item(_r){}
+    ~block_item_list(){
+      delete block_item_listptr;
+      delete block_item;
+    }
+
+      virtual void python(std::string &dst) const override{
+        //std::cerr<<"entering compound_statement\n";
+            std::string str1,str2;
+            block_item_listptr->python(str1);
+            block_item->python(str2);
+            dst = str1 + '\n' + str2;
+
+        }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        block_item_listptr->mips(dst,destReg, Context);
+        block_item->mips(dst,destReg, Context);
+      }
+};
 
 
 // class type_qualifier : public Node{
