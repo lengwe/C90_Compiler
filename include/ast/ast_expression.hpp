@@ -698,18 +698,15 @@ class logical_and_expression : public Node{
 			std::string str1, str2;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
-			std::string label = makeName("label");
-			//not sure about the end label
-			std::string end = makeName("end");
-			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
-			std::cout<<"beq "<<destReg<<", $zero, "<<label<<'\n';
-			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
-			std::cout<<"beq "<<destReg<<", $zero, "<<label<<'\n';
-			std::cout<<"li "<<destReg<<", 1"<<'\n';
-			std::cout<<"b "<<end<<'\n';
-			// if(str1[0] == '$' && str2[0] == '$'){
-			// std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			// }
+
+			if(str1[0] == '$' && str2[0] == '$'){
+				std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+			}
+			else if(str1[0] != '$' || str2[0] != '$'){
+				std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+			}
 			// else if(str1[0] != '$' && str2[0] != '$'){
 			// 	std::cout << "li " << destReg << ", " << (std::stoi(str1)&&std::stoi(str2)) << std::endl;
 			// }
@@ -719,7 +716,7 @@ class logical_and_expression : public Node{
 			// else{
 			// 	std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			// }
-			// dst = destReg;
+			 dst = destReg;
 			// //TODO
 		}
 
@@ -748,31 +745,16 @@ class logical_or_expression : public Node{
 			std::string str1, str2;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
-			std::string label = makeName("label");
-			std::string end = makeName("end");
-			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
-			std::cout<<"bne "<<destReg<<", $zero, "<<label<<'\n';
-			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
-			std::cout<<"beq "<<destReg<<", $zero, "<<label<<'\n';
-			std::cout<<"li "<<destReg<<", 1"<<'\n';
-			std::cout<<"b "<<end<<'\n';
-			// std::string str1, str2;
-			// l->mips(str1, destReg, Context);
-			// r->mips(str2, destReg, Context);
-			// if(str1[0] == '$' && str2[0] == '$'){
-			// std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			// }
-			// else if(str1[0] != '$' && str2[0] != '$'){
-			// 	std::cout << "li " << destReg << ", " << (std::stoi(str1)||std::stoi(str2)) << std::endl;
-			// }
-			// else if (str1[0] != '$'){
-			// 	std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
-			// }
-			// else{
-			// 	std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			// }
-			// dst = destReg;
-			// //TODO
+
+			if(str1[0] == '$' && str2[0] == '$'){
+				std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+			}
+			else if(str1[0] != '$' || str2[0] != '$'){
+				std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+			}
+			 dst = destReg;
 
 		}
 
@@ -831,6 +813,116 @@ class assignment_expression : public Node{
 				else{
 					std::cout << "addu " << str << ", $zero, " << str2 << '\n';
 				}
+				dst=destReg;
+			}
+
+			if(*assign_op == "*="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				std::cout<<"mult "<<destReg<<", "<<str2<<'\n';
+				std::cout<<"mflo "<<destReg<<'\n';
+				dst=destReg;
+			}
+
+			if(*assign_op == "/="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				std::cout << "div " << destReg << ", " << str2 << std::endl;
+				std::cout << "mflo " << destReg <<  std::endl;
+				dst=destReg;
+			}
+
+			if(*assign_op == "%="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				std::cout << "div " << destReg << ", " << str2 << std::endl;
+				std::cout << "mfhi " << destReg <<  std::endl;
+				dst=destReg;
+			}
+
+			if(*assign_op == "+="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout<<"addiu "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"addu "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
+			}
+
+			if(*assign_op == "-="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				std::cerr<<"in ass str2:"<<str2<<std::endl;
+				if(str2[0] != '$'){
+					std::cout<<"addiu "<<destReg<<", "<<destReg<<", -"<<str2<<'\n';
+				}
+				else{
+					std::cout<<"subu "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
+			}
+
+			if(*assign_op == "<<="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout<<"sll "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"sllv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
+			}
+
+			if(*assign_op == ">>="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout<<"srl "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"srlv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
+			}
+
+			if(*assign_op == "&="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout<<"srl "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"srlv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
+			}
+
+			if(*assign_op == "^="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout<<"xori "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"xor "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
+			}
+
+			if(*assign_op == "|="){
+				l->mips(str, destReg, Context);
+				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout<<"ori "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"or "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				}
+				dst=destReg;
 			}
 		}
 };

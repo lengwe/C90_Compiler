@@ -29,7 +29,7 @@ for i in ${DRIVER_TESTS}*_driver.c ; do
   OBJECT_FILE=${OBJECT}$NAME
 
   # run the compiler on the test program
-  ${COMPILER} -S ${NAME}.c -o ${NAME}.s
+  ${COMPILER} -S ${NAME}.c -o ${ASSEMBLY_FILE}.s
   #${MIPS_GCC} -S ${TEST}.c -o ${ASSEMBLY_FILE}.s
 
   # use GCC to assemble the generated assembly program

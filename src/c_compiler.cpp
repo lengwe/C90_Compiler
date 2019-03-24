@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
 	//   std::cout<<str;
 	//
 	// }
-	else if(argument == "--S"){
+	else if(argument == "-S"){
 		freopen(argv[2],"r", stdin);
 		freopen (argv[4],"w",stdout);
 		const Node* ast=parseAST();
