@@ -119,6 +119,7 @@ class postfix_expression : public Node{
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::cerr << "in postfix" << '\n';
+			std::string str2;
 			std::string str = "func";
 			std::string dr = "$a0";
 			if(type == 2){
@@ -137,7 +138,16 @@ class postfix_expression : public Node{
 					std::cout << "nop" << '\n';
 					dst = Context.loadall(dst);
 					}
-
+			else if (type == 6){
+				p->mips(str2, destReg, Context);
+				std::cout << "addiu " << str2 << " , " << str2 << ", 1" <<'\n';
+				dst = str2;
+			}
+			else if (type == 7){
+				p->mips(str2, destReg, Context);
+				std::cout << "addiu " << str2 << " , " << str2 << ", -1" << '\n';
+				dst = str2;
+			}
 			}
 
 };
@@ -221,7 +231,18 @@ class unary_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::string str;
+			if (type == 1){
+				p->mips(str, destReg, Context);
+				std::cout << "addiu " << str << " , " << str << ", 1" <<'\n';
+			}
+			else if (type == 2){
+				p->mips(str, destReg, Context);
+				std::cout << "addiu " << str << " , " << str << ", -1" << '\n';
+			}
+			dst = str;
+		}
 };
 
 class cast_expression :public Node{
