@@ -308,10 +308,10 @@ class parameter_list : public Node{
       }
 
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-        parameter_declaration->mips(dst, destReg, Context);
         if(parameter_listptr != NULL){
           parameter_listptr->mips(dst, destReg, Context);
         }
+        parameter_declaration->mips(dst, destReg, Context);
       }
 };
 

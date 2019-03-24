@@ -176,6 +176,9 @@ class argument_expression_list : public Node{
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::cerr << "argument_expression_list called" << '\n';
+			if(argument_expression_listptr != NULL){
+				argument_expression_listptr->mips(dst, destReg, Context);
+			}
 			std::string str ,str2;
 			str2 = "$a" + std::to_string(Context.counter);
 			Context.counter++;
@@ -187,9 +190,6 @@ class argument_expression_list : public Node{
 				std::cout << "addu " << str2 << ", $zero, " << str << '\n';
 			}
 
-		if(argument_expression_listptr != NULL){
-			argument_expression_listptr->mips(dst, destReg, Context);
-	}
 }
 };
 
