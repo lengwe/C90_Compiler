@@ -11,12 +11,12 @@ int main()
     /* The order of execution of these functions
      is not defined, but either order results in
       the same result
-    *
+    
     */
     return f()+f();
     /*
     Making sure the multi line comments working well
-    ****** //
+    ****** 
         
         */
 }

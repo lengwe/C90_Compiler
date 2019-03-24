@@ -7,7 +7,7 @@
 
 def main():
 	a=-5+-5
-	b=
+	b=-a/5
 	return a*b
 	
 if __name__ == "__main__":

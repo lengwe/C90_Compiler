@@ -7,7 +7,9 @@ extern "C" int fileno(FILE *stream);
 #include "parser.tab.hpp"
 #include <string>
 #include <iostream>
+#include <cstdio>
 %}
+
 KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|sizeof|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
 OPERATOR [\=|\+|\-|\*|\/|\%|\||>|<|!|\|\||\?|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|]
@@ -66,7 +68,6 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 ">="			{  return  (GE_OP); }
 
 "=="			{  return  (EQ_OP); }
-
 
 {OPERATOR}        {
   std::string op(yytext);
@@ -260,10 +261,29 @@ volatile {return VOLATILE;}
 
 {WHITESPACE}        {;}
 
+"//"[^\n]*          {;}
+
 .                   { }
 
 
+"/*"    {
+        int c;
 
+        while((c = yyinput()) != 0)
+            {
+            if(c == '\n'){
+
+            }
+
+            else if(c == '*')
+                {
+                if((c = yyinput()) == '/')
+                    break;
+                else
+                    unput(c);
+                }
+            }
+        }
 
 %%
 

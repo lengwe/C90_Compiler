@@ -5,7 +5,7 @@
 
 
 def main():
-	a=
+	a=30/-3
 	return a
 	
 if __name__ == "__main__":
