@@ -108,6 +108,10 @@ class translation_unit: public Node{
 					p->mips(str1,destReg, Context);
 					//std::cerr<<"case 1 in trans: "<<dst<<std::endl;
 					break;
+				case 2:
+				l->mips(str1,destReg, Context);
+				r->mips(str1,destReg, Context);
+					break;
 		}
 	}
 };
@@ -241,15 +245,15 @@ public:
 		std::cout << ".ent    " << function_scope.getScope() << '\n';
 		std::cout << ".type "<<function_scope.getScope()<<",@function" << '\n';
 		std::cout << str << ":" << '\n';
-		std::cout << "addiu   $sp,$sp,-24" << '\n';
-		std::cout << "sw      $fp,16($sp)" << '\n';
-		std::cout << "sw			$ra, 20($sp)" << '\n';
+		std::cout << "addiu   $sp,$sp,-200" << '\n';
+		std::cout << "sw      $fp,192($sp)" << '\n';
+		std::cout << "sw			$ra, 196($sp)" << '\n';
 		std::cout << "move    $fp,$sp" << '\n';
 		compound_statement -> mips(dst, destReg, function_scope);
 		std::cout << function_scope.getScope()+"_end" << ":" << '\n';
 		std::cout << "move    $sp,$fp" << '\n';
-		std::cout << "lw      $fp,16($sp)" << '\n';
-		std::cout << "lw			$ra,20($sp)" << '\n';
+		std::cout << "lw      $fp,192($sp)" << '\n';
+		std::cout << "lw			$ra,196($sp)" << '\n';
 		std::cout << "addiu   $sp,$sp,24" << '\n';
 		std::cout << "j	$31" << '\n';
 		std::cout << "nop" << '\n';

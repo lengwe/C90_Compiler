@@ -48,6 +48,10 @@ class primary_expression : public Node{
 			std::cerr << "in primary expression" << '\n';
 			switch(type){
 				case 1:
+				if(dst == "func"){
+						dst = *string;
+						return;
+				}
 					dst = Context.findVar(*string, dst);
 					break;
 				case 2:
@@ -113,7 +117,17 @@ class postfix_expression : public Node{
 			}
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::cerr << "in postfix" << '\n';
+			std::string str = "func";
+			p->mips(str, destReg, Context);
+			if(type == 2|| type == 3){
+					Context.savealltostack();
+					std::cout << "jal " << str <<'\n';
+					std::cout << "nop" << '\n';
+					dst = Context.loadall(dst);
+			}
+		}
 };
 
 class argument_expression_list : public Node{
@@ -734,9 +748,14 @@ class assignment_expression : public Node{
 			std::cerr << "in ass, assop = " << *assign_op << '\n';
 			std::string str, str2;
 			if(*assign_op == "="){
-				std::cerr << "in = " << '\n';
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
+				if(str2[0] != '$'){
+					std::cout << "addiu " << str << ", $zero, " << str2 << '\n';
+				}
+				else{
+					std::cout << "addu " << str << ", $zero, " << str2 << '\n';
+				}
 			}
 		}
 };

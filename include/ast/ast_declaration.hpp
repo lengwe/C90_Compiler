@@ -106,6 +106,9 @@ class init_declarator : public Node{
       if(str2[0] != '$'){
         std::cout << "addiu " << str1 << ", $zero, " << str2 << '\n';
       }
+      else{
+        std::cout << "addu " << str1 << ", $zero, " << str2 << '\n';
+      }
     }
 };
 
