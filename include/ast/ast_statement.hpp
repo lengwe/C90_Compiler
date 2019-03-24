@@ -167,6 +167,14 @@ class jump_statement : public Node{
 
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string str;
+        if(type==2){
+          //continue statement
+          std::cout<<"b "<<dst<<'\n';
+        }
+        if(type==3){
+          //break statement
+          std::cout<<"b "<<dst<<'\n';
+        }
         if(type == 4 || type == 5){
           if(expression != NULL){
             expression -> mips(str, destReg, Context);

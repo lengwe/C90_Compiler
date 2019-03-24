@@ -578,7 +578,25 @@ class and_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::string str1, str2;
+			l->mips(str1, destReg, Context);
+			r->mips(str2, destReg, Context);
+			if(str1[0] == '$' && str2[0] == '$'){
+			std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			else if(str1[0] != '$' && str2[0] != '$'){
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)&std::stoi(str2)) << std::endl;
+			}
+			else if (str1[0] != '$'){
+				std::cout << "andi " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			}
+			else{
+				std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			dst = destReg;
+			//TODO
+		}
 
 };
 
@@ -597,7 +615,25 @@ class exclusive_or_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::string str1, str2;
+			l->mips(str1, destReg, Context);
+			r->mips(str2, destReg, Context);
+			if(str1[0] == '$' && str2[0] == '$'){
+			std::cout << "xor " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			else if(str1[0] != '$' && str2[0] != '$'){
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)^std::stoi(str2)) << std::endl;
+			}
+			else if (str1[0] != '$'){
+				std::cout << "xori " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			}
+			else{
+				std::cout << "xori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			dst = destReg;
+			//TODO
+		}
 
 };
 
@@ -616,7 +652,26 @@ class inclusive_or_expression : public Node{
 
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::string str1, str2;
+			l->mips(str1, destReg, Context);
+			r->mips(str2, destReg, Context);
+			if(str1[0] == '$' && str2[0] == '$'){
+			std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			else if(str1[0] != '$' && str2[0] != '$'){
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)|std::stoi(str2)) << std::endl;
+			}
+			else if (str1[0] != '$'){
+				std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			}
+			else{
+				std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			}
+			dst = destReg;
+			//TODO
+
+		}
 
 };
 
@@ -643,20 +698,29 @@ class logical_and_expression : public Node{
 			std::string str1, str2;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
-			if(str1[0] == '$' && str2[0] == '$'){
-			std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			}
-			else if(str1[0] != '$' && str2[0] != '$'){
-				std::cout << "li " << destReg << ", " << (std::stoi(str1)&&std::stoi(str2)) << std::endl;
-			}
-			else if (str1[0] != '$'){
-				std::cout << "andi " << destReg << ", " << str2 << ", " << str1 << std::endl;
-			}
-			else{
-				std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			}
-			dst = destReg;
-			//TODO
+			std::string label = makeName("label");
+			//not sure about the end label
+			std::string end = makeName("end");
+			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
+			std::cout<<"beq "<<destReg<<", $zero, "<<label<<'\n';
+			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
+			std::cout<<"beq "<<destReg<<", $zero, "<<label<<'\n';
+			std::cout<<"li "<<destReg<<", 1"<<'\n';
+			std::cout<<"b "<<end<<'\n';
+			// if(str1[0] == '$' && str2[0] == '$'){
+			// std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			// }
+			// else if(str1[0] != '$' && str2[0] != '$'){
+			// 	std::cout << "li " << destReg << ", " << (std::stoi(str1)&&std::stoi(str2)) << std::endl;
+			// }
+			// else if (str1[0] != '$'){
+			// 	std::cout << "andi " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			// }
+			// else{
+			// 	std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			// }
+			// dst = destReg;
+			// //TODO
 		}
 
 };
@@ -684,20 +748,31 @@ class logical_or_expression : public Node{
 			std::string str1, str2;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
-			if(str1[0] == '$' && str2[0] == '$'){
-			std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			}
-			else if(str1[0] != '$' && str2[0] != '$'){
-				std::cout << "li " << destReg << ", " << (std::stoi(str1)||std::stoi(str2)) << std::endl;
-			}
-			else if (str1[0] != '$'){
-				std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
-			}
-			else{
-				std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
-			}
-			dst = destReg;
-			//TODO
+			std::string label = makeName("label");
+			std::string end = makeName("end");
+			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
+			std::cout<<"bne "<<destReg<<", $zero, "<<label<<'\n';
+			// std::cout<<"lw "<<destReg<<", "<<Context.offset_count<<"($fp)"<<'\n'
+			std::cout<<"beq "<<destReg<<", $zero, "<<label<<'\n';
+			std::cout<<"li "<<destReg<<", 1"<<'\n';
+			std::cout<<"b "<<end<<'\n';
+			// std::string str1, str2;
+			// l->mips(str1, destReg, Context);
+			// r->mips(str2, destReg, Context);
+			// if(str1[0] == '$' && str2[0] == '$'){
+			// std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			// }
+			// else if(str1[0] != '$' && str2[0] != '$'){
+			// 	std::cout << "li " << destReg << ", " << (std::stoi(str1)||std::stoi(str2)) << std::endl;
+			// }
+			// else if (str1[0] != '$'){
+			// 	std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
+			// }
+			// else{
+			// 	std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			// }
+			// dst = destReg;
+			// //TODO
 
 		}
 
