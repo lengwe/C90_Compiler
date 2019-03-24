@@ -12,9 +12,7 @@ def main():
 	if b==0 or a==0:
 		return b
 		
-		
 	return a
-	
 	
 if __name__ == "__main__":
 	import sys

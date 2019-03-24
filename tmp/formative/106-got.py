@@ -19,9 +19,7 @@ def main():
 			b=7
 		else:
 			b=6
-		
 	return b
-	
 	
 if __name__ == "__main__":
 	import sys

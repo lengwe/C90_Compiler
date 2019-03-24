@@ -38,10 +38,19 @@ class compound_statement : public Node{
       virtual void python(std::string &dst) const override{
         //std::cerr<<"entering compound_statement\n";
             std::string str1;
-            block_item_list->python(str1);
-            dst = str1;
+            switch(type){
+              case 1:
+                dst = "pass";
+              break;
+
+              case 2:
+              block_item_list->python(str1);
+              dst = str1;
+              break;
+            }
 
       }
+
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string str1,str2;
         block_item_list->mips(dst,destReg, Context);
@@ -53,8 +62,6 @@ class block_item_list : public Node{
     int type;
     Nodeptr block_item_listptr;
     Nodeptr block_item;
-
-
 
   public:
     block_item_list(int type_in, Nodeptr _l,Nodeptr _r) : type(type_in), block_item_listptr(_l),

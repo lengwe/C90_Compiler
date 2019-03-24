@@ -13,9 +13,7 @@ def main():
 	while b>0:
 		a=a+b
 		b=b-1
-		
 	return a
-	
 	
 if __name__ == "__main__":
 	import sys

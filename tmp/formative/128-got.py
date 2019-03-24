@@ -10,7 +10,6 @@ def main():
 	b=-3
 	return a+b
 	
-	
 if __name__ == "__main__":
 	import sys
 	ret=main()
