@@ -13,12 +13,14 @@
 class registers{
 private:
 	std::vector<std::string> reg;
+	std::vector<std::string> arg;
 	std::map<std::string, int> allVar; // 1 in reg 2 in
 	int offset_count;
 	std::string scope_name;
 	std::list<int> usage;
 	std::string regUsed;
 	int argumentcount;
+
 
 	int find_empty(){
 		std::vector<std::string>::iterator it;
@@ -59,9 +61,13 @@ private:
 
 
 public:
+	int counter;
+
 	registers(std::string _scope_name){
 		scope_name = _scope_name;
 		offset_count = 0;
+		argumentcount = 0;
+		counter = 0;
 		if(scope_name == "main"){
 			regUsed = "$s";
 			reg.resize(8,"0");
@@ -70,6 +76,7 @@ public:
 			regUsed = "$t";
 			reg.resize(10,"0");
 		}
+		arg.resize(4,"0");
 	}
 	void savealltostack(){
 		for(int i = 0; i < reg.size();i++){
@@ -123,12 +130,19 @@ public:
 		return scope_name;
 	}
 	std::string findVar(std::string name, std::string& dst){
-		std::vector<std::string>::iterator it;
+		std::vector<std::string>::iterator it, argit;
 		std::string out;
 		int n;
 		it = find (reg.begin(), reg.end(), name);
 		//move it to back of the queue
 		if(it == reg.end()){
+			argit = find(arg.begin(), arg.end(), name);
+
+
+			if(argit != arg.end()){
+
+				return "$a"+std::to_string(argit - arg.begin());
+			}
 			std::string r = load(name, dst);
 			n = (r[r.size()-1])-48;
 		}
@@ -155,7 +169,11 @@ public:
 	}
 		//
 	}
-	int arginc(){
+	int addarg(std::string name){
+		std::cerr << "adding arg" << '\n';
+		arg[argumentcount] = name;
+		std::cerr << "added " << name << " @ " << argumentcount << '\n';
+		std::cerr << "addarg to " << scope_name <<'\n';
 		argumentcount++;
 		return argumentcount;
 	} // increase argumentcount

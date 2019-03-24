@@ -63,7 +63,7 @@ postfix_expression
 ;
 
 argument_expression_list
-: assignment_expression                                 {$$ = $1;}
+: assignment_expression                                 {$$ =new argument_expression_list(1,NULL,$1);}
 | argument_expression_list ',' assignment_expression    {$$ = new argument_expression_list(1,$1,$3);}
 ;
 

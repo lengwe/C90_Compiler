@@ -120,36 +120,67 @@ class postfix_expression : public Node{
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::cerr << "in postfix" << '\n';
 			std::string str = "func";
-			p->mips(str, destReg, Context);
-			if(type == 2|| type == 3){
+			std::string dr = "$a0";
+			if(type == 2){
+					p->mips(str, destReg, Context);
 					Context.savealltostack();
 					std::cout << "jal " << str <<'\n';
 					std::cout << "nop" << '\n';
 					dst = Context.loadall(dst);
+				}
+				else if(type == 3){
+					l->mips(str, destReg, Context);
+					Context.savealltostack();
+					r->mips(str, dr, Context);
+					Context.counter = 0;
+					std::cout << "jal " << str <<'\n';
+					std::cout << "nop" << '\n';
+					dst = Context.loadall(dst);
+					}
+
 			}
-		}
+
 };
 
 class argument_expression_list : public Node{
 	private:
 		int type;
-		Nodeptr l,r;
+		Nodeptr argument_expression_listptr,assignment_expression;
 	public:
-		argument_expression_list(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), l(_l), r(_r){}
+		argument_expression_list(int type_in, Nodeptr _l, Nodeptr _r) : type(type_in), argument_expression_listptr(_l), assignment_expression(_r){}
 		~argument_expression_list(){
-			delete l;
-			delete r;
+			delete argument_expression_listptr;
+			delete assignment_expression;
 		}
 
 		virtual void python(std::string &dst) const override{
 			std::string str,str2;
-			l->python(str);
-			r->python(str2);
+			assignment_expression->python(str2);
+			dst = str2;
+			if(argument_expression_listptr != NULL){
+			argument_expression_listptr->python(str);
 			dst = str+","+str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		}
 
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::cerr << "argument_expression_list called" << '\n';
+			std::string str ,str2;
+			str2 = "$a" + std::to_string(Context.counter);
+			Context.counter++;
+			assignment_expression->mips(str, str2, Context);
+			if(str[0] != '$'){
+				std::cout << "addiu " << str2 << ", $zero, " << str << '\n';
+			}
+			else{
+				std::cout << "addu " << str2 << ", $zero, " << str << '\n';
+			}
+
+		if(argument_expression_listptr != NULL){
+			argument_expression_listptr->mips(dst, destReg, Context);
+	}
+}
 };
 
 class unary_expression : public Node{
@@ -231,6 +262,16 @@ class multiplicative_expression : public Node{
 					l->python(str1);
 					r->python(str2);
 					dst = str1 + "*" + str2;
+				break;
+				case 2:
+					l->python(str1);
+					r->python(str2);
+					dst = str1 + "/" + str2;
+				break;
+				case 3:
+					l->python(str1);
+					r->python(str2);
+					dst = str1 + "%" + str2;
 				break;
 			}
 		}
