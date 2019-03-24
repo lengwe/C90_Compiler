@@ -304,8 +304,6 @@ initializer_list
 | initializer_list ',' initializer                               {$$ =new initializer_list(2,$3,$1);}
 ;
 
-
-
 struct_declaration_list
 : struct_declaration                                           {$$ = $1;}
 | struct_declaration_list struct_declaration                   {$$ = new struct_declaration_list(1,$2, $1);}
