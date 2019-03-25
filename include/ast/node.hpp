@@ -164,6 +164,10 @@ class external_declaration: public Node{
 					case 1:
 						p -> mips(dst, destReg, Context);
 						break;
+					case 2:
+						p -> mips(dst, destReg, Context);
+						break;
+
 				}
 		}
 };
@@ -243,7 +247,7 @@ public:
 		std::string str2,str3;
 		declarator->python(str3);
 		std::string str = str3.substr(0, str3.find("(")); //very bad hack this slice the name to obtain the function name using python function
-		registers function_scope(str);
+		registers function_scope(str, Context);
 		declarator->mips(str, destReg, function_scope);
 		std::cerr << "called declarator" << '\n';
 		std::cout << ".text" << '\n';

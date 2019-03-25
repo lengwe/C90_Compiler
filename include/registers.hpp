@@ -14,6 +14,7 @@ class registers{
 private:
 	std::vector<std::string> reg;
 	std::vector<std::string> arg;
+	std::vector<std::string> global;
 	std::map<std::string, int> allVar; // 1 in reg 2 in
 	int offset_count;
 	std::string scope_name;
@@ -24,6 +25,14 @@ private:
 
 	int find_empty(){
 		std::vector<std::string>::iterator it;
+		if(scope_name == "global"){
+			it = find (global.begin(), global.end(),"0");
+			if(it == global.end()){
+				return -1;
+			}
+			int n = it - global.begin();
+			return n;
+		}
 		it = find (reg.begin(), reg.end(),"0");
 		if(it == reg.end()){
 			return -1;
@@ -69,8 +78,26 @@ public:
 		argumentcount = 0;
 		counter = 0;
 		regUsed = "$t";
+		if(scope_name == "global"){
+					regUsed = "$s";
+		}
+		global.resize(8,"0");
 		reg.resize(10,"0");
 		arg.resize(4,"0");
+	}
+
+	registers(std::string _scope_name, registers _global){
+		scope_name = _scope_name;
+		offset_count = 0;
+		argumentcount = 0;
+		counter = 0;
+		regUsed = "$t";
+		if(scope_name == "global"){
+					regUsed = "$s";
+		}
+		reg.resize(10,"0");
+		arg.resize(4,"0");
+		global = _global.global;
 	}
 	void savealltostack(){
 		for(int i = 0; i < reg.size();i++){
@@ -108,6 +135,7 @@ public:
 		return name;
 	}
 	std::string newVar(std::string name, std::string& dst){
+		std::cerr << "scope_name: " << scope_name << "making " << name << '\n';
 		std::string t;
 		int n = find_empty();
 		if(n < 0){
@@ -115,7 +143,13 @@ public:
 			spill(n,"($sp)");
 			usage.pop_front();
 		}
-		reg[n] = name;
+		if(scope_name == "global"){
+			global[n] = name;
+		}
+		else{
+			reg[n] = name;
+			std::cerr << "reg " << regUsed << n << "is " << name << " in " <<scope_name << '\n';
+		}
 		usage.push_back(n);
 		t = regUsed+std::to_string(n); //plus one cos register t0 is reserved.
 		return t;
@@ -124,18 +158,22 @@ public:
 		return scope_name;
 	}
 	std::string findVar(std::string name, std::string& dst){
-		std::vector<std::string>::iterator it, argit;
+		std::vector<std::string>::iterator it, argit, gloit;
 		std::string out;
 		int n;
 		it = find (reg.begin(), reg.end(), name);
 		//move it to back of the queue
 		if(it == reg.end()){
+			std::cerr << "cannot find" << '\n';
 			argit = find(arg.begin(), arg.end(), name);
-
-
 			if(argit != arg.end()){
-
 				return "$a"+std::to_string(argit - arg.begin());
+			}
+			else{
+				gloit= find (global.begin(), global.end(), name);
+				if(gloit != global.end()){
+					return "$s"+std::to_string(gloit - global.begin());
+				}
 			}
 			std::string r = load(name, dst);
 			n = (r[r.size()-1])-48;

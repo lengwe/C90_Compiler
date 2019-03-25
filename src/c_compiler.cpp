@@ -9,7 +9,7 @@ int makeNameUnq = 0;
 
 int main (int argc, char *argv[])
 {
-	registers Context("foo");
+	registers Context("global");
 	std::string argument(argv[1]);
 	std::string file(argv[2]);
 
@@ -27,7 +27,7 @@ int main (int argc, char *argv[])
 		fclose (stdin);
 		fclose (stdout);
 	}
-	
+
 	else if(argument == "-S"){
 		freopen(argv[2],"r", stdin);
 		freopen (argv[4],"w",stdout);

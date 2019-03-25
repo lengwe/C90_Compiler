@@ -695,11 +695,17 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str1[0]!='$'||str2[0]!='$'){
+					else if(str2[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str1<<", "<<str2<<'\n';
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
+					else if(str1[0]!='$'){
+						std::cout<<"xori "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
+						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
+					}
+					
 					dst = destReg;
 				break;
 
@@ -711,8 +717,13 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str1[0]!='$'||str2[0]!='$'){
+					else if(str2[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str1<<", "<<str2<<'\n';
+						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
+						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
+					}
+					else if(str1[0]!='$'){
+						std::cout<<"xori "<<destReg<<", "<<str2<<", "<<str1<<'\n';
 						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
