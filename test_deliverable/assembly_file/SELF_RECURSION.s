@@ -16,7 +16,9 @@ addiu   $sp,$sp,-200
 sw      $fp,192($sp)
 sw			$ra, 196($sp)
 move    $fp,$sp
-slti $t0, $a0, 1
+slt $t0, $a0, 1
+xori $t0, $t0, 0x1
+andi $t0, $t0, 0x00ff
 beq $t0, $zero, _end1_1
 sw $t0, 16($fp)
 sw $a0, 20($fp)
