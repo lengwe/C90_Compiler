@@ -565,7 +565,24 @@ class shift_expression : public Node{
 			dst = str1 + op + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::string str, str2;
+			switch (type) {
+				case 1:
+					shift_expressionptr->mips(str,destReg,Context);
+					additive_expression->mips(str2,destReg,Context);
+					std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
+					dst=destReg;
+				break;
+
+				case 2:
+					shift_expressionptr->mips(str,destReg,Context);
+					additive_expression->mips(str2,destReg,Context);
+					std::cout<<"sra "<<str<<", "<<str<<", "<<str2<<'\n';
+					dst=destReg;
+				break;
+			}
+		}
 };
 
 class relational_expression : public Node{
@@ -705,7 +722,7 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					
+
 					dst = destReg;
 				break;
 
