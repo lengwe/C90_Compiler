@@ -571,14 +571,33 @@ class shift_expression : public Node{
 				case 1:
 					shift_expressionptr->mips(str,destReg,Context);
 					additive_expression->mips(str2,destReg,Context);
+<<<<<<< HEAD
 					std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
+=======
+					if(str[0] == '$' || str2[0] == '$'){
+						std::cout<<"sll "<<destReg<<", "<<str<<", "<<str2<<'\n';
+
+					}
+					else if(str[0] != '$' && str2[0] != '$'){
+						std::cout << "li " << destReg << ", " << (std::stoi(str)+std::stoi(str2)) << std::endl;
+					}
+>>>>>>> 9ea96db4873903538a00b7e1c1da1c07b200897a
 					dst=destReg;
 				break;
 
 				case 2:
 					shift_expressionptr->mips(str,destReg,Context);
 					additive_expression->mips(str2,destReg,Context);
+<<<<<<< HEAD
 					std::cout<<"sra "<<str<<", "<<str<<", "<<str2<<'\n';
+=======
+					if(str[0] == '$' || str2[0] == '$'){
+						std::cout<<"sra "<<destReg<<", "<<str<<", "<<str2<<'\n';
+					}
+					else if(str[0] != '$' && str2[0] != '$'){
+						std::cout << "li " << destReg << ", " << (std::stoi(str)+std::stoi(str2)) << std::endl;
+					}
+>>>>>>> 9ea96db4873903538a00b7e1c1da1c07b200897a
 					dst=destReg;
 				break;
 			}
@@ -712,17 +731,20 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str2[0]!='$'){
+					else if(str1[0]!='$'||str2[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str1<<", "<<str2<<'\n';
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
+<<<<<<< HEAD
 					else if(str1[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str2<<", "<<str1<<'\n';
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
 
+=======
+>>>>>>> 9ea96db4873903538a00b7e1c1da1c07b200897a
 					dst = destReg;
 				break;
 
@@ -734,13 +756,8 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str2[0]!='$'){
+					else if(str1[0]!='$'||str2[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str1<<", "<<str2<<'\n';
-						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
-						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
-					}
-					else if(str1[0]!='$'){
-						std::cout<<"xori "<<destReg<<", "<<str2<<", "<<str1<<'\n';
 						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
@@ -1021,7 +1038,7 @@ class assignment_expression : public Node{
 				else{
 					std::cout << "addu " << str << ", $zero, " << str2 << '\n';
 				}
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "*="){
@@ -1029,7 +1046,7 @@ class assignment_expression : public Node{
 				r->mips(str2, str, Context);
 				std::cout<<"mult "<<str<<", "<<str2<<'\n';
 				std::cout<<"mflo "<<str<<'\n';
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "/="){
@@ -1037,7 +1054,7 @@ class assignment_expression : public Node{
 				r->mips(str2, str, Context);
 				std::cout << "div " << str << ", " << str2 << std::endl;
 				std::cout << "mflo " << str <<  std::endl;
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "%="){
@@ -1045,7 +1062,7 @@ class assignment_expression : public Node{
 				r->mips(str2, str, Context);
 				std::cout << "div " << str << ", " << str2 << std::endl;
 				std::cout << "mfhi " << str <<  std::endl;
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "+="){
@@ -1057,7 +1074,7 @@ class assignment_expression : public Node{
 				else{
 					std::cout<<"addu "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "-="){
@@ -1070,26 +1087,26 @@ class assignment_expression : public Node{
 				else{
 					std::cout<<"subu "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "<<="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				if(str2[0] != '$'){
-					std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
-				}
-				else{
-					std::cout<<"sllv "<<str<<", "<<str<<", "<<str2<<'\n';
-				}
-				dst=destReg;
+				std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
+				dst=str;
 			}
 
 			if(*assign_op == ">>="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
+<<<<<<< HEAD
 					std::cout<<"sra "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
 				dst=destReg;
+=======
+				std::cout<<"sra "<<str<<", "<<str<<", "<<str2<<'\n';
+				dst=str;
+>>>>>>> 9ea96db4873903538a00b7e1c1da1c07b200897a
 			}
 
 			if(*assign_op == "&="){
@@ -1101,7 +1118,7 @@ class assignment_expression : public Node{
 				else{
 					std::cout<<"and "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "^="){
@@ -1113,7 +1130,7 @@ class assignment_expression : public Node{
 				else{
 					std::cout<<"xor "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
-				dst=destReg;
+				dst=str;
 			}
 
 			if(*assign_op == "|="){
@@ -1125,7 +1142,7 @@ class assignment_expression : public Node{
 				else{
 					std::cout<<"or "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
-				dst=destReg;
+				dst=str;
 			}
 		}
 };
