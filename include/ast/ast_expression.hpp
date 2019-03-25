@@ -565,7 +565,24 @@ class shift_expression : public Node{
 			dst = str1 + op + str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::string str, str2;
+			switch (type) {
+				case 1:
+					shift_expressionptr->mips(str,destReg,Context);
+					additive_expression->mips(str2,destReg,Context);
+					std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
+					dst=destReg;
+				break;
+
+				case 2:
+					shift_expressionptr->mips(str,destReg,Context);
+					additive_expression->mips(str2,destReg,Context);
+					std::cout<<"sra "<<str<<", "<<str<<", "<<str2<<'\n';
+					dst=destReg;
+				break;
+			}
+		}
 };
 
 class relational_expression : public Node{
@@ -695,17 +712,11 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str2[0]!='$'){
+					else if(str1[0]!='$'||str2[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str1<<", "<<str2<<'\n';
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str1[0]!='$'){
-						std::cout<<"xori "<<destReg<<", "<<str2<<", "<<str1<<'\n';
-						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
-						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
-					}
-					
 					dst = destReg;
 				break;
 
@@ -717,13 +728,8 @@ class equality_expression : public Node{
 						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
-					else if(str2[0]!='$'){
+					else if(str1[0]!='$'||str2[0]!='$'){
 						std::cout<<"xori "<<destReg<<", "<<str1<<", "<<str2<<'\n';
-						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
-						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
-					}
-					else if(str1[0]!='$'){
-						std::cout<<"xori "<<destReg<<", "<<str2<<", "<<str1<<'\n';
 						std::cout<<"sltu "<<destReg<<", $zero, "<<destReg<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
@@ -1059,24 +1065,14 @@ class assignment_expression : public Node{
 			if(*assign_op == "<<="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				if(str2[0] != '$'){
-					std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
-				}
-				else{
-					std::cout<<"sllv "<<str<<", "<<str<<", "<<str2<<'\n';
-				}
+				std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
 				dst=destReg;
 			}
 
 			if(*assign_op == ">>="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				if(str2[0] != '$'){
-					std::cout<<"srl "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
-				}
-				else{
-					std::cout<<"srlv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
-				}
+				std::cout<<"sra "<<str<<", "<<str<<", "<<str2<<'\n';
 				dst=destReg;
 			}
 
@@ -1084,10 +1080,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"srl "<<str<<", "<<str<<", "<<str2<<'\n';
+					std::cout<<"andi "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"srlv "<<str<<", "<<str<<", "<<str2<<'\n';
+					std::cout<<"and "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
