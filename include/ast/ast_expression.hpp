@@ -57,6 +57,9 @@ class primary_expression : public Node{
 				case 2:
 					dst = *string;
 					break;
+				case 4:
+				p->mips(dst, destReg, Context);
+				break;
 			}
 		}
 		};
@@ -931,10 +934,31 @@ class conditional_expression : public Node{
 		}
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-
-
-		}
-
+				std::string str1, str2;
+				std::string c = Context.newVar(makeName("condition"),dst);
+				std::string end1 = makeName("end1");
+				l->mips(dst,c,Context);
+				std::cout << "beq " << c << ", $zero, " << end1 << std::endl;
+				p->mips(str1, destReg, Context);
+				if(str1[0]  != '$'){
+					std::cout << "addiu " << destReg << " , $zero, " << str1 << '\n';
+				}
+				else{
+					std::cout << "addu " << destReg << " , $zero, " << str1 << '\n';
+				}
+				std::string end2 = makeName("end2");
+				std::cout << "beq $zero, $zero, " << end2 << std::endl;
+				std::cout <<  end1 <<":" << std::endl;
+				r->mips(str2, destReg, Context);
+				if(str2[0]  != '$'){
+					std::cout << "addiu " << destReg << " , $zero, " << str2 << '\n';
+				}
+				else{
+					std::cout << "addu " << destReg << " , $zero, " << str2 << '\n';
+				}
+				std::cout  << end2 << ":" <<std::endl;
+				dst = destReg;
+}
 };
 
 class assignment_expression : public Node{
