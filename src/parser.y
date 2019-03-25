@@ -44,8 +44,8 @@ ROOT:  translation_unit  {g_root = $1;}
 
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
-// | '+' CONSTANT               {$$ = new primary_expression(2,$2);}
-// | '-' CONSTANT                {$$ = new primary_expression(6,$2);}
+// | '+' CONSTANT            {$$ = new primary_expression(2,$2);}
+// | '-' CONSTANT            {$$ = new primary_expression(6,$2);}
 | CONSTANT                   {$$ = new primary_expression(2,$1);}
 | STRING_LITERAL             {$$ = new primary_expression(3,$1);}
 | '(' expression ')'         {$$ = new primary_expression(4,$2);}
@@ -431,6 +431,7 @@ statement_list
 expression_statement
 : ';'                                                                  {/*$$ = new expression_statement();*/}
 | expression ';'                                                       {$$ = new expression_statement($1);}
+| declaration                                                         {$$ = $1;}
 ;
 
 selection_statement

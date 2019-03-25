@@ -68,14 +68,8 @@ public:
 		offset_count = 0;
 		argumentcount = 0;
 		counter = 0;
-		if(scope_name == "main"){
-			regUsed = "$s";
-			reg.resize(8,"0");
-		}
-		else{
-			regUsed = "$t";
-			reg.resize(10,"0");
-		}
+		regUsed = "$t";
+		reg.resize(10,"0");
 		arg.resize(4,"0");
 	}
 	void savealltostack(){

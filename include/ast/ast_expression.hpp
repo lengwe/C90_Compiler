@@ -1127,7 +1127,10 @@ class expression : public Node{
 			dst = str+","+str2;
 		}
 
-		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			l->mips(dst,destReg, Context);
+			r->mips(dst,destReg, Context);
+		}
 
 };
 
