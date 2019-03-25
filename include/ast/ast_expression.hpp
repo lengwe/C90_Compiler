@@ -1088,12 +1088,7 @@ class assignment_expression : public Node{
 			if(*assign_op == ">>="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				if(str2[0] != '$'){
-					std::cout<<"srl "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
-				}
-				else{
-					std::cout<<"srlv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
-				}
+					std::cout<<"sra "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
 				dst=destReg;
 			}
 
@@ -1101,10 +1096,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"srl "<<str<<", "<<str<<", "<<str2<<'\n';
+					std::cout<<"andi "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"srlv "<<str<<", "<<str<<", "<<str2<<'\n';
+					std::cout<<"and "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
