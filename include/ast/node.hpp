@@ -164,6 +164,10 @@ class external_declaration: public Node{
 					case 1:
 						p -> mips(dst, destReg, Context);
 						break;
+					case 2:
+						p -> mips(dst, destReg, Context);
+						break;
+
 				}
 		}
 };
@@ -240,9 +244,12 @@ public:
 	}
 //int main(){int a; int y; return x;} int x(){int f;}
 	virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-		std::string str;
-		declarator->mips(str, destReg, Context);
-		registers function_scope(str);
+		std::string str2,str3;
+		declarator->python(str3);
+		std::string str = str3.substr(0, str3.find("(")); //very bad hack this slice the name to obtain the function name using python function
+		registers function_scope(str, Context);
+		declarator->mips(str, destReg, function_scope);
+		std::cerr << "called declarator" << '\n';
 		std::cout << ".text" << '\n';
 		std::cout << ".align 2" << '\n';
 		std::cout << ".globl " << function_scope.getScope() <<'\n';
@@ -253,6 +260,8 @@ public:
 		std::cout << "sw      $fp,192($sp)" << '\n';
 		std::cout << "sw			$ra, 196($sp)" << '\n';
 		std::cout << "move    $fp,$sp" << '\n';
+		if(declaration_list!=NULL){
+		}
 		compound_statement -> mips(dst, destReg, function_scope);
 		std::cout << function_scope.getScope()+"_end" << ":" << '\n';
 		std::cout << "move    $sp,$fp" << '\n';

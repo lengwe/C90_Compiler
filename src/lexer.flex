@@ -7,10 +7,12 @@ extern "C" int fileno(FILE *stream);
 #include "parser.tab.hpp"
 #include <string>
 #include <iostream>
+#include <cstdio>
 %}
+
 KEYWORD [auto|break|case|char|const|continue|default|do|double|else|enum|sizeof|float|for|if|long|return|short|signed|unsigned|static|struct|switch|typedef|void|while]
 IDENTIFIER [A-Za-z_][A-Za-z0-9_]*
-OPERATOR [\=|\+|\-|\*|\/|\%|\||>|<|!|\|\||\?|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|]
+OPERATOR [\=|\+|\-|\*|\/|\%|\||>|<|!|\|\||\?|\[|\|\(|\)|\{|\}|\:|\,|\;|\->|\.\|\~]
 ASS_OP [\+=|\-=|\*=|\/=|%=|>>=|<<=|&=|\^=|\|=|\+\+|\-\-|==|!=|>=|<=|<<|>>|&&];
 EXPONENT    [eE][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
@@ -67,6 +69,7 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 "=="			{  return  (EQ_OP); }
 
+"!="			{  return  (NE_OP); }
 
 {OPERATOR}        {
   std::string op(yytext);
@@ -199,6 +202,9 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
   else if(op == "&"){
     return '&';
   }
+  else if(op == "~"){
+    return '~';
+  }
 }
 {DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
 
@@ -260,10 +266,29 @@ volatile {return VOLATILE;}
 
 {WHITESPACE}        {;}
 
+"//"[^\n]*          {;}
+
 .                   { }
 
 
+"/*"    {
+        int c;
 
+        while((c = yyinput()) != 0)
+            {
+            if(c == '\n'){
+
+            }
+
+            else if(c == '*')
+                {
+                if((c = yyinput()) == '/')
+                    break;
+                else
+                    unput(c);
+                }
+            }
+        }
 
 %%
 

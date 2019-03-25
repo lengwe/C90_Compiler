@@ -7,7 +7,7 @@ int main()
     const Node* ast=parseAST();
 
 
-    registers Context("test");
+    registers Context("global");
     std::string str, destReg = "$2";
     ast->mips(str, destReg, Context);
 

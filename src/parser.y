@@ -44,8 +44,8 @@ ROOT:  translation_unit  {g_root = $1;}
 
 primary_expression
 : IDENTIFIER                 {$$ = new primary_expression(1,$1);}
-// | '+' CONSTANT               {$$ = new primary_expression(2,$2);}
-// | '-' CONSTANT                {$$ = new primary_expression(6,$2);}
+// | '+' CONSTANT            {$$ = new primary_expression(2,$2);}
+// | '-' CONSTANT            {$$ = new primary_expression(6,$2);}
 | CONSTANT                   {$$ = new primary_expression(2,$1);}
 | STRING_LITERAL             {$$ = new primary_expression(3,$1);}
 | '(' expression ')'         {$$ = new primary_expression(4,$2);}
@@ -63,7 +63,7 @@ postfix_expression
 ;
 
 argument_expression_list
-: assignment_expression                                 {$$ = $1;}
+: assignment_expression                                 {$$ =new argument_expression_list(1,NULL,$1);}
 | argument_expression_list ',' assignment_expression    {$$ = new argument_expression_list(1,$1,$3);}
 ;
 
@@ -105,8 +105,8 @@ additive_expression
 
 shift_expression
 : additive_expression                                {$$ = $1;}
-| shift_expression '<''<' additive_expression       {$$ = new shift_expression(1,$1,$4);}
-| shift_expression '>''>' additive_expression      {$$ = new shift_expression(2,$1,$4);}
+| shift_expression LEFT_OP additive_expression       {$$ = new shift_expression(1,$1,$3);}
+| shift_expression RIGHT_OP additive_expression      {$$ = new shift_expression(2,$1,$3);}
 ;
 
 relational_expression
@@ -304,8 +304,6 @@ initializer_list
 | initializer_list ',' initializer                               {$$ =new initializer_list(2,$3,$1);}
 ;
 
-
-
 struct_declaration_list
 : struct_declaration                                           {$$ = $1;}
 | struct_declaration_list struct_declaration                   {$$ = new struct_declaration_list(1,$2, $1);}
@@ -433,6 +431,7 @@ statement_list
 expression_statement
 : ';'                                                                  {/*$$ = new expression_statement();*/}
 | expression ';'                                                       {$$ = new expression_statement($1);}
+| declaration                                                         {$$ = $1;}
 ;
 
 selection_statement

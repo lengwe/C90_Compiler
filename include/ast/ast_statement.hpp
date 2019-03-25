@@ -52,6 +52,10 @@ class compound_statement : public Node{
       }
 
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        if(type == 1){
+          return;
+        }
+
         std::string str1,str2;
         block_item_list->mips(dst,destReg, Context);
       }
@@ -347,6 +351,22 @@ class iteration_statement : public Node{
           expression->mips(dst, condition, Context);
           std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
           statement->mips(str, destReg, Context);
+          std::cout << "beq $zero, $zero, " << start <<  std::endl;
+          std::cout << exit << ":" << std::endl;
+        }
+        if(type == 3||type == 4){
+          expression_statement_1->mips(dst, destReg,Context);
+          std::string start = makeName("start");
+          std::string exit = makeName("exit");
+          std::string str = start+","+exit;
+          std::string condition = Context.newVar(makeName("condition"),dst);
+          std::cout << start << ":" << std::endl;
+          expression_statement_2->mips(dst, condition, Context);
+          std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
+          statement->mips(str, destReg, Context);
+          if(expression != NULL){
+            expression->mips(str, destReg, Context);
+          }
           std::cout << "beq $zero, $zero, " << start <<  std::endl;
           std::cout << exit << ":" << std::endl;
         }

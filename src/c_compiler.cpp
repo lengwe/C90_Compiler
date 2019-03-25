@@ -9,9 +9,10 @@ int makeNameUnq = 0;
 
 int main (int argc, char *argv[])
 {
-	registers Context("foo");
+	registers Context("global");
 	std::string argument(argv[1]);
 	std::string file(argv[2]);
+
 	if(argument == "--translate" && file != "print"){
 		freopen(argv[2],"r", stdin);
 		freopen (argv[4],"w",stdout);
@@ -26,16 +27,8 @@ int main (int argc, char *argv[])
 		fclose (stdin);
 		fclose (stdout);
 	}
-	// else if(argument == "--translate"){
-	// 	//std::cout<<"1"<<std::endl;
-	//   const Node* ast=parseAST();
-	//
-	//   std::string str;
-	//   ast->python(str);
-	//   std::cout<<str;
-	//
-	// }
-	else if(argument == "--S"){
+
+	else if(argument == "-S"){
 		freopen(argv[2],"r", stdin);
 		freopen (argv[4],"w",stdout);
 		const Node* ast=parseAST();
@@ -45,6 +38,7 @@ int main (int argc, char *argv[])
 		fclose (stdin);
 		fclose (stdout);
 	}
+
 
 	return 0;
 }

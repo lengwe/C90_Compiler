@@ -258,7 +258,8 @@ class direct_declarator : public Node{
       }
 
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-
+        std::string func("func");
+        std::cerr << "direct_declarator: " << type << '\n';
         switch (type) {
           case 1:
           if(dst == "func"){
@@ -267,10 +268,12 @@ class direct_declarator : public Node{
           }
             dst = Context.newVar(*identifier, destReg);
           break;
+          case 5:
+            direct_declaratorptr->mips(func, destReg, Context);
+            parameter_type_list->mips(dst, destReg, Context);
+            break;
           case 6:
-          std::string str("func");
-            direct_declaratorptr->mips(str, destReg, Context);
-            dst = str;
+            direct_declaratorptr->mips(func, destReg, Context);
           break;
       }
     }
@@ -304,7 +307,12 @@ class parameter_list : public Node{
         dst = str2+ ", " + str1;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        if(parameter_listptr != NULL){
+          parameter_listptr->mips(dst, destReg, Context);
+        }
+        parameter_declaration->mips(dst, destReg, Context);
+      }
 };
 
 class parameter_type_list : public Node{
@@ -355,7 +363,11 @@ class parameter_declaration : public Node{
           dst = str1 + str2;
       }
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        std::string str = "func";
+        declarator->mips(str, destReg, Context);
+        Context.addarg(str);
+      }
 };
 
 class type_qualifier_list : public Node{
