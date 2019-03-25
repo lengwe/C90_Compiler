@@ -247,6 +247,7 @@ class expression_statement : public Node{
       if(expression != NULL){
         expression -> mips(dst,destReg, Context);
       }
+      std::cout <<dst<< '\n';
     }
 };
 
