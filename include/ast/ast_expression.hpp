@@ -999,24 +999,24 @@ class assignment_expression : public Node{
 			if(*assign_op == "*="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				std::cout<<"mult "<<destReg<<", "<<str2<<'\n';
-				std::cout<<"mflo "<<destReg<<'\n';
+				std::cout<<"mult "<<str<<", "<<str2<<'\n';
+				std::cout<<"mflo "<<str<<'\n';
 				dst=destReg;
 			}
 
 			if(*assign_op == "/="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				std::cout << "div " << destReg << ", " << str2 << std::endl;
-				std::cout << "mflo " << destReg <<  std::endl;
+				std::cout << "div " << str << ", " << str2 << std::endl;
+				std::cout << "mflo " << str <<  std::endl;
 				dst=destReg;
 			}
 
 			if(*assign_op == "%="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				std::cout << "div " << destReg << ", " << str2 << std::endl;
-				std::cout << "mfhi " << destReg <<  std::endl;
+				std::cout << "div " << str << ", " << str2 << std::endl;
+				std::cout << "mfhi " << str <<  std::endl;
 				dst=destReg;
 			}
 
@@ -1024,10 +1024,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"addiu "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"addiu "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"addu "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"addu "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
@@ -1037,10 +1037,10 @@ class assignment_expression : public Node{
 				r->mips(str2, str, Context);
 				std::cerr<<"in ass str2:"<<str2<<std::endl;
 				if(str2[0] != '$'){
-					std::cout<<"addiu "<<destReg<<", "<<destReg<<", -"<<str2<<'\n';
+					std::cout<<"addiu "<<str<<", "<<str<<", -"<<str2<<'\n';
 				}
 				else{
-					std::cout<<"subu "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"subu "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
@@ -1049,10 +1049,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"sll "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"sll "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"sllv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"sllv "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
@@ -1073,10 +1073,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"srl "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"srl "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"srlv "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"srlv "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
@@ -1085,10 +1085,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"xori "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"xori "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"xor "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"xor "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
@@ -1097,10 +1097,10 @@ class assignment_expression : public Node{
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
 				if(str2[0] != '$'){
-					std::cout<<"ori "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"ori "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"or "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+					std::cout<<"or "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
 				dst=destReg;
 			}
