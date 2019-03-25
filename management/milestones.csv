@@ -1,5 +1,8 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-Lexer,,1,Ramon,           ,Finish Lexer
-Parser,Lexer,,Leng,,Finish parser
-Test Suite,"Bash, lexer, parser",,Ramon,,
-Code Gen,* + working simulator,,,,
+Specification,,2,Ramon,24/02/19,Reading through the specification and plan 
+Lexer,,2,Ramon,26/02/19,C Lexer
+Parser/Yacc ,Lexer,,Leng,,C parser
+ast_classes ,,,Ramon,,Building up the structure for 
+code gen for python,,,Leng,,Translate C code to Python
+code gen for mips,,,Ramon,,Translate C code to MIPS
+Test Suite,,,Leng,,Writing required 10 test cases and bash to run the automate tests

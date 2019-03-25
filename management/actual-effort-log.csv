@@ -1,0 +1,27 @@
+Date,Effort,Developers,Milestones
+26/02/19,,Ramon,lexer finished 
+01/03/19,,Leng,Starting parser
+04/03/19,,"Ramon, Leng",Working on ast classes 
+04/03/19,,Leng,fixing segmentation fault in the parser
+07/03/19,,Leng,finish all the expression constructors
+08/03/19,,Ramon,add function declaration 
+13/03/19,,Leng,Modify declaration_list 
+13/03/19,,Ramon,Fix addition error and add parameter in the function 
+14/03/19,,Leng,working on basic arithmetic operations and call functions on Python
+15/03/19,,Leng,Finish global variable and start working on indentation
+15/03/19,,Ramon,If-else and while statement for python works
+16/03/19,,Leng,Fixing indentation bug
+18/03/19,,Ramon,Add more tests to test Python code gen
+18/03/19,,Leng,Finished code gen part for Python
+19/03/19,,Ramon,Working on register and stack class 
+20/03/19,,Leng,working on test suite 
+21/03/19,,Ramon,Working on basci instructions on mips 
+22/03/19,,Ramon,Add function call and return on mips 
+22/03/19,,Leng,Fixing a bug in global variable on Python
+23/03/19,,Ramon,While statement works on mips
+24/03/19,,Ramon,Changing the compound statement in parser
+24/03/19,,Ramon,function call with arguments works on mips
+24/03/19,,Ramon,finish unary operation in mips 
+24/03/19,,Leng,finish relation and equality expression 
+25/03/19,,Ramon,working on for loop and conditional expression
+25/03/19,,Ramon,Working on global variable in mips 
