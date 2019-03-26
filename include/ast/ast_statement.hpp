@@ -169,11 +169,11 @@ class jump_statement : public Node{
         std::string str;
         if(type==2){
           //continue statement
-          std::cout<<"b "<<dst<<'\n';
+std::cout << "j " << Context.scope_start << '\n';
         }
         if(type==3){
           //break statement
-          std::cout<<"b "<<dst<<'\n';
+std::cout << "j " << Context.scope_end << '\n';
         }
         if(type == 4 || type == 5){
           if(expression != NULL){
@@ -374,7 +374,9 @@ class iteration_statement : public Node{
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         if(type == 1){
           std::string start = makeName("start");
+          Context.scope_start = start;
           std::string exit = makeName("exit");
+          Context.scope_end = exit;
           std::string str = start+","+exit;
           std::string condition = Context.newVar(makeName("condition"),dst);
           std::cout << start << ":" << std::endl;
@@ -391,7 +393,9 @@ class iteration_statement : public Node{
         if(type == 3||type == 4){
           expression_statement_1->mips(dst, destReg,Context);
           std::string start = makeName("start");
+          Context.scope_start = start;
           std::string exit = makeName("exit");
+          Context.scope_end = exit;
           std::string str = start+","+exit;
           std::string condition = Context.newVar(makeName("condition"),dst);
           std::cout << start << ":" << std::endl;

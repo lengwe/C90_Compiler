@@ -68,6 +68,8 @@ private:
 
 public:
 	int argumentcount;
+	std::string scope_start;
+	std::string scope_end;
 	int counter;
 	std::vector<std::string> global;
 	bool to_store = false;
