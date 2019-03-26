@@ -1,6 +1,7 @@
-int array(int x){
-  int a[10]={1,2,3,4,5,6,7,8,9,10};
+int array(){
+  int x=3;
+  int a[10];
+  a[x] = 1;
 
-  x = x+a[0];
-  return x;
+  return a[3];
 }

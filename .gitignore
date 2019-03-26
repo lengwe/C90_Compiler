@@ -2,5 +2,5 @@
 *.o
 testing/*
 *.s
-test_deliverable/working
+test_deliverable/working/*
 test_deliverable/object_file/*.o

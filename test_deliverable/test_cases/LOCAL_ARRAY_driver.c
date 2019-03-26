@@ -1,5 +1,5 @@
-int array(int x);
+int array();
 
 int main(){
-  return !(11==array(10));
+  return !(1==array());
 }
