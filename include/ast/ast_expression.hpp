@@ -617,31 +617,54 @@ class shift_expression : public Node{
 		}
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-	             std::string str, str2;
+	             std::string str1, str2;
 	             switch (type) {
 	                 case 1:
-	                     shift_expressionptr->mips(str,destReg,Context);
-	                     additive_expression->mips(str2,destReg,Context);
-	                     if(str[0] == '$' || str2[0] == '$'){
-	                         std::cout<<"sll "<<destReg<<", "<<str<<", "<<str2<<'\n';
-
-	                     }
-	                     else if(str[0] != '$' && str2[0] != '$'){
-	                         std::cout << "li " << destReg << ", " << (std::stoi(str)+std::stoi(str2)) << std::endl;
-	                     }
-	                     dst=destReg;
+									 shift_expressionptr->mips(str1,destReg,Context);
+									 additive_expression->mips(str2,destReg,Context);
+									 if(str1[0] == '$' && str2[0] == '$'){
+									 std::cout << "sllv " << destReg << ", " << str1 << ", " << str2 << std::endl;
+									 }
+									 else if(str1[0] != '$' && str2[0] != '$'){
+									 	if(Context.getScope() == "global"){
+									 		dst = std::to_string(std::stoi(str1)<<std::stoi(str2));
+									 		return;
+									 	}
+									 	std::cout << "li " << destReg << ", " << (std::stoi(str1)>>std::stoi(str2)) << std::endl;
+									 }
+									 else if (str1[0] != '$'){
+										 std::string tmp = Context.newVar("0tmp", dst);
+										 std::cout << "li " << tmp << " , " << str1 <<  '\n';
+									 	std::cout << "sllv " << destReg << ", " << tmp << ", " << str2 << std::endl;
+									 }
+									 else{
+									 	std::cout << "sll " << destReg << ", " << str1 << ", " << str2 << std::endl;
+									 }
+									 dst = destReg;
 	                 break;
 
 	                 case 2:
-	                     shift_expressionptr->mips(str,destReg,Context);
-	                     additive_expression->mips(str2,destReg,Context);
-	                     if(str[0] == '$' || str2[0] == '$'){
-	                         std::cout<<"sra "<<destReg<<", "<<str<<", "<<str2<<'\n';
-	                     }
-	                     else if(str[0] != '$' && str2[0] != '$'){
-	                         std::cout << "li " << destReg << ", " << (std::stoi(str)+std::stoi(str2)) << std::endl;
-	                     }
-	                     dst=destReg;
+									 shift_expressionptr->mips(str1,destReg,Context);
+									 additive_expression->mips(str2,destReg,Context);
+									 if(str1[0] == '$' && str2[0] == '$'){
+									 std::cout << "srlv " << destReg << ", " << str1 << ", " << str2 << std::endl;
+									 }
+									 else if(str1[0] != '$' && str2[0] != '$'){
+										if(Context.getScope() == "global"){
+											dst = std::to_string(std::stoi(str1)>>std::stoi(str2));
+											return;
+										}
+										std::cout << "li " << destReg << ", " << (std::stoi(str1)>>std::stoi(str2)) << std::endl;
+									 }
+									 else if (str1[0] != '$'){
+										 std::string tmp = Context.newVar("0tmp", dst);
+										 std::cout << "li " << tmp << " , " << str1 <<  '\n';
+											std::cout << "srlv " << destReg << ", " << tmp << ", " << str2 << std::endl;
+									 }
+									 else{
+										std::cout << "srl " << destReg << ", " << str1 << ", " << str2 << std::endl;
+									 }
+									 dst = destReg;
 	                 break;
 	             }
 	         }
@@ -1216,7 +1239,12 @@ class assignment_expression : public Node{
 			if(*assign_op == ">>="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, tmp, Context);
-					std::cout<<"sra "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
+				if(str2[0] != '$'){
+					std::cout<<"srl "<<str<<", "<<str<<", "<<str2<<'\n';
+				}
+				else{
+					std::cout<<"srlv "<<str<<", "<<str<<", "<<str2<<'\n';
+				}
 				dst=str;
 			}
 
