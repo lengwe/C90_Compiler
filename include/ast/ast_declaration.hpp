@@ -843,6 +843,21 @@ class enumerator : public Node{
     virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
       std::string name = *IDENTIFIER;
       std::string str = Context.newVar(name, dst);
+      if(Context.getScope() == "global"){
+        std::cout << name << ":" <<'\n';
+        if(type == 1){
+        std::cout << ".word\t" << Context.counter << '\n';
+      }
+      else if(type == 2){
+        std::string str2;
+        constant_expression->mips(str2, destReg, Context);
+        Context.counter = std::stoi(str2);
+        std::cout << ".word\t" << Context.counter << '\n';
+      }
+      Context.counter++;
+      Context.global.push_back(name);
+      return;
+      }
       if(type == 1){
         std::cout << "addiu " << str << " , $zero, " << Context.counter <<'\n';
       }
@@ -850,8 +865,8 @@ class enumerator : public Node{
         std::string str2;
         constant_expression->mips(str2, destReg, Context);
         Context.counter = std::stoi(str2);
+        std::cout << "addiu " << str << " , $zero, " << Context.counter <<'\n';
       }
-      std::cout << "addiu " << str << " , $zero, " << Context.counter <<'\n';
       Context.counter++;
     }
 };
