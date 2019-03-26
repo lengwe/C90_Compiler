@@ -321,7 +321,9 @@ class selection_statement : public Node{
           std::string c = Context.newVar(makeName("condition"),dst);
           std::string end1 = makeName("end1");
           expression-> mips(dst ,c, Context);
+
           std::cout << "beq " << c << ", $zero, " << end1 << std::endl;
+
           statement_1->mips(dst, destReg, Context);
           if(statement_2 != NULL){
             std::string end2 = makeName("end2");

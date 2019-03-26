@@ -8,8 +8,8 @@ std::string makeName(std::string base){
 
 void loadimm(std::string destReg, int num){
 	if(num > 0xFFFF){
-	 std::cout << "lui " << destReg << (unsigned(num << 16)>>16) << '\n';
-	 std::cout << "ori " << destReg << (num | 0xFFFF) <<'\n';
+	 std::cout << "lui " << destReg << (unsigned(num << 16)>>16) << std::endl;
+	 std::cout << "ori " << destReg << (num | 0xFFFF) << std::endl;
 	}
-	std::cout << "li " << destReg << " , " << num << '\n';
+	std::cout << "li " << destReg << " , " << num << std::endl;
 }

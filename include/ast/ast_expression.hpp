@@ -739,12 +739,12 @@ class relational_expression : public Node{
 				break;
 
 				case 3:
-				if(str2[0] != '$'){
+				 if(str2[0] != '$'){
 					std::string tmp = Context.newVar("0tmp", dst);
 					std::cout << "li " << tmp << " , " << str2 << '\n';
 					str2=tmp;
 				}
-				if(str1[0] != '$'){
+				else if(str1[0] != '$'){
 						std::cout<<"slti "<<destReg<<", "<<str2<<", "<<str1<<'\n';
 				}
 				else{
@@ -762,10 +762,10 @@ class relational_expression : public Node{
 					str1=tmp;
 				}
 				if(str2[0] != '$'){
-						std::cout<<"slti "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+						std::cout<<"slti "<<destReg<<", "<<str1<<", "<<str2<<'\n';
 				}
 				else{
-					std::cout<<"slt "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+					std::cout<<"slt "<<destReg<<", "<<str1<<", "<<str2<<'\n';
 				}
 					std::cout<<"xori "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
 					std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
@@ -973,7 +973,7 @@ class inclusive_or_expression : public Node{
 					dst = std::to_string(std::stoi(str1)|std::stoi(str2));
 					return;
 				}
-				std::cout << "li " << destReg << ", " << (std::stoi(str1)|std::stoi(str2)) << std::endl;
+				std::cout << "li " << destReg << ", " << (std::stoi(str1)||std::stoi(str2)) << std::endl;
 			}
 			else if (str1[0] != '$'){
 				std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
@@ -1008,18 +1008,28 @@ class logical_and_expression : public Node{
 		}
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+			std::cerr << "and expression" << '\n';
 			std::string str1, str2;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
 
 			if(str1[0] == '$' && str2[0] == '$'){
-				std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
 			}
-			else if(str1[0] != '$' || str2[0] != '$'){
-				std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			else if(str1[0] != '$' && str2[0] != '$'){
+							loadimm(destReg, (std::stoi(str1)&&std::stoi(str2)));
+			}
+			else if(str1[0] != '$'){
+				std::cout << "andi " << destReg << ", " << str2 << ", " << str1 << std::endl;
 				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
 			}
+				else if(str2[0] != '$'){
+					std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+					std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+			}
+			 dst = destReg;
+
 			// else if(str1[0] != '$' && str2[0] != '$'){
 			// 	std::cout << "li " << destReg << ", " << (std::stoi(str1)&&std::stoi(str2)) << std::endl;
 			// }
@@ -1055,20 +1065,27 @@ class logical_or_expression : public Node{
 		}
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+
 			std::string str1, str2;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
 
 			if(str1[0] == '$' && str2[0] == '$'){
-				std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
+				std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
 			}
-			else if(str1[0] != '$' || str2[0] != '$'){
-				std::cout << "andi " << destReg << ", " << str1 << ", " << str2 << std::endl;
+			else if(str1[0] != '$' && str2[0] != '$'){
+			loadimm(destReg, (std::stoi(str1)||std::stoi(str1)));
+			}
+			else if(str1[0] != '$'){
+				std::cout << "ori " << destReg << ", " << str2 << ", " << str1 << std::endl;
 				std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+			}
+				else if(str2[0] != '$'){
+					std::cout << "ori " << destReg << ", " << str1 << ", " << str2 << std::endl;
+					std::cout<< "andi "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
 			}
 			 dst = destReg;
-
 		}
 
 };
@@ -1312,8 +1329,15 @@ class expression : public Node{
 		}
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-			l->mips(dst,destReg, Context);
-			r->mips(dst,destReg, Context);
+			if(l != NULL){
+				l->mips(dst,destReg, Context);
+			}
+			std::string str;
+			r->mips(str,destReg, Context);
+			if(str[0] != '$'){
+				loadimm(destReg, std::stoi(str));
+			}
+			dst = str;
 			// std::cout  << '\n';
 		}
 
