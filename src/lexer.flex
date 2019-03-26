@@ -18,8 +18,7 @@ EXPONENT    [eE][\+|\-]?[0-9]+
 FRACTION_CONSTANT [0-9]*\.[0-9]+|([0-9]+\.)
 DECIMAL_CONSTANT  ([1-9][0-9]*)|[0]*
 HEX_CONSTANT      [0][xX][0-9A-Fa-f]+
-FLOAT_SUFFIX      [f|F|l|L]
-INTEGER_SUFFIX    [u|U|l|L|ul|UL|ll|LL|ull|ULL]
+
 CHAR_CONSTANT  ['](([\\]['])|([^']))+[']
 WHITESPACE  [ \t\r\f\v]+
 STRING_LITERAL  ["](([\\]["])|([^"]))*["]
@@ -210,20 +209,31 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
     return '~';
   }
 }
-{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
+{DECIMAL_CONSTANT}?                   {yylval.str = new std::string (yytext); return CONSTANT;}
 
-{DECIMAL_CONSTANT}{INTEGER_SUFFIX}?                   {
+{DECIMAL_CONSTANT}?                   {
+yylval.str = new std::string (yytext);
+return CONSTANT;
+}
+
+{HEX_CONSTANT}?                   {
+
   yylval.str = new std::string (yytext);
+  std::string tmp(yytext);
+  int n;
+  std::istringstream(tmp) >> std::hex >> n;
+  tmp = std::to_string(n);
+  yylval.str = new std::string (tmp);
   return CONSTANT;
 }
 
 
-{FRACTION_CONSTANT}{EXPONENT}{FLOAT_SUFFIX}?    {
+{FRACTION_CONSTANT}{EXPONENT}?    {
   yylval.str = new std::string (yytext);
   return CONSTANT;
 }
 
-([0-9]+){EXPONENT}{FLOAT_SUFFIX}?               {
+([0-9]+){EXPONENT}?               {
   yylval.str = new std::string (yytext);
   return CONSTANT;
 }

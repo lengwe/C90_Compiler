@@ -87,6 +87,10 @@ class block_item_list : public Node{
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         block_item_listptr->mips(dst,destReg, Context);
         block_item->mips(dst,destReg, Context);
+        if(Context.to_print == true){
+          std::cout << Context.str_to_print;
+          Context.to_print = false;
+        }
       }
 };
 
@@ -183,20 +187,25 @@ class jump_statement : public Node{
 
 class statement : public Node{
   private:
-    int type;
     Nodeptr statementptr;
 
   public:
-    statement(int type_in,  Nodeptr _l) : type(type_in), statementptr(_l){}
+    statement( Nodeptr _l) :statementptr(_l){}
     ~statement(){
       delete statementptr;
     }
 
     virtual void python(std::string &dst) const override{
-      //std::cerr<<"entering statement\n";
+    statementptr->python(dst);
     }
 
-    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+      statementptr->mips(dst, destReg, Context);
+      if(Context.to_print == true){
+        std::cout << Context.str_to_print;
+        Context.to_print =false;
+      }
+    }
 };
 
 class statement_list : public Node{
@@ -239,7 +248,7 @@ class statement_list : public Node{
         else{
           statement_listptr->mips(str, destReg, Context);
           statement->mips(str2, destReg, Context);
-          dst = str+'\n'+str2;
+
           //std::cerr<<"str in statement_list: "<<str<<'\n';
           //std::cerr<<"str2 in statement_list: "<<str2<<'\n';
         }
@@ -372,6 +381,10 @@ class iteration_statement : public Node{
           expression->mips(dst, condition, Context);
           std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
           statement->mips(str, destReg, Context);
+          if(Context.to_print == true){
+            std::cout << Context.str_to_print;
+            Context.to_print =false;
+          }
           std::cout << "beq $zero, $zero, " << start <<  std::endl;
           std::cout << exit << ":" << std::endl;
         }
@@ -383,11 +396,15 @@ class iteration_statement : public Node{
           std::string condition = Context.newVar(makeName("condition"),dst);
           std::cout << start << ":" << std::endl;
           expression_statement_2->mips(dst, condition, Context);
+          if(Context.to_print == true){
+            std::cout << Context.str_to_print;
+            Context.to_print =false;
+          }
           std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
-          statement->mips(str, destReg, Context);
           if(expression != NULL){
             expression->mips(str, destReg, Context);
           }
+          statement->mips(str, destReg, Context);
           std::cout << "beq $zero, $zero, " << start <<  std::endl;
           std::cout << exit << ":" << std::endl;
         }

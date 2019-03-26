@@ -12,13 +12,12 @@
 .ent    recursive
 .type recursive,@function
 recursive:
-addiu   $sp,$sp,-200
-sw      $fp,192($sp)
-sw			$ra, 196($sp)
+addiu   $sp,$sp,-600
+sw      $fp,592($sp)
+sw			$ra, 596($sp)
 move    $fp,$sp
-slt $t0, $a0, 1
+slti $t0, $a0, 2
 xori $t0, $t0, 0x1
-andi $t0, $t0, 0x00ff
 beq $t0, $zero, _end1_1
 sw $t0, 16($fp)
 sw $a0, 20($fp)
@@ -52,9 +51,9 @@ j recursive_end
 _end2_2:
 recursive_end:
 move    $sp,$fp
-lw      $fp,192($sp)
-lw			$ra,196($sp)
-addiu   $sp,$sp,200
+lw      $fp,592($sp)
+lw			$ra,596($sp)
+addiu   $sp,$sp,600
 j	$31
 nop
 .end	recursive

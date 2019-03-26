@@ -3,19 +3,15 @@
 
 
 
-.globl func
-.data
-func:
-    .word 0
 .text
 .align 2
 .globl main
 .ent    main
 .type main,@function
 main:
-addiu   $sp,$sp,-200
-sw      $fp,192($sp)
-sw			$ra, 196($sp)
+addiu   $sp,$sp,-600
+sw      $fp,592($sp)
+sw			$ra, 596($sp)
 move    $fp,$sp
 sw $a0, 16($fp)
 sw $a1, 20($fp)
@@ -24,7 +20,7 @@ sw $a3, 28($fp)
 sw $2, 32($fp)
 sw $3, 36($fp)
 sw $31, 40($fp)
-addiu $a0, $zero, 5
+li $a0 , 5
 jal f
 nop
 lw $a0, 16($fp)
@@ -44,9 +40,9 @@ addu $2, $zero, $2
 j main_end
 main_end:
 move    $sp,$fp
-lw      $fp,192($sp)
-lw			$ra,196($sp)
-addiu   $sp,$sp,200
+lw      $fp,592($sp)
+lw			$ra,596($sp)
+addiu   $sp,$sp,600
 j	$31
 nop
 .end	main

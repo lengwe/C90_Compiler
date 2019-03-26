@@ -1,32 +1,60 @@
 
+
+
+
+
+
+
+
+
 .text
 .align 2
-.globl main
-.ent    main
-.type main,@function
-main:
-addiu   $sp,$sp,-200
-sw      $fp,192($sp)
-sw			$ra, 196($sp)
+.globl recursive
+.ent    recursive
+.type recursive,@function
+recursive:
+addiu   $sp,$sp,-600
+sw      $fp,592($sp)
+sw			$ra, 596($sp)
 move    $fp,$sp
-li  $3, 1
-sw $3, 16($fp)
-li  $3, 2
-sw $3, 20($fp)
-li  $3, 3
-sw $3, 24($fp)
-li  $3, 4
-sw $3, 28($fp)
-li  $3, 5
-sw $3, 32($fp)
-lw $t0, 24($fp)
-addu $2, $zero, $t0
-j main_end
-main_end:
+slti $t0, $a0, 2
+xori $t0, $t0, 0x1
+beq $t0, $zero, _end1_1
+sw $t0, 16($fp)
+sw $a0, 20($fp)
+sw $a1, 24($fp)
+sw $a2, 28($fp)
+sw $a3, 32($fp)
+sw $2, 36($fp)
+sw $3, 40($fp)
+sw $31, 44($fp)
+addiu $a0, $a0, -1
+addu $a0, $zero, $a0
+jal recursive
+nop
+lw $t0, 16($fp)
+lw $a0, 20($fp)
+lw $a1, 24($fp)
+lw $a2, 28($fp)
+lw $a3, 32($fp)
+lw $3, 40($fp)
+lw $31, 44($fp)
+move $t1, $2
+lw $2, 36($fp)
+mult $a0, $t1
+mflo $2
+addu $2, $zero, $2
+j recursive_end
+beq $zero, $zero, _end2_2
+_end1_1:
+addu $2, $zero, 1
+j recursive_end
+_end2_2:
+recursive_end:
 move    $sp,$fp
-lw      $fp,192($sp)
-lw			$ra,196($sp)
-addiu   $sp,$sp,200
+lw      $fp,592($sp)
+lw			$ra,596($sp)
+addiu   $sp,$sp,600
 j	$31
 nop
-.end	main
+.end	recursive

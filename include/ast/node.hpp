@@ -257,18 +257,18 @@ public:
 		std::cout << ".ent    " << function_scope.getScope() << '\n';
 		std::cout << ".type "<<function_scope.getScope()<<",@function" << '\n';
 		std::cout << str << ":" << '\n';
-		std::cout << "addiu   $sp,$sp,-200" << '\n';
-		std::cout << "sw      $fp,192($sp)" << '\n';
-		std::cout << "sw			$ra, 196($sp)" << '\n';
+		std::cout << "addiu   $sp,$sp,-600" << '\n';
+		std::cout << "sw      $fp,592($sp)" << '\n';
+		std::cout << "sw			$ra, 596($sp)" << '\n';
 		std::cout << "move    $fp,$sp" << '\n';
 		if(declaration_list!=NULL){
 		}
 		compound_statement -> mips(dst, destReg, function_scope);
 		std::cout << function_scope.getScope()+"_end" << ":" << '\n';
 		std::cout << "move    $sp,$fp" << '\n';
-		std::cout << "lw      $fp,192($sp)" << '\n';
-		std::cout << "lw			$ra,196($sp)" << '\n';
-		std::cout << "addiu   $sp,$sp,200" << '\n';
+		std::cout << "lw      $fp,592($sp)" << '\n';
+		std::cout << "lw			$ra,596($sp)" << '\n';
+		std::cout << "addiu   $sp,$sp,600" << '\n';
 		std::cout << "j	$31" << '\n';
 		std::cout << "nop" << '\n';
 

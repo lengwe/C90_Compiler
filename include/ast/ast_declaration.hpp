@@ -101,10 +101,12 @@ class init_declarator : public Node{
     // }
 
     virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-      std::string str1,str2;
-      if(Context.getScope() == "global"){
-        str1 = "func";
+      std::string str1,str2,str3;
+      if(Context.getScope() == "global" ){
         declarator->mips(str1, destReg, Context);
+        if(str1.length() == 0){
+          return;
+        }
         std::cout << ".globl " << str1 <<  '\n';
         std::cout << ".data" << '\n';
         std::cout << str1 << ":" << '\n';
@@ -117,6 +119,10 @@ class init_declarator : public Node{
         }
         Context.global.push_back(str1);
         return;
+        for(int i=0; i < Context.init_list.size(); i++){
+          std::cout << ".word " << Context.init_list[i] << '\n';
+        }
+        Context.init_list.resize(0);
       }
       declarator->mips(str1, destReg, Context);
        if(str1[0] == '_'){
@@ -125,10 +131,10 @@ class init_declarator : public Node{
             int offset = std::stoi(str1.substr(1,str1.length()));
             for(int i = 0; i < Context.init_list.size();i++){
               if(Context.init_list[i][0] != '$'){
-                std::cout << "li " << " $3" <<", " <<  Context.init_list[i] <<'\n'; //TODO
+                loadimm(" $3", std::stoi(Context.init_list[i]));
               }
               else{
-                std::cout << "addi $3, $zero, " << Context.init_list[i] << '\n';
+                std::cout << "addu $3, $zero, " << Context.init_list[i] << '\n';
               }
               std::cout << "sw $3, " << offset <<"($fp)" <<  '\n';
               offset += 4;
@@ -302,7 +308,7 @@ class direct_declarator : public Node{
         std::cerr << "direct_declarator: " << type << '\n';
         switch (type) {
           case 1:
-          if(dst == "func"){
+          if(Context.getScope() == "global" || dst == "func"){
             dst = *identifier;
             return;
           }
@@ -314,9 +320,12 @@ class direct_declarator : public Node{
               constant_expression->mips(str, destReg, Context);
               std::string offset = Context.newArray(func, std::stoi(str), dst);
               dst="_"+offset;
-              std::cerr << "inside case 2 init" << '\n';
                // TODO support var
             }
+            else{
+              direct_declaratorptr->mips(func, destReg, Context);
+            }
+
             break;
           case 5:
             direct_declaratorptr->mips(func, destReg, Context);
@@ -779,8 +788,7 @@ class enum_specifier : public Node{
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         if(enumerator_list != NULL){
           enumerator_list->mips(dst, destReg, Context);
-          Context.counter
-          ;
+          Context.counter++;
         }
       }
 };

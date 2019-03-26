@@ -3,13 +3,13 @@ direct_declarator: 1
 direct_declarator: 1
 adding arg
 added x @ 0
-addarg to global
+addarg to global @ 0
 direct_declarator: 6
 direct_declarator: 1
 called declarator
 in primary expression
 in primary expression
-in postfix
+in postfix: 3
 in primary expression
 offset_count stored @ $a0: 16
 offset_count stored @ $a1: 20

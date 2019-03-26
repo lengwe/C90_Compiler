@@ -3,11 +3,11 @@ direct_declarator: 1
 direct_declarator: 1
 adding arg
 added x @ 0
-addarg to f
+addarg to f @ 0
 direct_declarator: 1
 adding arg
 added y @ 1
-addarg to f
+addarg to f @ 1
 called declarator
 makeName called: 0
 scope_name: fmaking _condition_0
@@ -16,6 +16,7 @@ makeName called: 1
 in primary expression
 cannot find
 in primary expression
+relational case: 1
 $a0 0
 in primary expression
 cannot find

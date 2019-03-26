@@ -3,7 +3,7 @@ direct_declarator: 1
 direct_declarator: 1
 adding arg
 added x @ 0
-addarg to recursive
+addarg to recursive @ 0
 called declarator
 makeName called: 0
 scope_name: recursivemaking _condition_0
@@ -12,9 +12,11 @@ makeName called: 1
 in primary expression
 cannot find
 in primary expression
+relational case: 4
+1 $a0
 in primary expression
 cannot find
-in postfix
+in postfix: 3
 in primary expression
 offset_count stored @ _condition_0: 16
 offset_count stored @ $a0: 20

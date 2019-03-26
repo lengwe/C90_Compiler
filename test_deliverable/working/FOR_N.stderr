@@ -3,12 +3,14 @@ direct_declarator: 1
 direct_declarator: 1
 adding arg
 added x @ 0
-addarg to f
+addarg to f @ 0
 called declarator
 direct_declarator: 1
 scope_name: fmaking i
 reg $t0is i in f
 in ass, assop = =
+scope_name: fmaking 0tmp
+reg $t1is 0tmp in f
 in primary expression
 trying to use i @ $t0
 in primary expression
@@ -20,12 +22,13 @@ reg $t1is _condition_2 in f
 in primary expression
 trying to use i @ $t0
 in primary expression
+relational case: 1
 $t0 5
-in postfix
-in primary expression
-trying to use i @ $t0
-in postfix
+in postfix: 6
 in primary expression
 cannot find
+in postfix: 6
+in primary expression
+trying to use i @ $t0
 in primary expression
 cannot find

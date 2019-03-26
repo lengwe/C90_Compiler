@@ -3,7 +3,7 @@ direct_declarator: 1
 direct_declarator: 1
 adding arg
 added x @ 0
-addarg to f
+addarg to f @ 0
 called declarator
 makeName called: 0
 scope_name: fmaking _condition_0

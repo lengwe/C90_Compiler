@@ -19,7 +19,6 @@ private:
 	std::string scope_name;
 	std::list<int> usage;
 	std::string regUsed;
-	int argumentcount;
 
 
 	int find_empty(){
@@ -68,6 +67,7 @@ private:
 
 
 public:
+	int argumentcount;
 	int counter;
 	std::vector<std::string> global;
 	bool to_store = false;
@@ -231,7 +231,7 @@ public:
 		std::cerr << "adding arg" << '\n';
 		arg[argumentcount] = name;
 		std::cerr << "added " << name << " @ " << argumentcount << '\n';
-		std::cerr << "addarg to " << scope_name <<'\n';
+		std::cerr << "addarg to " << scope_name << " @ " << argumentcount << '\n';
 		argumentcount++;
 		return argumentcount;
 	} // increase argumentcount

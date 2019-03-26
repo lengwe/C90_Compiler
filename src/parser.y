@@ -415,12 +415,12 @@ jump_statement
 ;
 
 statement
-: labeled_statement                                                    {$$ = $1;} //not sure
-| compound_statement                                                   {$$ = $1;}
-| expression_statement                                                 {$$ = $1;}
-| selection_statement                                                  {$$ = $1;}
-| iteration_statement                                                  {$$ = $1;}
-| jump_statement                                                       {$$ = $1;}
+: labeled_statement                                                    {$$ = new statement($1);} //not sure
+| compound_statement                                                  {$$ = new statement($1);}
+| expression_statement                                                 {$$ = new statement($1);}
+| selection_statement                                                  {$$ = new statement($1);}
+| iteration_statement                                                  {$$ = new statement($1);}
+| jump_statement                                                       {$$ = new statement($1);}
 ;
 
 statement_list

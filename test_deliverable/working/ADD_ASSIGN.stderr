@@ -3,9 +3,11 @@ direct_declarator: 1
 direct_declarator: 1
 adding arg
 added x @ 0
-addarg to f
+addarg to f @ 0
 called declarator
 in ass, assop = +=
+scope_name: fmaking 0tmp
+reg $t0is 0tmp in f
 in primary expression
 cannot find
 in primary expression

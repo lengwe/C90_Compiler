@@ -10,9 +10,9 @@
 .ent    f
 .type f,@function
 f:
-addiu   $sp,$sp,-200
-sw      $fp,192($sp)
-sw			$ra, 196($sp)
+addiu   $sp,$sp,-600
+sw      $fp,592($sp)
+sw			$ra, 596($sp)
 move    $fp,$sp
 beq $t0, $zero, _end1_1
 addu $2, $zero, $a0
@@ -23,9 +23,9 @@ addu $2, $zero, $2
 j f_end
 f_end:
 move    $sp,$fp
-lw      $fp,192($sp)
-lw			$ra,196($sp)
-addiu   $sp,$sp,200
+lw      $fp,592($sp)
+lw			$ra,596($sp)
+addiu   $sp,$sp,600
 j	$31
 nop
 .end	f

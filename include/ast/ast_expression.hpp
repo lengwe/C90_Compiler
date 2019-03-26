@@ -121,7 +121,7 @@ class postfix_expression : public Node{
 		}
 
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
-			std::cerr << "in postfix" << '\n';
+			std::cerr << "in postfix: " << type << '\n';
 			std::string str2;
 			std::string str = "func";
 			std::string dr = "$a0";
@@ -157,10 +157,10 @@ class postfix_expression : public Node{
 					dst = Context.loadall(dst);
 				}
 				else if(type == 3){
+					Context.counter = 0;
 					l->mips(str, destReg, Context);
 					Context.savealltostack();
 					r->mips(str, dr, Context);
-					Context.counter = 0;
 					std::cout << "jal " << str <<'\n';
 					std::cout << "nop" << '\n';
 					dst = Context.loadall(dst);
@@ -168,11 +168,14 @@ class postfix_expression : public Node{
 			else if (type == 6){
 				p->mips(str2, destReg, Context);
 				std::cout << "addiu " << str2 << " , " << str2 << ", 1" <<'\n';
+				Context.to_print = false;
 				dst = str2;
+
 			}
 			else if (type == 7){
 				p->mips(str2, destReg, Context);
-				std::cout << "addiu " << str2 << " , " << str2 << ", -1" << '\n';
+				std::cout << "addiu " << str2 << " , " << str2 << ", -1" <<'\n';
+				Context.to_print = false;
 				dst = str2;
 			}
 			}
@@ -211,7 +214,7 @@ class argument_expression_list : public Node{
 			Context.counter++;
 			assignment_expression->mips(str, str2, Context);
 			if(str[0] != '$'){
-				std::cout << "addiu " << str2 << ", $zero, " << str << '\n';
+					loadimm(str2, std::stoi(str));
 			}
 			else{
 				std::cout << "addu " << str2 << ", $zero, " << str << '\n';
@@ -263,10 +266,12 @@ class unary_expression : public Node{
 			if (type == 1){
 				p->mips(str, destReg, Context);
 				std::cout << "addiu " << str << " , " << str << ", 1" <<'\n';
+				dst = str;
 			}
 			else if (type == 2){
 				p->mips(str, destReg, Context);
 				std::cout << "addiu " << str << " , " << str << ", -1" << '\n';
+				dst = str;
 			}
 
 			else if(type == 3){
@@ -280,6 +285,7 @@ class unary_expression : public Node{
 						std::cout << "subu " << str << " , $zero, " << str << '\n';
 						dst = str;
 					}
+					return;
 				}
 					else if(*string == "~"){
 						if(str[0] != '$'){
@@ -291,6 +297,7 @@ class unary_expression : public Node{
 						}
 						std::cout << "nor " << str << " , $zero, " << str << '\n';
 						dst = str;
+						return;
 					}
 
 					else if(*string ==  "!"){
@@ -301,8 +308,9 @@ class unary_expression : public Node{
 					std::cout << "sltu " << str << " , "<< str << ", 1" << '\n';
 					std::cout << "andi " << str << " , "<< str << ", 0x00ff" << '\n';
 					dst = str;
+					return;
 				}
-
+				dst =str;
 			}
 
 
@@ -373,6 +381,10 @@ class multiplicative_expression : public Node{
 				//TODO handle non int
 				}
 				else if(str1[0] != '$' && str2[0] != '$'){
+					if(Context.getScope() == "global"){
+						dst = std::to_string(std::stoi(str1)*std::stoi(str2));
+						return;
+					}
 					std::cout << "li " << destReg << ", " << (std::stoi(str1)*std::stoi(str2)) << std::endl;
 				}
 				//TODO check for overflow
@@ -409,6 +421,10 @@ class multiplicative_expression : public Node{
 					//TODO handle non int
 					}
 					else if(str1[0] != '$' && str2[0] != '$'){
+						if(Context.getScope() == "global"){
+							dst = std::to_string(std::stoi(str1)/std::stoi(str2));
+							return;
+						}
 						std::cout << "li " << destReg << ", " << (std::stoi(str1)/std::stoi(str2)) << std::endl;
 					}
 					//TODO check for overflow
@@ -449,6 +465,10 @@ class multiplicative_expression : public Node{
 						//TODO handle non int
 					}
 					else if(str1[0] != '$' && str2[0] != '$'){
+						if(Context.getScope() == "global"){
+							dst = std::to_string(std::stoi(str1)%std::stoi(str2));
+							return;
+						}
 						std::cout << "li " << destReg << ", " << (std::stoi(str1)%std::stoi(str2)) << std::endl;
 					}
 					//TODO check for overflow
@@ -523,6 +543,10 @@ class additive_expression : public Node{
 				std::cout << "add " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				}
 				else if(str1[0] != '$' && str2[0] != '$'){
+					if(Context.getScope() == "global"){
+						dst = std::to_string(std::stoi(str1)+std::stoi(str2));
+						return;
+					}
 					std::cout << "li " << destReg << ", " << (std::stoi(str1)+std::stoi(str2)) << std::endl;
 				}
 				else if (str1[0] != '$'){
@@ -542,6 +566,10 @@ class additive_expression : public Node{
 				std::cout << "sub " << destReg << ", " << str1 << ", " << str2 << std::endl;
 				}
 				else if(str1[0] != '$' && str2[0] != '$'){
+					if(Context.getScope() == "global"){
+						dst = std::to_string(std::stoi(str1)-std::stoi(str2));
+						return;
+					}
 					std::cout << "li " << destReg << ", " << (std::stoi(str1)-std::stoi(str2)) << std::endl;
 				}
 				else if (str1[0] != '$'){
@@ -657,6 +685,7 @@ class relational_expression : public Node{
 			std::string str1, str2, tmp;
 			l->mips(str1, destReg, Context);
 			r->mips(str2, destReg, Context);
+			std::cerr << "relational case: " << type << '\n';
 			switch(type){
 				case 1:
 				case 2:
@@ -670,6 +699,10 @@ class relational_expression : public Node{
 					std::cout << "slt " << destReg << ", " << str1 << ", " << str2 << std::endl;
 					}
 					else if(str1[0] != '$' && str2[0] != '$'){
+						if(Context.getScope() == "global"){
+							dst = std::to_string(std::stoi(str1)<std::stoi(str2));
+							return;
+						}
 						std::cout << "li " << destReg << ", " << (std::stoi(str1)<std::stoi(str2)) << std::endl;
 					}
 					else if (str1[0] != '$'){
@@ -683,19 +716,33 @@ class relational_expression : public Node{
 				break;
 
 
-			case 3:
-				std::cout<<"slt "<<destReg<<", "<<str2<<", "<<str1<<'\n';
-				std::cout<<"xori "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
-				std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
-				dst = destReg;
-			break;
-
-			case 4:
-				std::cout<<"slt "<<destReg<<", "<<str1<<", "<<str2<<'\n';
-				std::cout<<"xori "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
-				std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
-				dst = destReg;
-			break;
+				case 3:
+				case 4:
+					if(type == 4){
+						tmp = str1;
+						str1 = str2;
+						str2 = tmp;
+					}
+					std::cerr << str1 <<  " " << str2 << '\n';
+					if(str1[0] == '$' && str2[0] == '$'){
+					std::cout << "slt " << destReg << ", " << str1 << ", " << str2 << std::endl;
+					}
+					else if(str1[0] != '$' && str2[0] != '$'){
+						if(Context.getScope() == "global"){
+							dst = std::to_string(std::stoi(str1)<std::stoi(str2));
+							return;
+						}
+						std::cout << "li " << destReg << ", " << (std::stoi(str1)<std::stoi(str2)) << std::endl;
+					}
+					else if (str1[0] != '$'){
+						std::cout << "slti " << destReg << ", " << str2 << ", " << std::stoi(str1)+1 << std::endl;
+						std::cout << "xori " << destReg << ", " << destReg << ", 0x1" << std::endl;
+					}
+					else{
+						std::cout << "slti " << destReg << ", " << str1 << ", " << str2 << std::endl;
+					}
+					dst = destReg;
+				break;
 		 }
 
 		}
@@ -742,7 +789,12 @@ class equality_expression : public Node{
 					l->mips(str1, destReg, Context);
 					r->mips(str2, destReg, Context);
 					if(str1[0]=='$'&&str2[0]=='$'){
-						std::cout<<"xor "<<destReg<<", "<<str1<<str2<<'\n';
+						std::cout<<"xor "<<destReg<<", "<<str1<<", "<<str2<<'\n';
+						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
+						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
+					}
+					else if (str2[0]!='$' && str1[0]!='$'){
+						loadimm(destReg, std::stoi(str1)^std::stoi(str1));
 						std::cout<<"sltu "<<destReg<<", "<<destReg<<", 1"<<'\n';
 						std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					}
@@ -807,6 +859,10 @@ class and_expression : public Node{
 			std::cout << "and " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
 			else if(str1[0] != '$' && str2[0] != '$'){
+				if(Context.getScope() == "global"){
+					dst = std::to_string(std::stoi(str1)&std::stoi(str2));
+					return;
+				}
 				std::cout << "li " << destReg << ", " << (std::stoi(str1)&std::stoi(str2)) << std::endl;
 			}
 			else if (str1[0] != '$'){
@@ -844,6 +900,10 @@ class exclusive_or_expression : public Node{
 			std::cout << "xor " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
 			else if(str1[0] != '$' && str2[0] != '$'){
+				if(Context.getScope() == "global"){
+					dst = std::to_string(std::stoi(str1)^std::stoi(str2));
+					return;
+				}
 				std::cout << "li " << destReg << ", " << (std::stoi(str1)^std::stoi(str2)) << std::endl;
 			}
 			else if (str1[0] != '$'){
@@ -881,6 +941,10 @@ class inclusive_or_expression : public Node{
 			std::cout << "or " << destReg << ", " << str1 << ", " << str2 << std::endl;
 			}
 			else if(str1[0] != '$' && str2[0] != '$'){
+				if(Context.getScope() == "global"){
+					dst = std::to_string(std::stoi(str1)|std::stoi(str2));
+					return;
+				}
 				std::cout << "li " << destReg << ", " << (std::stoi(str1)|std::stoi(str2)) << std::endl;
 			}
 			else if (str1[0] != '$'){
@@ -1003,7 +1067,7 @@ class conditional_expression : public Node{
 				std::cout << "beq " << c << ", $zero, " << end1 << std::endl;
 				p->mips(str1, destReg, Context);
 				if(str1[0]  != '$'){
-					std::cout << "addiu " << destReg << " , $zero, " << str1 << '\n';
+					loadimm(destReg, std::stoi(str1));
 				}
 				else{
 					std::cout << "addu " << destReg << " , $zero, " << str1 << '\n';
@@ -1013,7 +1077,7 @@ class conditional_expression : public Node{
 				std::cout <<  end1 <<":" << std::endl;
 				r->mips(str2, destReg, Context);
 				if(str2[0]  != '$'){
-					std::cout << "addiu " << destReg << " , $zero, " << str2 << '\n';
+					loadimm(destReg, std::stoi(str2));
 				}
 				else{
 					std::cout << "addu " << destReg << " , $zero, " << str2 << '\n';
@@ -1046,47 +1110,70 @@ class assignment_expression : public Node{
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			std::cerr << "in ass, assop = " << *assign_op << '\n';
 			std::string str, str2;
+			std::string tmp = Context.newVar("0tmp", dst);
 			if(*assign_op == "="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 				if(str != str2){
 					if(str2[0] != '$'){
-						std::cout << "addiu " << str << ", $zero, " << str2 << '\n';
+					loadimm(str, std::stoi(str2));
 					}
 					else{
 						std::cout << "addu " << str << ", $zero, " << str2 << '\n';
 					}
-				dst=str2;
 			}
+			dst=str2;
 		}
 
 			if(*assign_op == "*="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
-				std::cout<<"mult "<<str<<", "<<str2<<'\n';
+				r->mips(str2, tmp, Context);
+
+				if(str2[0] != '$'){
+										std::string a =Context.newVar("0tmp", dst);
+					loadimm(a, std::stoi(str2));
+					std::cout << "mult " << str  << ", " << a << '\n';
+				}
+				else{
+									std::cout<<"mult "<<str<<", "<<str2<<'\n';
+				}
 				std::cout<<"mflo "<<str<<'\n';
 				dst=str;
 			}
 
 			if(*assign_op == "/="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
-				std::cout << "div " << str << ", " << str2 << std::endl;
+				r->mips(str2, tmp, Context);
+				if(str2[0] != '$'){
+					std::string a =Context.newVar("0tmp", dst);
+					loadimm(a, std::stoi(str2));
+					std::cout << "div "<< str << ", " << a << '\n';
+				}
+				else{
+									std::cout<<"div "<<str<<", "<<str2<<'\n';
+				}
 				std::cout << "mflo " << str <<  std::endl;
 				dst=str;
 			}
 
 			if(*assign_op == "%="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
-				std::cout << "div " << str << ", " << str2 << std::endl;
+				r->mips(str2, tmp, Context);
+				if(str2[0] != '$'){
+					std::string a =Context.newVar("0tmp", dst);
+					loadimm(a, std::stoi(str2));
+					std::cout << "div " << str << ", " << a << '\n';
+				}
+				else{
+									std::cout<<"div "<<str<<", "<<str2<<'\n';
+				}
 				std::cout << "mfhi " << str <<  std::endl;
 				dst=str;
 			}
 
 			if(*assign_op == "+="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 				if(str2[0] != '$'){
 					std::cout<<"addiu "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
@@ -1098,7 +1185,7 @@ class assignment_expression : public Node{
 
 			if(*assign_op == "-="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 				std::cerr<<"in ass str2:"<<str2<<std::endl;
 				if(str2[0] != '$'){
 					std::cout<<"addiu "<<str<<", "<<str<<", -"<<str2<<'\n';
@@ -1123,14 +1210,14 @@ class assignment_expression : public Node{
 
 			if(*assign_op == ">>="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 					std::cout<<"sra "<<destReg<<", "<<destReg<<", "<<str2<<'\n';
 				dst=str;
 			}
 
 			if(*assign_op == "&="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 				if(str2[0] != '$'){
 					std::cout<<"andi "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
@@ -1142,7 +1229,7 @@ class assignment_expression : public Node{
 
 			if(*assign_op == "^="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 				if(str2[0] != '$'){
 					std::cout<<"xori "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
@@ -1154,7 +1241,7 @@ class assignment_expression : public Node{
 
 			if(*assign_op == "|="){
 				l->mips(str, destReg, Context);
-				r->mips(str2, str, Context);
+				r->mips(str2, tmp, Context);
 				if(str2[0] != '$'){
 					std::cout<<"ori "<<str<<", "<<str<<", "<<str2<<'\n';
 				}
@@ -1163,7 +1250,7 @@ class assignment_expression : public Node{
 				}
 				dst=str;
 			}
-
+			Context.killVar("0tmp");
 			if(Context.to_store == true){
 				std::cout << "sw " << str << ", " << Context.store_at << '\n';
 				Context.to_store = false;
