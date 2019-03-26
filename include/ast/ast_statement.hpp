@@ -393,22 +393,21 @@ class iteration_statement : public Node{
         if(type == 3||type == 4){
           expression_statement_1->mips(dst, destReg,Context);
           std::string start = makeName("start");
-          Context.scope_start = start;
           std::string exit = makeName("exit");
+          std::string yeet = makeName("yeet");
+          std::cerr << yeet << '\n';
+          Context.scope_start = yeet;
           Context.scope_end = exit;
           std::string str = start+","+exit;
           std::string condition = Context.newVar(makeName("condition"),dst);
           std::cout << start << ":" << std::endl;
           expression_statement_2->mips(dst, condition, Context);
-          if(Context.to_print == true){
-            std::cout << Context.str_to_print;
-            Context.to_print =false;
-          }
           std::cout << "beq " << condition << ", $zero, " << exit << std::endl;
+          statement->mips(str, destReg, Context);
+          std::cout << yeet << ":" << std::endl;
           if(expression != NULL){
             expression->mips(str, destReg, Context);
           }
-          statement->mips(str, destReg, Context);
           std::cout << "beq $zero, $zero, " << start <<  std::endl;
           std::cout << exit << ":" << std::endl;
         }

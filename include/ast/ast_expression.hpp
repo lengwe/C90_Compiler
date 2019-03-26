@@ -715,32 +715,37 @@ class relational_expression : public Node{
 					dst = destReg;
 				break;
 
-
 				case 3:
+				if(str2[0] != '$'){
+					std::string tmp = Context.newVar("0tmp", dst);
+					std::cout << "li " << tmp << " , " << str2 << '\n';
+					str2=tmp;
+				}
+				if(str1[0] != '$'){
+						std::cout<<"slti "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+				}
+				else{
+					std::cout<<"slt "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+				}
+					std::cout<<"xori "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+					std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
+					dst = destReg;
+				break;
+
 				case 4:
-					if(type == 4){
-						tmp = str1;
-						str1 = str2;
-						str2 = tmp;
-					}
-					std::cerr << str1 <<  " " << str2 << '\n';
-					if(str1[0] == '$' && str2[0] == '$'){
-					std::cout << "slt " << destReg << ", " << str1 << ", " << str2 << std::endl;
-					}
-					else if(str1[0] != '$' && str2[0] != '$'){
-						if(Context.getScope() == "global"){
-							dst = std::to_string(std::stoi(str1)<std::stoi(str2));
-							return;
-						}
-						std::cout << "li " << destReg << ", " << (std::stoi(str1)<std::stoi(str2)) << std::endl;
-					}
-					else if (str1[0] != '$'){
-						std::cout << "slti " << destReg << ", " << str2 << ", " << std::stoi(str1)+1 << std::endl;
-						std::cout << "xori " << destReg << ", " << destReg << ", 0x1" << std::endl;
-					}
-					else{
-						std::cout << "slti " << destReg << ", " << str1 << ", " << str2 << std::endl;
-					}
+				if(str1[0] != '$'){
+					std::string tmp = Context.newVar("0tmp", dst);
+					std::cout << "li " << tmp << " , " << str1 << '\n';
+					str1=tmp;
+				}
+				if(str2[0] != '$'){
+						std::cout<<"slti "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+				}
+				else{
+					std::cout<<"slt "<<destReg<<", "<<str2<<", "<<str1<<'\n';
+				}
+					std::cout<<"xori "<<destReg<<", "<<destReg<<", 0x1"<<'\n';
+					std::cout<<"andi "<<destReg<<", "<<destReg<<", 0x00ff"<<'\n';
 					dst = destReg;
 				break;
 		 }

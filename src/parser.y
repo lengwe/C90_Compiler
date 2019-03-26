@@ -443,8 +443,8 @@ selection_statement
 iteration_statement
 : WHILE '(' expression ')' statement                                           {$$ = new iteration_statement(1,$3,$5,NULL,NULL);}
 | DO statement WHILE '(' expression ')' ';'                                    {$$ = new iteration_statement(2,$5,$2,NULL,NULL);}
-| FOR '(' expression_statement expression_statement ')' statement              {$$ = new iteration_statement(3,$6,NULL,$3,$4);}
-| FOR '(' expression_statement expression_statement expression ')' statement   {$$ = new iteration_statement(4,$7,$5,$3,$4);}
+| FOR '(' expression_statement expression_statement ')' statement              {$$ = new iteration_statement(3,NULL,$6,$3,$4);}
+| FOR '(' expression_statement expression_statement expression ')' statement   {$$ = new iteration_statement(4,$5,$7,$3,$4);}
 ;
 
 labeled_statement
