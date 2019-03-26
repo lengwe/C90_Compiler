@@ -1,0 +1,5 @@
+Week,Date,Planned effort,Description 
+1,26/02/19-5/03/19,29,"Finish lexer, parser and ast_classes "
+2,05/03/19-12/03/19,20,Finish code generation for Python
+3,12/03/19-19/03/19,15,Start working on code-gen for MIPS and finish basic instructions 
+4,19/03/19-26/03/19,20,Finish test suite and all the intermediate instructions 
