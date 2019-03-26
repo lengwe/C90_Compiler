@@ -1,0 +1,31 @@
+direct_declarator: 5
+direct_declarator: 1
+direct_declarator: 1
+adding arg
+added x @ 0
+addarg to f
+called declarator
+direct_declarator: 1
+scope_name: fmaking i
+reg $t0is i in f
+in ass, assop = =
+in primary expression
+trying to use i @ $t0
+in primary expression
+makeName called: 0
+makeName called: 1
+makeName called: 2
+scope_name: fmaking _condition_2
+reg $t1is _condition_2 in f
+in primary expression
+trying to use i @ $t0
+in primary expression
+$t0 5
+in postfix
+in primary expression
+trying to use i @ $t0
+in postfix
+in primary expression
+cannot find
+in primary expression
+cannot find

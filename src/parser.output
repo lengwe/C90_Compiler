@@ -47,7 +47,7 @@ Grammar
     5                   | '(' expression ')'
 
     6 postfix_expression: primary_expression
-    7                   | postfix_expression '[' expression ']'
+    7                   | postfix_expression L_SQ_BR expression R_SQ_BR
     8                   | postfix_expression '(' ')'
     9                   | postfix_expression '(' argument_expression_list ')'
    10                   | postfix_expression '.' IDENTIFIER
@@ -234,8 +234,8 @@ Grammar
 
   145 direct_declarator: IDENTIFIER
   146                  | '(' declarator ')'
-  147                  | direct_declarator '[' constant_expression ']'
-  148                  | direct_declarator '[' ']'
+  147                  | direct_declarator L_SQ_BR constant_expression R_SQ_BR
+  148                  | direct_declarator L_SQ_BR R_SQ_BR
   149                  | direct_declarator '(' parameter_type_list ')'
   150                  | direct_declarator '(' ')'
 
@@ -296,8 +296,6 @@ $end (0) 0
 ';' (59) 118 119 127 156 157 158 159 160 167 168 174
 '=' (61) 62 83 144
 '?' (63) 59
-'[' (91) 7 147 148
-']' (93) 7 147 148
 '^' (94) 51
 '{' (123) 102 103 107 108 121 122 138 139
 '|' (124) 53
@@ -356,16 +354,18 @@ NE_OP (306) 47
 GOTO (307) 156
 UNION (308) 129
 VOLATILE (309)
-IDENTIFIER (310) 2 10 11 102 104 139 140 143 144 145 156 177
-FLOAT_NUM (311)
-HEX_NUM (312)
-INT_NUM (313)
-CHAR_CONSTANT (314)
-CONSTANT (315) 3
-MOD_ASSGIN (316)
-STRING_LITERAL (317) 4
-MORE (318) 42
-LESS (319) 41
+L_SQ_BR (310) 7 147 148
+R_SQ_BR (311) 7 147 148
+IDENTIFIER (312) 2 10 11 102 104 139 140 143 144 145 156 177
+FLOAT_NUM (313)
+HEX_NUM (314)
+INT_NUM (315)
+CHAR_CONSTANT (316)
+CONSTANT (317) 3
+MOD_ASSGIN (318)
+STRING_LITERAL (319) 4
+MORE (320) 42
+LESS (321) 41
 
 
 Nonterminals, with rules where they appear
@@ -910,13 +910,13 @@ State 35
 State 36
 
   117 declarator: direct_declarator .
-  147 direct_declarator: direct_declarator . '[' constant_expression ']'
-  148                  | direct_declarator . '[' ']'
+  147 direct_declarator: direct_declarator . L_SQ_BR constant_expression R_SQ_BR
+  148                  | direct_declarator . L_SQ_BR R_SQ_BR
   149                  | direct_declarator . '(' parameter_type_list ')'
   150                  | direct_declarator . '(' ')'
 
-    '('  shift, and go to state 55
-    '['  shift, and go to state 56
+    L_SQ_BR  shift, and go to state 55
+    '('      shift, and go to state 56
 
     $default  reduce using rule 117 (declarator)
 
@@ -1311,6 +1311,45 @@ State 54
 
 State 55
 
+  147 direct_declarator: direct_declarator L_SQ_BR . constant_expression R_SQ_BR
+  148                  | direct_declarator L_SQ_BR . R_SQ_BR
+
+    SIZEOF          shift, and go to state 69
+    INC_OP          shift, and go to state 70
+    DEC_OP          shift, and go to state 71
+    R_SQ_BR         shift, and go to state 129
+    IDENTIFIER      shift, and go to state 72
+    CONSTANT        shift, and go to state 73
+    STRING_LITERAL  shift, and go to state 74
+    '*'             shift, and go to state 75
+    '+'             shift, and go to state 76
+    '-'             shift, and go to state 77
+    '~'             shift, and go to state 78
+    '!'             shift, and go to state 79
+    '&'             shift, and go to state 80
+    '('             shift, and go to state 81
+
+    primary_expression         go to state 83
+    postfix_expression         go to state 84
+    unary_expression           go to state 130
+    unary_operator             go to state 86
+    cast_expression            go to state 87
+    multiplicative_expression  go to state 88
+    additive_expression        go to state 89
+    shift_expression           go to state 90
+    relational_expression      go to state 91
+    equality_expression        go to state 92
+    and_expression             go to state 93
+    exclusive_or_expression    go to state 94
+    inclusive_or_expression    go to state 95
+    logical_and_expression     go to state 96
+    logical_or_expression      go to state 97
+    conditional_expression     go to state 131
+    constant_expression        go to state 132
+
+
+State 56
+
   149 direct_declarator: direct_declarator '(' . parameter_type_list ')'
   150                  | direct_declarator '(' . ')'
 
@@ -1329,56 +1368,17 @@ State 55
     TYPEDEF   shift, and go to state 13
     VOID      shift, and go to state 14
     UNION     shift, and go to state 15
-    ')'       shift, and go to state 129
+    ')'       shift, and go to state 133
 
-    declaration_specifiers     go to state 130
+    declaration_specifiers     go to state 134
     storage_class_specifier    go to state 18
     type_specifier             go to state 21
     struct_or_union_specifier  go to state 22
     struct_or_union            go to state 25
     enum_specifier             go to state 26
-    parameter_list             go to state 131
-    parameter_type_list        go to state 132
-    parameter_declaration      go to state 133
-
-
-State 56
-
-  147 direct_declarator: direct_declarator '[' . constant_expression ']'
-  148                  | direct_declarator '[' . ']'
-
-    SIZEOF          shift, and go to state 69
-    INC_OP          shift, and go to state 70
-    DEC_OP          shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    CONSTANT        shift, and go to state 73
-    STRING_LITERAL  shift, and go to state 74
-    '*'             shift, and go to state 75
-    '+'             shift, and go to state 76
-    '-'             shift, and go to state 77
-    '~'             shift, and go to state 78
-    '!'             shift, and go to state 79
-    '&'             shift, and go to state 80
-    '('             shift, and go to state 81
-    ']'             shift, and go to state 134
-
-    primary_expression         go to state 83
-    postfix_expression         go to state 84
-    unary_expression           go to state 135
-    unary_operator             go to state 86
-    cast_expression            go to state 87
-    multiplicative_expression  go to state 88
-    additive_expression        go to state 89
-    shift_expression           go to state 90
-    relational_expression      go to state 91
-    equality_expression        go to state 92
-    and_expression             go to state 93
-    exclusive_or_expression    go to state 94
-    inclusive_or_expression    go to state 95
-    logical_and_expression     go to state 96
-    logical_or_expression      go to state 97
-    conditional_expression     go to state 136
-    constant_expression        go to state 137
+    parameter_list             go to state 135
+    parameter_type_list        go to state 136
+    parameter_declaration      go to state 137
 
 
 State 57
@@ -1511,7 +1511,7 @@ State 63
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -1524,7 +1524,7 @@ State 63
     inclusive_or_expression    go to state 95
     logical_and_expression     go to state 96
     logical_or_expression      go to state 97
-    conditional_expression     go to state 136
+    conditional_expression     go to state 131
     constant_expression        go to state 147
 
 
@@ -1811,7 +1811,7 @@ State 83
 
 State 84
 
-    7 postfix_expression: postfix_expression . '[' expression ']'
+    7 postfix_expression: postfix_expression . L_SQ_BR expression R_SQ_BR
     8                   | postfix_expression . '(' ')'
     9                   | postfix_expression . '(' argument_expression_list ')'
    10                   | postfix_expression . '.' IDENTIFIER
@@ -1820,12 +1820,12 @@ State 84
    13                   | postfix_expression . DEC_OP
    16 unary_expression: postfix_expression .
 
-    INC_OP  shift, and go to state 159
-    DEC_OP  shift, and go to state 160
-    PTR_OP  shift, and go to state 161
-    '('     shift, and go to state 162
-    '['     shift, and go to state 163
-    '.'     shift, and go to state 164
+    INC_OP   shift, and go to state 159
+    DEC_OP   shift, and go to state 160
+    PTR_OP   shift, and go to state 161
+    L_SQ_BR  shift, and go to state 162
+    '('      shift, and go to state 163
+    '.'      shift, and go to state 164
 
     $default  reduce using rule 16 (unary_expression)
 
@@ -1872,7 +1872,7 @@ State 86
 
     primary_expression  go to state 83
     postfix_expression  go to state 84
-    unary_expression    go to state 135
+    unary_expression    go to state 130
     unary_operator      go to state 86
     cast_expression     go to state 177
 
@@ -2050,7 +2050,7 @@ State 102
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -2063,7 +2063,7 @@ State 102
     inclusive_or_expression    go to state 95
     logical_and_expression     go to state 96
     logical_or_expression      go to state 97
-    conditional_expression     go to state 136
+    conditional_expression     go to state 131
     constant_expression        go to state 198
 
 
@@ -2568,12 +2568,40 @@ State 128
 
 State 129
 
+  148 direct_declarator: direct_declarator L_SQ_BR R_SQ_BR .
+
+    $default  reduce using rule 148 (direct_declarator)
+
+
+State 130
+
+   28 cast_expression: unary_expression .
+
+    $default  reduce using rule 28 (cast_expression)
+
+
+State 131
+
+   75 constant_expression: conditional_expression .
+
+    $default  reduce using rule 75 (constant_expression)
+
+
+State 132
+
+  147 direct_declarator: direct_declarator L_SQ_BR constant_expression . R_SQ_BR
+
+    R_SQ_BR  shift, and go to state 215
+
+
+State 133
+
   150 direct_declarator: direct_declarator '(' ')' .
 
     $default  reduce using rule 150 (direct_declarator)
 
 
-State 130
+State 134
 
   154 parameter_declaration: declaration_specifiers . declarator
   155                      | declaration_specifiers .
@@ -2583,60 +2611,32 @@ State 130
 
     $default  reduce using rule 155 (parameter_declaration)
 
-    declarator         go to state 215
+    declarator         go to state 216
     direct_declarator  go to state 36
-
-
-State 131
-
-  152 parameter_list: parameter_list . ',' parameter_declaration
-  153 parameter_type_list: parameter_list .
-
-    ','  shift, and go to state 216
-
-    $default  reduce using rule 153 (parameter_type_list)
-
-
-State 132
-
-  149 direct_declarator: direct_declarator '(' parameter_type_list . ')'
-
-    ')'  shift, and go to state 217
-
-
-State 133
-
-  151 parameter_list: parameter_declaration .
-
-    $default  reduce using rule 151 (parameter_list)
-
-
-State 134
-
-  148 direct_declarator: direct_declarator '[' ']' .
-
-    $default  reduce using rule 148 (direct_declarator)
 
 
 State 135
 
-   28 cast_expression: unary_expression .
+  152 parameter_list: parameter_list . ',' parameter_declaration
+  153 parameter_type_list: parameter_list .
 
-    $default  reduce using rule 28 (cast_expression)
+    ','  shift, and go to state 217
+
+    $default  reduce using rule 153 (parameter_type_list)
 
 
 State 136
 
-   75 constant_expression: conditional_expression .
+  149 direct_declarator: direct_declarator '(' parameter_type_list . ')'
 
-    $default  reduce using rule 75 (constant_expression)
+    ')'  shift, and go to state 218
 
 
 State 137
 
-  147 direct_declarator: direct_declarator '[' constant_expression . ']'
+  151 parameter_list: parameter_declaration .
 
-    ']'  shift, and go to state 218
+    $default  reduce using rule 151 (parameter_list)
 
 
 State 138
@@ -2707,7 +2707,7 @@ State 142
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -2720,7 +2720,7 @@ State 142
     inclusive_or_expression    go to state 95
     logical_and_expression     go to state 96
     logical_or_expression      go to state 97
-    conditional_expression     go to state 136
+    conditional_expression     go to state 131
     constant_expression        go to state 220
 
 
@@ -2950,47 +2950,7 @@ State 161
 
 State 162
 
-    8 postfix_expression: postfix_expression '(' . ')'
-    9                   | postfix_expression '(' . argument_expression_list ')'
-
-    SIZEOF          shift, and go to state 69
-    INC_OP          shift, and go to state 70
-    DEC_OP          shift, and go to state 71
-    IDENTIFIER      shift, and go to state 72
-    CONSTANT        shift, and go to state 73
-    STRING_LITERAL  shift, and go to state 74
-    '*'             shift, and go to state 75
-    '+'             shift, and go to state 76
-    '-'             shift, and go to state 77
-    '~'             shift, and go to state 78
-    '!'             shift, and go to state 79
-    '&'             shift, and go to state 80
-    '('             shift, and go to state 81
-    ')'             shift, and go to state 230
-
-    primary_expression         go to state 83
-    postfix_expression         go to state 84
-    argument_expression_list   go to state 231
-    unary_expression           go to state 85
-    unary_operator             go to state 86
-    cast_expression            go to state 87
-    multiplicative_expression  go to state 88
-    additive_expression        go to state 89
-    shift_expression           go to state 90
-    relational_expression      go to state 91
-    equality_expression        go to state 92
-    and_expression             go to state 93
-    exclusive_or_expression    go to state 94
-    inclusive_or_expression    go to state 95
-    logical_and_expression     go to state 96
-    logical_or_expression      go to state 97
-    conditional_expression     go to state 98
-    assignment_expression      go to state 232
-
-
-State 163
-
-    7 postfix_expression: postfix_expression '[' . expression ']'
+    7 postfix_expression: postfix_expression L_SQ_BR . expression R_SQ_BR
 
     SIZEOF          shift, and go to state 69
     INC_OP          shift, and go to state 70
@@ -3023,7 +2983,47 @@ State 163
     logical_or_expression      go to state 97
     conditional_expression     go to state 98
     assignment_expression      go to state 115
-    expression                 go to state 233
+    expression                 go to state 230
+
+
+State 163
+
+    8 postfix_expression: postfix_expression '(' . ')'
+    9                   | postfix_expression '(' . argument_expression_list ')'
+
+    SIZEOF          shift, and go to state 69
+    INC_OP          shift, and go to state 70
+    DEC_OP          shift, and go to state 71
+    IDENTIFIER      shift, and go to state 72
+    CONSTANT        shift, and go to state 73
+    STRING_LITERAL  shift, and go to state 74
+    '*'             shift, and go to state 75
+    '+'             shift, and go to state 76
+    '-'             shift, and go to state 77
+    '~'             shift, and go to state 78
+    '!'             shift, and go to state 79
+    '&'             shift, and go to state 80
+    '('             shift, and go to state 81
+    ')'             shift, and go to state 231
+
+    primary_expression         go to state 83
+    postfix_expression         go to state 84
+    argument_expression_list   go to state 232
+    unary_expression           go to state 85
+    unary_operator             go to state 86
+    cast_expression            go to state 87
+    multiplicative_expression  go to state 88
+    additive_expression        go to state 89
+    shift_expression           go to state 90
+    relational_expression      go to state 91
+    equality_expression        go to state 92
+    and_expression             go to state 93
+    exclusive_or_expression    go to state 94
+    inclusive_or_expression    go to state 95
+    logical_and_expression     go to state 96
+    logical_or_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 233
 
 
 State 164
@@ -3174,7 +3174,7 @@ State 178
 
     primary_expression  go to state 83
     postfix_expression  go to state 84
-    unary_expression    go to state 135
+    unary_expression    go to state 130
     unary_operator      go to state 86
     cast_expression     go to state 236
 
@@ -3199,7 +3199,7 @@ State 179
 
     primary_expression  go to state 83
     postfix_expression  go to state 84
-    unary_expression    go to state 135
+    unary_expression    go to state 130
     unary_operator      go to state 86
     cast_expression     go to state 237
 
@@ -3224,7 +3224,7 @@ State 180
 
     primary_expression  go to state 83
     postfix_expression  go to state 84
-    unary_expression    go to state 135
+    unary_expression    go to state 130
     unary_operator      go to state 86
     cast_expression     go to state 238
 
@@ -3249,7 +3249,7 @@ State 181
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 239
@@ -3275,7 +3275,7 @@ State 182
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 240
@@ -3301,7 +3301,7 @@ State 183
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3328,7 +3328,7 @@ State 184
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3355,7 +3355,7 @@ State 185
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3383,7 +3383,7 @@ State 186
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3411,7 +3411,7 @@ State 187
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3439,7 +3439,7 @@ State 188
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3467,7 +3467,7 @@ State 189
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3496,7 +3496,7 @@ State 190
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3525,7 +3525,7 @@ State 191
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3555,7 +3555,7 @@ State 192
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3586,7 +3586,7 @@ State 193
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3618,7 +3618,7 @@ State 194
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -3651,7 +3651,7 @@ State 195
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -4159,12 +4159,19 @@ State 214
 
 State 215
 
+  147 direct_declarator: direct_declarator L_SQ_BR constant_expression R_SQ_BR .
+
+    $default  reduce using rule 147 (direct_declarator)
+
+
+State 216
+
   154 parameter_declaration: declaration_specifiers declarator .
 
     $default  reduce using rule 154 (parameter_declaration)
 
 
-State 216
+State 217
 
   152 parameter_list: parameter_list ',' . parameter_declaration
 
@@ -4184,7 +4191,7 @@ State 216
     VOID      shift, and go to state 14
     UNION     shift, and go to state 15
 
-    declaration_specifiers     go to state 130
+    declaration_specifiers     go to state 134
     storage_class_specifier    go to state 18
     type_specifier             go to state 21
     struct_or_union_specifier  go to state 22
@@ -4193,18 +4200,11 @@ State 216
     parameter_declaration      go to state 266
 
 
-State 217
+State 218
 
   149 direct_declarator: direct_declarator '(' parameter_type_list ')' .
 
     $default  reduce using rule 149 (direct_declarator)
-
-
-State 218
-
-  147 direct_declarator: direct_declarator '[' constant_expression ']' .
-
-    $default  reduce using rule 147 (direct_declarator)
 
 
 State 219
@@ -4241,7 +4241,7 @@ State 221
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88
@@ -4254,7 +4254,7 @@ State 221
     inclusive_or_expression    go to state 95
     logical_and_expression     go to state 96
     logical_or_expression      go to state 97
-    conditional_expression     go to state 136
+    conditional_expression     go to state 131
     constant_expression        go to state 267
 
 
@@ -4312,7 +4312,7 @@ State 226
 
     primary_expression  go to state 83
     postfix_expression  go to state 84
-    unary_expression    go to state 135
+    unary_expression    go to state 130
     unary_operator      go to state 86
     cast_expression     go to state 270
 
@@ -4374,34 +4374,34 @@ State 229
 
 State 230
 
+    7 postfix_expression: postfix_expression L_SQ_BR expression . R_SQ_BR
+   74 expression: expression . ',' assignment_expression
+
+    R_SQ_BR  shift, and go to state 273
+    ','      shift, and go to state 211
+
+
+State 231
+
     8 postfix_expression: postfix_expression '(' ')' .
 
     $default  reduce using rule 8 (postfix_expression)
 
 
-State 231
+State 232
 
     9 postfix_expression: postfix_expression '(' argument_expression_list . ')'
    15 argument_expression_list: argument_expression_list . ',' assignment_expression
 
-    ')'  shift, and go to state 273
-    ','  shift, and go to state 274
-
-
-State 232
-
-   14 argument_expression_list: assignment_expression .
-
-    $default  reduce using rule 14 (argument_expression_list)
+    ')'  shift, and go to state 274
+    ','  shift, and go to state 275
 
 
 State 233
 
-    7 postfix_expression: postfix_expression '[' expression . ']'
-   74 expression: expression . ',' assignment_expression
+   14 argument_expression_list: assignment_expression .
 
-    ']'  shift, and go to state 275
-    ','  shift, and go to state 211
+    $default  reduce using rule 14 (argument_expression_list)
 
 
 State 234
@@ -4896,12 +4896,19 @@ State 272
 
 State 273
 
+    7 postfix_expression: postfix_expression L_SQ_BR expression R_SQ_BR .
+
+    $default  reduce using rule 7 (postfix_expression)
+
+
+State 274
+
     9 postfix_expression: postfix_expression '(' argument_expression_list ')' .
 
     $default  reduce using rule 9 (postfix_expression)
 
 
-State 274
+State 275
 
    15 argument_expression_list: argument_expression_list ',' . assignment_expression
 
@@ -4938,13 +4945,6 @@ State 274
     assignment_expression      go to state 283
 
 
-State 275
-
-    7 postfix_expression: postfix_expression '[' expression ']' .
-
-    $default  reduce using rule 7 (postfix_expression)
-
-
 State 276
 
    59 conditional_expression: logical_or_expression '?' expression ':' . conditional_expression
@@ -4965,7 +4965,7 @@ State 276
 
     primary_expression         go to state 83
     postfix_expression         go to state 84
-    unary_expression           go to state 135
+    unary_expression           go to state 130
     unary_operator             go to state 86
     cast_expression            go to state 87
     multiplicative_expression  go to state 88

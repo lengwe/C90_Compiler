@@ -71,6 +71,10 @@ STRING_LITERAL  ["](([\\]["])|([^"]))*["]
 
 "!="			{  return  (NE_OP); }
 
+"["       	{  return  (L_SQ_BR); }
+
+"]"         	{  return  (R_SQ_BR); }
+
 {OPERATOR}        {
   std::string op(yytext);
   if(op == "="){

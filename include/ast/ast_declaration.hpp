@@ -53,7 +53,13 @@ class init_declarator_list : public Node{
       dst = str1 + "\n" + str2;
     }
 
-    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+      if(l != NULL){
+      l->mips(dst, destReg, Context);
+    }
+    r->mips(dst, destReg, Context);
+
+    }
 
 
 };
@@ -96,10 +102,43 @@ class init_declarator : public Node{
 
     virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
       std::string str1,str2;
-      declarator->mips(str1, destReg, Context);
-      if(initializer == NULL){
-      std::cout << "addiu " << str1<< ", $zero, 0" << '\n';
+      if(Context.getScope() == "global"){
+        str1 = "func";
+        declarator->mips(str1, destReg, Context);
+        std::cout << ".globl " << str1 <<  '\n';
+        std::cout << ".data" << '\n';
+        std::cout << str1 << ":" << '\n';
+        if(initializer == NULL){
+          std::cout << "    .word 0" << '\n';
+        }
+        else{
+          initializer->mips(str2, str1, Context);
+          std::cout << "    .word " << str2 << '\n';
+        }
+        Context.global.push_back(str1);
         return;
+      }
+      declarator->mips(str1, destReg, Context);
+       if(str1[0] == '_'){
+         if(initializer != NULL){
+            initializer->mips(str2, str1, Context);
+            int offset = std::stoi(str1.substr(1,str1.length()));
+            for(int i = 0; i < Context.init_list.size();i++){
+              if(Context.init_list[i][0] != '$'){
+                std::cout << "li " << " $3" <<", " <<  Context.init_list[i] <<'\n'; //TODO
+              }
+              else{
+                std::cout << "addi $3, $zero, " << Context.init_list[i] << '\n';
+              }
+              std::cout << "sw $3, " << offset <<"($fp)" <<  '\n';
+              offset += 4;
+            }
+         }
+         return;
+       }
+      if(initializer == NULL){
+      std::cout << "addiu " << str1 << ", $zero, 0" << '\n';
+      return;
       }
       initializer->mips(str2, str1, Context);
       std::cerr << "str2 in init_declarator" << str2 <<  '\n';
@@ -259,6 +298,7 @@ class direct_declarator : public Node{
 
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string func("func");
+        std::string str;
         std::cerr << "direct_declarator: " << type << '\n';
         switch (type) {
           case 1:
@@ -268,6 +308,16 @@ class direct_declarator : public Node{
           }
             dst = Context.newVar(*identifier, destReg);
           break;
+          case 3:
+            if(Context.getScope() != "global"){
+              direct_declaratorptr->mips(func, destReg, Context);
+              constant_expression->mips(str, destReg, Context);
+              std::string offset = Context.newArray(func, std::stoi(str), dst);
+              dst="_"+offset;
+              std::cerr << "inside case 2 init" << '\n';
+               // TODO support var
+            }
+            break;
           case 5:
             direct_declaratorptr->mips(func, destReg, Context);
             parameter_type_list->mips(dst, destReg, Context);
@@ -413,7 +463,14 @@ class initializer_list : public Node{
         //std::cerr<<"entering initializer_list\n";
   		}
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        std::string str;
+        if (initializer_listptr!= NULL){
+          initializer_listptr->mips(dst, destReg, Context);
+        }
+        initializer->mips(str, destReg, Context);
+        Context.init_list.push_back(str);
+      }
 };
 
 class struct_declarator : public Node{
@@ -480,8 +537,8 @@ class declaration : public Node{
       virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
         std::string str1;
         init_declarator_list -> mips(str1, destReg, Context);
+        declaration_specifiers->mips(str1, destReg, Context);
       }
-
 
 };
 
@@ -696,7 +753,9 @@ class struct_declarator_list : public Node{
           //std::cerr<<"entering struct_declarator_list\n";
   		}
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+
+      }
 };
 
 class enum_specifier : public Node{
@@ -717,7 +776,13 @@ class enum_specifier : public Node{
           //std::cerr<<"entering enum_specifier\n";
       }
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        if(enumerator_list != NULL){
+          enumerator_list->mips(dst, destReg, Context);
+          Context.counter
+          ;
+        }
+      }
 };
 
 class enumerator_list : public Node{
@@ -739,7 +804,13 @@ class enumerator_list : public Node{
           //std::cerr<<"entering enumerator_list\n";
       }
 
-      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        if(enumerator_listptr != NULL){
+          enumerator_listptr->mips(dst, destReg, Context);
+        }
+        enumerator->mips(dst, destReg, Context);
+
+      }
 };
 
 class enumerator : public Node{
@@ -761,7 +832,20 @@ class enumerator : public Node{
         //std::cerr<<"entering enumerator\n";
     }
 
-    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{}
+    virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+      std::string name = *IDENTIFIER;
+      std::string str = Context.newVar(name, dst);
+      if(type == 1){
+        std::cout << "addiu " << str << " , $zero, " << Context.counter <<'\n';
+      }
+      else if(type == 2){
+        std::string str2;
+        constant_expression->mips(str2, destReg, Context);
+        Context.counter = std::stoi(str2);
+      }
+      std::cout << "addiu " << str << " , $zero, " << Context.counter <<'\n';
+      Context.counter++;
+    }
 };
 
 

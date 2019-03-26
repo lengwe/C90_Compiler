@@ -125,6 +125,30 @@ class postfix_expression : public Node{
 			std::string str2;
 			std::string str = "func";
 			std::string dr = "$a0";
+			if (type == 1){
+				l->mips(str, destReg, Context);
+				r->mips(str2, destReg, Context);
+				int n = Context.findArray(str, dst);
+				std::string newA = Context.newVar(str, dst);
+				if(str2[0] != '$'){
+					std::cerr << "here1" << '\n';
+					n = n+4*std::stoi(str2);
+					std::cerr << "here2" << '\n';
+					std::cout << "lw " << newA << ", " << n <<"($fp)" << '\n';
+					Context.store_at = std::to_string(n)+"($fp)";
+				}
+				else{
+					std::string newB = Context.newVar(str+"adr",dst);
+					std::cout << "sll " << newB << " , " << str2 << ", 2" << '\n';
+					std::cout << "addi " << newB << ", " << newB << " , " << n << '\n';
+					std::cout << "add " <<   newB << ", " << newB << " , $fp" << '\n';
+					std::cout << "lw " << newA << ", 0(" << newB << ")" << '\n';
+					Context.store_at =  "0(" + newB + ")";
+				}
+				Context.to_store = true;
+				std::cerr << "store_at " << Context.store_at << '\n';
+				dst =  newA;
+			}
 			if(type == 2){
 					p->mips(str, destReg, Context);
 					Context.savealltostack();
@@ -258,7 +282,6 @@ class unary_expression : public Node{
 					}
 				}
 					else if(*string == "~"){
-						std::cerr << "IN" << '\n';
 						if(str[0] != '$'){
 							int a = std::stoi(str);
 							a = ~a;
@@ -1026,14 +1049,16 @@ class assignment_expression : public Node{
 			if(*assign_op == "="){
 				l->mips(str, destReg, Context);
 				r->mips(str2, str, Context);
-				if(str2[0] != '$'){
-					std::cout << "addiu " << str << ", $zero, " << str2 << '\n';
-				}
-				else{
-					std::cout << "addu " << str << ", $zero, " << str2 << '\n';
-				}
-				dst=str;
+				if(str != str2){
+					if(str2[0] != '$'){
+						std::cout << "addiu " << str << ", $zero, " << str2 << '\n';
+					}
+					else{
+						std::cout << "addu " << str << ", $zero, " << str2 << '\n';
+					}
+				dst=str2;
 			}
+		}
 
 			if(*assign_op == "*="){
 				l->mips(str, destReg, Context);
@@ -1138,6 +1163,11 @@ class assignment_expression : public Node{
 				}
 				dst=str;
 			}
+
+			if(Context.to_store == true){
+				std::cout << "sw " << str << ", " << Context.store_at << '\n';
+				Context.to_store = false;
+			}
 		}
 };
 
@@ -1164,6 +1194,7 @@ class expression : public Node{
 		virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
 			l->mips(dst,destReg, Context);
 			r->mips(dst,destReg, Context);
+			// std::cout  << '\n';
 		}
 
 };

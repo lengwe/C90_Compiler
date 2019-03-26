@@ -1,0 +1,39 @@
+direct_declarator: 5
+direct_declarator: 1
+direct_declarator: 1
+adding arg
+added x @ 0
+addarg to array
+called declarator
+direct_declarator: 3
+direct_declarator: 1
+in primary expression
+new array name: a@16
+inside case 2 init
+in ass, assop = =
+in postfix
+in primary expression
+in primary expression
+found array name: a@16
+scope_name: arraymaking a
+reg $t0is a in array
+here1
+here2
+store_at 16($fp)
+in primary expression
+in ass, assop = =
+in primary expression
+cannot find
+in primary expression
+cannot find
+in postfix
+in primary expression
+in primary expression
+found array name: a@16
+scope_name: arraymaking a
+reg $t1is a in array
+here1
+here2
+store_at 16($fp)
+in primary expression
+cannot find

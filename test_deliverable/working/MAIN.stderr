@@ -1,0 +1,25 @@
+direct_declarator: 5
+direct_declarator: 1
+direct_declarator: 1
+adding arg
+added x @ 0
+addarg to global
+direct_declarator: 6
+direct_declarator: 1
+called declarator
+in primary expression
+in primary expression
+in postfix
+in primary expression
+offset_count stored @ $a0: 16
+offset_count stored @ $a1: 20
+offset_count stored @ $a2: 24
+offset_count stored @ $a3: 28
+offset_count stored @ $2: 32
+offset_count stored @ $3: 36
+offset_count stored @ $31: 40
+argument_expression_list called
+in primary expression
+scope_name: mainmaking _result
+reg $t0is _result in main
+*string !

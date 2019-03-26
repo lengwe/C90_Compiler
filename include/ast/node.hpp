@@ -165,7 +165,8 @@ class external_declaration: public Node{
 						p -> mips(dst, destReg, Context);
 						break;
 					case 2:
-						p -> mips(dst, destReg, Context);
+						std::string str = "global";
+						p -> mips(str, destReg, Context);
 						break;
 
 				}
@@ -267,7 +268,7 @@ public:
 		std::cout << "move    $sp,$fp" << '\n';
 		std::cout << "lw      $fp,192($sp)" << '\n';
 		std::cout << "lw			$ra,196($sp)" << '\n';
-		std::cout << "addiu   $sp,$sp,24" << '\n';
+		std::cout << "addiu   $sp,$sp,200" << '\n';
 		std::cout << "j	$31" << '\n';
 		std::cout << "nop" << '\n';
 

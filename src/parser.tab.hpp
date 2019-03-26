@@ -109,16 +109,18 @@ extern int yydebug;
     GOTO = 307,
     UNION = 308,
     VOLATILE = 309,
-    IDENTIFIER = 310,
-    FLOAT_NUM = 311,
-    HEX_NUM = 312,
-    INT_NUM = 313,
-    CHAR_CONSTANT = 314,
-    CONSTANT = 315,
-    MOD_ASSGIN = 316,
-    STRING_LITERAL = 317,
-    MORE = 318,
-    LESS = 319
+    L_SQ_BR = 310,
+    R_SQ_BR = 311,
+    IDENTIFIER = 312,
+    FLOAT_NUM = 313,
+    HEX_NUM = 314,
+    INT_NUM = 315,
+    CHAR_CONSTANT = 316,
+    CONSTANT = 317,
+    MOD_ASSGIN = 318,
+    STRING_LITERAL = 319,
+    MORE = 320,
+    LESS = 321
   };
 #endif
 
@@ -132,7 +134,7 @@ union YYSTYPE
   std::string *str;
   Node* node;
 
-#line 136 "src/parser.tab.hpp" /* yacc.c:1909  */
+#line 138 "src/parser.tab.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

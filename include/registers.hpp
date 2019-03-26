@@ -14,9 +14,8 @@ class registers{
 private:
 	std::vector<std::string> reg;
 	std::vector<std::string> arg;
-	std::vector<std::string> global;
-	std::map<std::string, int> allVar; // 1 in reg 2 in
-	int offset_count;
+	std::map<std::string, int> allVar; //name, offset
+	int offset_count = 16;
 	std::string scope_name;
 	std::list<int> usage;
 	std::string regUsed;
@@ -48,7 +47,7 @@ private:
 		return -1;
 	}
 	void spill(int n, std::string to){
-		std::cout << "sw "<< regUsed << n << ", " << offset_count+16 << to <<'\n';
+		std::cout << "sw "<< regUsed << n << ", " << offset_count  << to <<'\n';
 		allVar[reg[n]] = offset_count;
 		std::cerr << "offset_count stored @ " << reg[n] << ": " << offset_count << '\n';
 		offset_count += 4;
@@ -57,12 +56,11 @@ private:
 	std::string load(std::string name, std::string &dst){
 		std::string n = newVar(name, dst);
 		std::cerr << "name: " << name << '\n';
-		std::cerr << "allVar[name]+16 " <<  allVar[name]<< '\n';
-		std::cout << "lw " << n << ", " << allVar[name]+16 << "($sp)" << '\n';
+		std::cout << "lw " << n << ", " << allVar[name] << "($sp)" << '\n';
 		return n;
 	}
 	void spillReg(std::string reg){
-		std::cout << "sw "<< reg  << ", " << offset_count+16 <<"($fp)"<<'\n';
+		std::cout << "sw "<< reg  << ", " << offset_count <<"($fp)"<<'\n';
 		allVar[reg] = offset_count;
 		std::cerr << "offset_count stored @ " << reg << ": " << offset_count << '\n';
 		offset_count += 4;
@@ -71,12 +69,19 @@ private:
 
 public:
 	int counter;
-
+	std::vector<std::string> global;
+	bool to_store = false;
+	std::string store_at;
+	bool to_print;
+	std::string str_to_print;
+	std::vector<std::string>init_list;
 	registers(std::string _scope_name){
+		to_print =false;
 		scope_name = _scope_name;
 		offset_count = 0;
 		argumentcount = 0;
 		counter = 0;
+		offset_count = 16;
 		regUsed = "$t";
 		if(scope_name == "global"){
 					regUsed = "$s";
@@ -87,14 +92,14 @@ public:
 	}
 
 	registers(std::string _scope_name, registers _global){
+		to_print = false;
+		to_store = false;
+
 		scope_name = _scope_name;
-		offset_count = 0;
+		offset_count = 16;
 		argumentcount = 0;
 		counter = 0;
 		regUsed = "$t";
-		if(scope_name == "global"){
-					regUsed = "$s";
-		}
 		reg.resize(10,"0");
 		arg.resize(4,"0");
 		global = _global.global;
@@ -120,18 +125,18 @@ public:
 			if(reg[i] != "0"){
 				std::string n = regUsed+std::to_string(i);
 				std::cerr << "loading " << reg[i] << '\n';
-				std::cout << "lw " << n << ", " << allVar[reg[i]]+16 << "($fp)" << '\n';
+				std::cout << "lw " << n << ", " << allVar[reg[i]]  << "($fp)" << '\n';
 			}
 		}
-		std::cout << "lw $a0, " << allVar["$a0"]+16 << "($fp)" << '\n';
-		std::cout << "lw $a1, " << allVar["$a1"]+16 << "($fp)" << '\n';
-		std::cout << "lw $a2, " << allVar["$a2"]+16 << "($fp)" << '\n';
-		std::cout << "lw $a3, " << allVar["$a3"]+16 << "($fp)" << '\n';
-		std::cout << "lw $3, " << allVar["$3"]+16 << "($fp)" << '\n';
-		std::cout << "lw $31, " << allVar["$31"]+16 << "($fp)" << '\n';
+		std::cout << "lw $a0, " << allVar["$a0"]  << "($fp)" << '\n';
+		std::cout << "lw $a1, " << allVar["$a1"]  << "($fp)" << '\n';
+		std::cout << "lw $a2, " << allVar["$a2"]  << "($fp)" << '\n';
+		std::cout << "lw $a3, " << allVar["$a3"]  << "($fp)" << '\n';
+		std::cout << "lw $3, " << allVar["$3"]  << "($fp)" << '\n';
+		std::cout << "lw $31, " << allVar["$31"]  << "($fp)" << '\n';
 		std::string name = newVar("_result",dst);
 		std::cout << "move " << name << ", $2" <<  '\n';
-		std::cout << "lw $2, " << allVar["$2"]+16 << "($fp)" << '\n';
+		std::cout << "lw $2, " << allVar["$2"]  << "($fp)" << '\n';
 		return name;
 	}
 	std::string newVar(std::string name, std::string& dst){
@@ -140,7 +145,7 @@ public:
 		int n = find_empty();
 		if(n < 0){
 			n = to_spill();
-			spill(n,"($sp)");
+			spill(n,"($fp)");
 			usage.pop_front();
 		}
 		if(scope_name == "global"){
@@ -153,6 +158,21 @@ public:
 		usage.push_back(n);
 		t = regUsed+std::to_string(n); //plus one cos register t0 is reserved.
 		return t;
+	}
+	std::string newArray(std::string name, int size, std::string& dst){
+				allVar[name] = offset_count;
+				std::cerr << "new array name: " << name << "@" << offset_count << '\n';
+				int tmp = offset_count;
+				offset_count += size*4;
+				return std::to_string(tmp);
+	}
+
+	int findArray(std::string name, std::string& dst){
+		auto it = allVar.find(name);
+		if(it != allVar.end()){
+							std::cerr << "found array name: " << name << "@" << it->second << '\n';
+			return (it->second);
+		}
 	}
 	std::string getScope(){
 		return scope_name;
@@ -172,7 +192,13 @@ public:
 			else{
 				gloit= find (global.begin(), global.end(), name);
 				if(gloit != global.end()){
-					return "$s"+std::to_string(gloit - global.begin());
+					std::string n = newVar("globaladdress_"+name, dst);
+					std::string n2 = newVar("global_"+name, dst);
+					std::cout << "lui " << n << ", %hi(" << name << ")" << '\n';
+					std::cout << "lw " << n2 << ", %lo(" << name << ")(" << n << ")" << '\n';
+					to_store = true;
+					store_at = "%lo("+name+")(" + n + ")";
+					return n2;
 				}
 			}
 			std::string r = load(name, dst);

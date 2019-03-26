@@ -90,7 +90,27 @@ class block_item_list : public Node{
       }
 };
 
+class block_item : public Node{
+  private:
+    int type;
+    Nodeptr block_itemptr;
 
+  public:
+    block_item(Nodeptr _l) : block_itemptr(_l){}
+    ~block_item(){
+      delete block_itemptr;
+    }
+
+      virtual void python(std::string &dst) const override{
+        //std::cerr<<"entering compound_statement\n";
+            block_itemptr->python(dst);
+        }
+
+      virtual void mips(std::string &dst, std::string &destReg, registers &Context) const override{
+        block_itemptr->mips(dst,destReg, Context);
+        // std::cout  << '\n';
+      }
+};
 // class type_qualifier : public Node{
 //   private:
 //     int type;
@@ -247,7 +267,7 @@ class expression_statement : public Node{
       if(expression != NULL){
         expression -> mips(dst,destReg, Context);
       }
-      std::cerr << "dst: " << dst << '\n';
+      std::cout  << '\n';
     }
 };
 

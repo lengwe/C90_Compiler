@@ -7,7 +7,7 @@
   int yylex(void);
   void yyerror(const char*);
 }
-/*%error-verbose*/
+%error-verbose
 %union{
   std::string *str;
   Node* node;
@@ -17,7 +17,7 @@
 %token AUTO BREAK CASE CHAR  CONTINUE DEFAULT DO DOUBLE ELSE ENUM FLOAT FOR IF INT LONG RETURN SHORT SIGNED UNSIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF VOID WHILE CONST ELLIPSIS
 /*OPERATOR*/
 %token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN RIGHT_ASSIGN LEFT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
-%token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP GOTO UNION VOLATILE
+%token INC_OP DEC_OP EQ_OP GE_OP LE_OP OR_OP AND_OP LEFT_OP RIGHT_OP PTR_OP NE_OP GOTO UNION VOLATILE L_SQ_BR R_SQ_BR
 %token IDENTIFIER FLOAT_NUM HEX_NUM INT_NUM CHAR_CONSTANT CONSTANT MOD_ASSGIN STRING_LITERAL MORE LESS
 
 
@@ -53,7 +53,7 @@ primary_expression
 
 postfix_expression
 : primary_expression                                    {$$ = $1;}
-| postfix_expression '[' expression ']'                 {$$ = new postfix_expression(1,$1,$3);}
+| postfix_expression L_SQ_BR expression R_SQ_BR                 {$$ = new postfix_expression(1,$1,$3);}
 | postfix_expression '(' ')'                            {$$ = new postfix_expression(2,$1);}
 | postfix_expression '(' argument_expression_list ')'   {$$ = new postfix_expression(3,$1,$3);}
 | postfix_expression '.' IDENTIFIER                     {$$ = new postfix_expression(4,$1,$3);}
@@ -249,10 +249,10 @@ function_definition
 
 // direct_abstract_declarator
 // : '(' direct_abstract_declarator ')' 				                  { $$ = new direct_abstract_declarator(1,$2,NULL,NULL,NULL); }
-// | '[' ']'							                                        { $$ = new direct_abstract_declarator(2,NULL,NULL,NULL,NULL); }
-// | '[' constant_expression ']'				                        	{ $$ = new direct_abstract_declarator(3,NULL,$2,NULL,NULL); }
-// | direct_declarator '[' ']'				                            { $$ = new direct_abstract_declarator(4,NULL,NULL,NULL,$1); }
-// | direct_declarator '[' constant_expression ']'              	{ $$ = new direct_abstract_declarator(5,NULL,$3,NULL,$1); }
+// | L_SQ_BR  R_SQ_BR							                                        { $$ = new direct_abstract_declarator(2,NULL,NULL,NULL,NULL); }
+// | L_SQ_BR constant_expression  R_SQ_BR				                        	{ $$ = new direct_abstract_declarator(3,NULL,$2,NULL,NULL); }
+// | direct_declarator L_SQ_BR  R_SQ_BR				                            { $$ = new direct_abstract_declarator(4,NULL,NULL,NULL,$1); }
+// | direct_declarator L_SQ_BR constant_expression  R_SQ_BR              	{ $$ = new direct_abstract_declarator(5,NULL,$3,NULL,$1); }
 // | '(' ')'						                                         	{ $$ = new direct_abstract_declarator(6,NULL,NULL,NULL,NULL); }
 // | '(' parameter_type_list ')'				                        	{ $$ = new direct_abstract_declarator(7,NULL,NULL,$2,NULL); }
 // | direct_abstract_declarator '(' ')'	                		   	{ $$ = new direct_abstract_declarator(8,NULL,NULL,NULL,$1); }
@@ -271,8 +271,8 @@ compound_statement
 ;
 
 block_item:
-| declaration                                                   {$$=$1;}
-| statement                                                     {$$=$1;}
+| declaration                                                   {$$=new block_item($1);}
+| statement                                                     {$$=new block_item($1);}
 
 block_item_list:
 | block_item_list block_item                                   {$$ = new block_item_list(1,$1,$2);}
@@ -300,7 +300,7 @@ initializer
 ;
 
 initializer_list
-: initializer                                                    {$$ = $1;}
+: initializer                                                    {$$ = new initializer_list(2,$1,NULL);}
 | initializer_list ',' initializer                               {$$ =new initializer_list(2,$3,$1);}
 ;
 
@@ -372,8 +372,8 @@ enumerator
 direct_declarator
 : IDENTIFIER                                                         {$$ = new direct_declarator(1,$1,NULL,NULL,NULL,NULL);}
 | '(' declarator ')'                                                 {$$ = new direct_declarator(2,NULL,NULL,$2,NULL,NULL);}
-| direct_declarator '[' constant_expression ']'                      {$$ = new direct_declarator(3,NULL,$1,NULL,$3,NULL);}
-| direct_declarator '[' ']'                                          {$$ = new direct_declarator(4,NULL,$1,NULL,NULL,NULL);}
+| direct_declarator  L_SQ_BR constant_expression  R_SQ_BR                      {$$ = new direct_declarator(3,NULL,$1,NULL,$3,NULL);}
+| direct_declarator  L_SQ_BR  R_SQ_BR                                          {$$ = new direct_declarator(4,NULL,$1,NULL,NULL,NULL);}
 | direct_declarator '(' parameter_type_list ')'                      {$$ = new direct_declarator(5,NULL,$1,NULL,NULL,$3);}
 //| direct_declarator '(' identifier_list ')'                          {$$ = new direct_declarator(6,NULL,$1,NULL,NULL,NULL,$3);}
 | direct_declarator '(' ')'                                          {$$ = new direct_declarator(6,NULL,$1,NULL,NULL,NULL);}
