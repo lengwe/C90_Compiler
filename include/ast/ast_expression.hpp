@@ -744,7 +744,7 @@ class relational_expression : public Node{
 					std::cout << "li " << tmp << " , " << str2 << '\n';
 					str2=tmp;
 				}
-				else if(str1[0] != '$'){
+				if(str1[0] != '$'){
 						std::cout<<"slti "<<destReg<<", "<<str2<<", "<<str1<<'\n';
 				}
 				else{
@@ -761,6 +761,7 @@ class relational_expression : public Node{
 					std::cout << "li " << tmp << " , " << str1 << '\n';
 					str1=tmp;
 				}
+
 				if(str2[0] != '$'){
 						std::cout<<"slti "<<destReg<<", "<<str1<<", "<<str2<<'\n';
 				}

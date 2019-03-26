@@ -174,7 +174,7 @@ assignment_operator
 ;
 
 expression
-: assignment_expression                               {$$ = $1;}
+: assignment_expression                               {$$ = new expression(NULL,$1);}
 | expression ',' assignment_expression                {$$ = new expression($1,$3);}
 ;
 
