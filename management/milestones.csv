@@ -2,7 +2,7 @@ MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Descri
 Specification,,2,Ramon,24/02/19,Reading through the specification and plan 
 Lexer,Specification ,5,Ramon,26/02/19,C Lexer
 Parser/Yacc ,Lexer,10,Leng,05/03/19,C parser
-ast_classes ,Parser,12,Ramon,13/03/19,Building up the structure for 
+ast_classes ,Parser,12,Ramon,13/03/19,Building up the structure for the Python translator and C-compiler
 code gen for python,ast_classes,10,Leng,22/03/19,Translate C code to Python
 code gen for mips,ast_classes,25,Ramon,26/03/19,Translate C code to MIPS
 Test Suite,Test cases and bash ,2,Leng,20/03/19,Writing required 10 test cases and bash to run the automate tests
