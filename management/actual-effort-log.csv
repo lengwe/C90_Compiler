@@ -6,7 +6,7 @@ Date,Effort (man-hour),Developers,Milestones,Assessment of the estimate
 07/03/19,3,Leng,finish all the expression constructors,As estimated
 08/03/19,1.5,Ramon,add function declaration,As estimated
 13/03/19,1.5,Leng,Modify declaration_list, underperform
-13/03/19,2,Ramon,Fix addition error and add parameter in the function, underperform, really slow progress due to maths coursework.
+13/03/19,2,Ramon,Fix addition error and add parameter in the function, "underperform, really slow progress due to maths coursework."
 14/03/19,3,Leng,working on basic arithmetic operations and call functions on Python,underperform
 15/03/19,3,Leng,Finish global variable and start working on indentation,underperform
 15/03/19,2,Ramon,If-else and while statement for python works, underperform
