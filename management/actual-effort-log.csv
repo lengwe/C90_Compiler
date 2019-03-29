@@ -19,7 +19,7 @@ Date,Effort (man-hour),Developers,Milestones,Assessment of the estimate
 22/03/19,3,Ramon,Add function call and return on mips, "as estimated, finally catches up with planned effort"
 22/03/19,2.5,Leng,Fixing a bug in global variable on Python,Underperform
 23/03/19,1.5,Ramon,While statement works on mips, as estimated
-24/03/19,0.5,Ramon,Changing the compound statement in parser, underperform, did not expect the bugs (later discovered that its a feature of C90)
+24/03/19,0.5,Ramon,Changing the compound statement in parser, "underperform, did not expect the bugs (later discovered that its a feature of C90)"
 24/03/19,2,Ramon,function call with arguments works on mips, as estimated
 24/03/19,2,Ramon,finish unary operation in mips, underperformed
 24/03/19,1,Leng,finish relation and equality expression,As estimated
