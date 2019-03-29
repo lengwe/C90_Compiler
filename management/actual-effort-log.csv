@@ -2,7 +2,7 @@ Date,Effort (man-hour),Developers,Milestones,Assessment of the estimate
 26/02/19,2,"Leng, Ramon",lexer finished,Optimistic
 01/03/19,3,Leng,Starting parser,Optimistic
 04/03/19,3,"Ramon, Leng",Working on ast classes,Optimistic
-04/03/19,5,Leng,fixing segmentation fault in the parser,"Pessimistic,we did not expect to spend too much time on fixing seg fault" 
+04/03/19,5,Leng,fixing segmentation fault in the parser,Pessimistic as we did not expect to spend too much time on fixing seg fault
 07/03/19,3,Leng,finish all the expression constructors,Optimistic
 08/03/19,1.5,Ramon,add function declaration,Optimistic
 13/03/19,1.5,Leng,Modify declaration_list,Optimistic
