@@ -1,32 +1,32 @@
 Date,Effort (man-hour),Developers,Milestones,Assessment of the estimate
-26/02/19,2,"Leng, Ramon",lexer finished,Optimistic
-01/03/19,3,Leng,Starting parser,Optimistic
-04/03/19,3,"Ramon, Leng",Working on ast classes,Optimistic
-04/03/19,5,Leng,fixing segmentation fault in the parser,Pessimistic as we did not expect to spend too much time on fixing seg fault
-07/03/19,3,Leng,finish all the expression constructors,Optimistic
-08/03/19,1.5,Ramon,add function declaration,Optimistic
-13/03/19,1.5,Leng,Modify declaration_list,Optimistic
-13/03/19,2,Ramon,Fix addition error and add parameter in the function,Optimistic
-14/03/19,3,Leng,working on basic arithmetic operations and call functions on Python,Optimistic
-15/03/19,3,Leng,Finish global variable and start working on indentation,Optimistic
-15/03/19,2,Ramon,If-else and while statement for python works,Optimistic
-16/03/19,6,Leng,Fixing indentation bug,"Pessimistic,the indentation bug was unexpected"
-18/03/19,1,Ramon,Add more tests to test Python code gen,Optimistic
-18/03/19,2.5,Leng,Finished code gen part for Python,Optimistic
-19/03/19,3,Ramon,Working on register and stack class,
-20/03/19,2.5,Leng,working on test suite,Optimistic
-21/03/19,4,Ramon,Working on basic instructions on mips,
-22/03/19,3,Ramon,Add function call and return on mips,
-22/03/19,2.5,Leng,Fixing a bug in global variable on Python,Pessimistic
-23/03/19,1.5,Ramon,While statement works on mips,
-24/03/19,0.5,Ramon,Changing the compound statement in parser,
-24/03/19,2,Ramon,function call with arguments works on mips,
-24/03/19,1,Ramon,finish unary operation in mips,
-24/03/19,1,Leng,finish relation and equality expression,Optimistic
-25/03/19,2,Ramon,working on for loop and conditional expression,
-25/03/19,1,Ramon,Working on enum in mips,
-25/03/19,2,Ramon,finish global variables,
-25/03/20,0.5,Leng,Adding the Vagrantfile,Optimistic
-26/03/19,3.5,Ramon,Working on local array,"Pessimistic,since the deadline was very close,we gave up to support more intermediate and all advanced instructions"
-26/03/19,3,Ramon,Finish continue and break statement,
-26/03/19,1,Ramon,Fix relational expression and logical and or bugs,
+26/02/19,2,"Leng, Ramon",lexer finished,As estimated
+01/03/19,3,Leng,Starting parser,As estimated
+04/03/19,3,"Ramon, Leng",Working on ast classes,As estimated
+04/03/19,5,Leng,fixing segmentation fault in the parser,Underperform as we did not expect to spend too much time on fixing seg fault
+07/03/19,3,Leng,finish all the expression constructors,As estimated
+08/03/19,1.5,Ramon,add function declaration,As estimated
+13/03/19,1.5,Leng,Modify declaration_list, underperform
+13/03/19,2,Ramon,Fix addition error and add parameter in the function, underperform, really slow progress due to maths coursework.
+14/03/19,3,Leng,working on basic arithmetic operations and call functions on Python,underperform
+15/03/19,3,Leng,Finish global variable and start working on indentation,underperform
+15/03/19,2,Ramon,If-else and while statement for python works, underperform
+16/03/19,6,Leng,Fixing indentation bug,"Underperform,the indentation bug was unexpected"
+18/03/19,1,Ramon,Add more tests to test Python code gen, As estimated
+18/03/19,2.5,Leng,Finished code gen part for Python,underperform
+19/03/19,3,Ramon,Working on register and stack class, underperform
+20/03/19,2.5,Leng,working on test suite,As estimated
+21/03/19,4,Ramon,Working on basic instructions on mips, underperform
+22/03/19,3,Ramon,Add function call and return on mips, as estimated, finally catches up with planned effort
+22/03/19,2.5,Leng,Fixing a bug in global variable on Python,Underperform
+23/03/19,1.5,Ramon,While statement works on mips, as estimated
+24/03/19,0.5,Ramon,Changing the compound statement in parser, underperform, did not expect the bugs (later discovered that its a feature of C90)
+24/03/19,2,Ramon,function call with arguments works on mips, as estimated
+24/03/19,2,Ramon,finish unary operation in mips, underperformed
+24/03/19,1,Leng,finish relation and equality expression,As estimated
+25/03/19,2,Ramon,working on for loop and conditional expression, as estimated
+25/03/19,1,Ramon,Working on enum in mips, as estimated
+25/03/19,2,Ramon,finish global variables, as estimated
+25/03/20,0.5,Leng,Adding the Vagrantfile,As estimated
+26/03/19,3.5,Ramon,Working on local array,"Underperform, since the deadline was very close,we gave up to support more intermediate"
+26/03/19,3,Ramon,Finish continue and break statement, underperform
+26/03/19,2,Ramon,Fix relational expression and logical and or bugs, severly underperformed

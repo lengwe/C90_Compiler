@@ -1,5 +1,5 @@
 MilestoneID,             Dependencies, EstimatedEffort, Lead,  Completed, Description
-Specification,,2,Ramon,24/02/19,Reading through the specification and plan 
+Specification,,2,Ramon,24/02/19,Reading through the specification and plan
 Lexer,Specification ,5,Ramon,26/02/19,C Lexer
 Parser/Yacc ,Lexer,10,Leng,05/03/19,C parser
 ast_classes ,Parser,12,Ramon,13/03/19,Building up the structure for the Python translator and C-compiler
