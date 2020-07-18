@@ -1,31 +1,38 @@
-2018/2019 Compilers Coursework
+C90 Compiler 
 ==============================
 
-There is a single assessed code deliverable, which is due on Tue 26 March at 23:59. This deliverable contains three components:
+The goal of this course work is to write a program that can translate a subset of C code into Python and compile to MIPS assembly.
 
-- [*Test suite*](c_test_suite.md) (14.3%): Each submission must contain a set of test programs which are able to determine whether a given compiler implements certain C language features correctly.
+## Specifications
 
-- [*C-translator*](c_translator.md) (28.6%): Your compiler will be able to translate a sub-set of C into equivalent Python. This allows each submission to demonstrate lexing and parsing functionality, even if the code generation is weak.
+- [*Test suite*](c_test_suite.md): Each submission must contain a set of test programs which are able to determine whether a given compiler implements certain C language features correctly.
 
-- [*C-compiler*](c_compiler.md) (42.8%): This is a compiler from C to MIPS assembly.
+- [*C-translator*](c_translator.md): Your compiler will be able to translate a sub-set of C into equivalent Python. This allows each submission to demonstrate lexing and parsing functionality, even if the code generation is weak.
+
+- [*C-compiler*](c_compiler.md): This is a compiler from C to MIPS assembly.
   
 In all cases, the source language is pre-processed C90. The target environment is Ubuntu 16.04, so the lab Ubuntu distribution, or equivalently an Ubuntu 16.04 VM as configured in the attached Vagrantfile.
 
 Associated with all deliverables is a
 
-- [time-tracking/project management component](management.md) (14.3%).
+- [time-tracking/project management component](management.md).
 
-This will be updated as you go along, but the final version is due on Fri 29 March at 23:59, then will be assessed orally at the start of Summer term.
+## C-to-Python Translator 
 
+To build the compiler, run the following command:
 
-Repositories
-============
+```make bin/c_compiler```
 
-Each group gets a bare private repository. It is up to you if you want to clone the master specification, or to start from scratch.
+The translator function is invoked using the flag --translate, with the source file and output file specified on the command line:
 
-Submission
-==========
+```bin/c_compiler --translate [source-file.c] -o [dest-file.py]```
 
-Submission will be via GitHub (code) and Blackboard (commit hash), as in the lab.
+## C Compiler 
 
-All submissions will be tested functionally, and won't be modified if they don't correctly compile, or if they produce output in the wrong place or format.
+To build the compiler, run the following command:
+
+```make bin/c_compiler```
+
+The compilation function is invoked using the flag -S, with the source file and output file specified on the command line:
+
+```bin/c_compiler -S [source-file.c] -o [dest-file.s]```
